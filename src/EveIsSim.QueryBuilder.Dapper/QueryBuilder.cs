@@ -10,7 +10,6 @@ using EveIsSim.QueryBuilder.Dapper.SqlDialect;
 using EveIsSim.QueryBuilder.Dapper.SqlDialect.Dialects.Postgres;
 using EveIsSim.QueryBuilder.Dapper.SqlDialect.Enums;
 using EveIsSim.QueryBuilder.Dapper.SqlDialect.Helpers;
-using EveIsSim.QueryBuilder.Models.Filters;
 
 namespace EveIsSim.QueryBuilder.Dapper;
 

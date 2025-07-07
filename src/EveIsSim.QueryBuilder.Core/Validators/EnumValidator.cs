@@ -1,4 +1,4 @@
-using EveIsSim.QueryBuilder.Models.Filters;
+using EveIsSim.QueryBuilder.Core.Models.Filters;
 
 namespace EveIsSim.QueryBuilder.Core.Validators;
 
