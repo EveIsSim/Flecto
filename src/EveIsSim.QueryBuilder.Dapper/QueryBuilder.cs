@@ -27,7 +27,7 @@ public class QueryBuilder
     private readonly string _fromTable;
     private bool _exceptOrderBy;
     private (int Limit, int Offset)? _paging;
-    private readonly List<string> _conditions = new();
+    private List<string> _conditions = new();
     private readonly DynamicParameters _parameters = new();
     private readonly Dictionary<string, Sort> _sortFields = new();
 
@@ -101,7 +101,7 @@ public class QueryBuilder
     public QueryBuilder Search(SearchFilter? filter, params string[] columns)
         => Search(filter, _fromTable, columns);
 
-    public QueryBuilder Search(SearchFilter? filter, string table, params string[] columns)
+    public QueryBuilder Search(SearchFilter? filter, string table, string[] columns)
         => Search(filter, (table, columns));
 
     // It will public when we implement JOIN ON logic
@@ -342,6 +342,36 @@ public class QueryBuilder
         return this;
     }
 
+    // cover tests
+    public QueryBuilder Clone()
+    {
+        var clone = new QueryBuilder(_fromTable, _dialectType);
+
+        clone._selectColumns = _selectColumns;
+        clone._selectWasSet = _selectWasSet;
+
+        clone._searchConditionCounter = _searchConditionCounter;
+
+        clone._exceptOrderBy = _exceptOrderBy;
+
+        clone._paging = _paging;
+
+        clone._conditions = new List<string>(_conditions);
+
+        foreach (var paramName in _parameters.ParameterNames)
+        {
+            var paramValue = _parameters.Get<object?>(paramName);
+            clone._parameters.Add(paramName, paramValue);
+        }
+
+        foreach (var kvp in _sortFields)
+        {
+            clone._sortFields.Add(kvp.Key, kvp.Value);
+        }
+
+        return clone;
+    }
+
     public (string Sql, DynamicParameters Parameters) Build()
     {
         if (_selectColumns == null)
@@ -389,8 +419,8 @@ public class QueryBuilder
 
     private void AddSortIfPresent(string column, IQueryFilter filter)
     {
-        if (filter.Sort == null) return;
-        _sortFields.Add(column, filter.Sort);
+        if (!filter.Sort.HasValue) return;
+        _sortFields.Add(column, filter.Sort.Value);
     }
 
     private void AddNullCheckConditionIfPresent(string column, IQueryFilter filter)

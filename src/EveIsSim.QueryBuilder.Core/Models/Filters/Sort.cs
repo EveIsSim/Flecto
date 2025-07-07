@@ -1,8 +1,14 @@
 namespace EveIsSim.QueryBuilder.Core.Models.Filters;
 
 
-public class Sort
+public readonly struct Sort
 {
-    public uint Position { get; set; }
-    public bool Descending { get; set; }
+    public uint Position { get; }
+    public bool Descending { get; }
+
+    public Sort(uint position, bool descending)
+    {
+        Position = position;
+        Descending = descending;
+    }
 }
