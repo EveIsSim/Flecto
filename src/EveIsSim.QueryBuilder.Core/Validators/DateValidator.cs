@@ -2,14 +2,36 @@ using EveIsSim.QueryBuilder.Core.Models.Filters;
 
 namespace EveIsSim.QueryBuilder.Core.Validators;
 
-
+/// <summary>
+/// Provides basic logical validation methods for <see cref="DateFilter"/> instances
+/// </summary>
 public static class DateValidator
 {
+    /// <summary>
+    /// Performs basic logical validation on the specified <see cref="DateFilter"/> and returns any validation errors found
+    /// </summary>
+    /// <param name="filter">The <see cref="DateFilter"/> to validate</param>
+    /// <param name="allowNullable">Indicates whether the filter can be null during validation</param>
+    /// <returns>
+    /// A collection of field-error pairs indicating validation errors, if any.
+    /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         DateFilter filter,
         bool allowNullable = true)
     => Validate(filter, allowNullable, null);
 
+    /// <summary>
+    /// Performs basic logical validation on the specified <see cref="DateFilter"/> with an optional custom validator,
+    /// and returns any validation errors found
+    /// </summary>
+    /// <param name="filter">The <see cref="DateFilter"/> to validate</param>
+    /// <param name="allowNullable">Indicates whether the filter can be null during validation</param>
+    /// <param name="customValidator">
+    /// An optional user-defined validator for additional custom validation logic
+    /// </param>
+    /// <returns>
+    /// A collection of field-error pairs indicating validation errors, if any
+    /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         DateFilter filter,
         bool allowNullable = true,
@@ -46,6 +68,14 @@ public static class DateValidator
             yield return error;
     }
 
+    /// <summary>
+    /// Ensures that the specified <see cref="DateFilter"/> is valid for binding to the specified table and column.
+    /// Throws an exception if the filter is invalid.
+    /// This method is used for internal validations within the <c>QueryBuilder</c>.
+    /// </summary>
+    /// <param name="filter">The <see cref="DateFilter"/> to validate.</param>
+    /// <param name="table">The name of the table associated with the filter.</param>
+    /// <param name="column">The name of the column associated with the filter.</param>
     internal static void EnsureValid(DateFilter filter, string table, string column)
     => CommonValidator.EnsureValidBindFilter(filter, table, column, f => Validate(f, false));
 }

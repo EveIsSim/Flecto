@@ -2,16 +2,35 @@ using System.Text.RegularExpressions;
 
 namespace EveIsSim.QueryBuilder.Core.Validators;
 
-
+/// <summary>
+/// Provides validation methods for ensuring that table and column names are valid for SQL query construction.
+/// </summary>
 internal static class TableColumnValidator
 {
     const string TableNameLabel = "Table name";
     const string ColumnNameLabel = "Column name";
 
-    // right docs what we expect what no and validate it.
+    // Valid SQL identifiers: start with a letter or underscore, followed by letters, numbers, or underscores.
     private static readonly Regex ColumnRegex = new Regex(
         @"^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
+    /// <summary>
+    /// Ensures that the provided tables and their columns are valid for use in SQL queries.
+    /// 
+    /// Requirements:
+    /// - At least one table with columns must be provided.
+    /// - Table names must not be null, empty, or whitespace.
+    /// - Column arrays for each table must contain at least one column.
+    /// - Column names must not be null, empty, or whitespace.
+    /// - Table and column names must match the regex: start with a letter or underscore,
+    ///   followed by letters, numbers, or underscores only.
+    /// 
+    /// Throws an <see cref="ArgumentException"/> if validation fails.
+    /// </summary>
+    /// <param name="tablesWithColumns">
+    /// An array of table and column pairs to validate.
+    /// Each tuple must contain a table name and an array of column names associated with that table.
+    /// </param>
     internal static void EnsureValidTableWithColumns(
         params (string Table, string[] Columns)[] tablesWithColumns)
     {

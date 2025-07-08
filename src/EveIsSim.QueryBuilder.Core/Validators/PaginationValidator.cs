@@ -2,10 +2,19 @@ using EveIsSim.QueryBuilder.Core.Models.Filters;
 
 namespace EveIsSim.QueryBuilder.Core.Validators;
 
-
+/// <summary>
+/// Provides validation methods for <see cref="PaginationFilter"/> instances.
+/// </summary>
 public static class PaginationValidator
 {
-    // at this moment the filter is mandatory, and then we can decide.
+    /// <summary>
+    /// Performs validation on the specified <see cref="PaginationFilter"/> and returns any validation errors found.
+    /// </summary>
+    /// <param name="filter">The <see cref="PaginationFilter"/> to validate. This parameter is required and must not be null.</param>
+    /// <param name="maxLimit">An optional maximum limit that the filter's limit value must not exceed.</param>
+    /// <returns>
+    /// A collection of field-error pairs indicating validation errors, if any.
+    /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         PaginationFilter filter,
         int? maxLimit = null)
@@ -31,6 +40,12 @@ public static class PaginationValidator
         yield return (fieldName, "Value should be greater than 0");
     }
 
+    /// <summary>
+    /// Ensures that the specified <see cref="PaginationFilter"/> is valid.
+    /// Throws an <see cref="ArgumentException"/> if the filter is invalid.
+    /// This method is used for internal validations within the <c>QueryBuilder</c>.
+    /// </summary>
+    /// <param name="filter">The <see cref="PaginationFilter"/> to validate.</param>
     internal static void EnsureValid(PaginationFilter filter)
     {
         var errors = Validate(filter).ToArray();

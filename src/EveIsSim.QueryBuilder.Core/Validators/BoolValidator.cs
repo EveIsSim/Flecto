@@ -3,13 +3,37 @@ using EveIsSim.QueryBuilder.Core.Validators.Enums;
 
 namespace EveIsSim.QueryBuilder.Core.Validators;
 
+/// <summary>
+/// Provides basic logical validation methods for <see cref="BoolFilter"/> instances
+/// </summary>
 public static class BoolValidator
 {
+    /// <summary>
+    /// Performs basic logical validation on the specified <see cref="BoolFilter"/> and returns a collection of validation errors, if any
+    /// </summary>
+    /// <param name="filter">The <see cref="BoolFilter"/> to validate</param>
+    /// <param name="options">The validation options to apply during validation</param>
+    /// <returns>
+    /// A collection of tuples containing the field name and the error message for each validation error
+    /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         BoolFilter? filter,
         BoolFilterValidationOptions options = BoolFilterValidationOptions.None)
     => Validate(filter, options, null);
 
+    /// <summary>
+    /// Performs basic logical validation on the specified <see cref="BoolFilter"/> with optional custom validation logic,
+    /// and returns a collection of validation errors, if any
+    /// </summary>
+    /// <param name="filter">The <see cref="BoolFilter"/> to validate</param>
+    /// <param name="options">The validation options to apply during validation</param>
+    /// <param name="customValidator">
+    /// An optional custom validator that allows specifying additional user-defined validation logic
+    /// The function should return a validation result and an error message if validation fails
+    /// </param>
+    /// <returns>
+    /// A collection of tuples containing the field name and the error message for each validation error.
+    /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         BoolFilter? filter,
         BoolFilterValidationOptions options = BoolFilterValidationOptions.None,
@@ -19,6 +43,19 @@ public static class BoolValidator
         options.HasFlag(BoolFilterValidationOptions.AllowNullable),
         filter => ValidateInner(filter, options, customValidator));
 
+    /// <summary>
+    /// Performs basic logical validation on the specified non-null <see cref="BoolFilter"/> with optional custom validation logic,
+    /// and returns a collection of validation errors, if any
+    /// </summary>
+    /// <param name="filter">The non-null <see cref="BoolFilter"/> to validate</param>
+    /// <param name="options">The validation options to apply during validation</param>
+    /// <param name="customValidator">
+    /// An optional custom validator that allows specifying additional user-defined validation logic
+    /// The function should return a validation result and an error message if validation fails
+    /// </param>
+    /// <returns>
+    /// A collection of tuples containing the field name and the error message for each validation error
+    /// </returns>
     private static IEnumerable<(string Field, string Error)> ValidateInner(
         BoolFilter filter,
         BoolFilterValidationOptions options = BoolFilterValidationOptions.None,
@@ -37,6 +74,14 @@ public static class BoolValidator
             yield return error;
     }
 
+    /// <summary>
+    /// Ensures that the specified <see cref="BoolFilter"/> is valid for binding to the specified table and column.
+    /// Throws an exception if the filter is invalid.
+    /// This method is used in internal validations within the <c>QueryBuilder</c>.
+    /// </summary>
+    /// <param name="filter">The <see cref="BoolFilter"/> to validate</param>
+    /// <param name="table">The name of the table associated with the filter</param>
+    /// <param name="column">The name of the column associated with the filter</param>
     internal static void EnsureValid(BoolFilter filter, string table, string column)
     => CommonValidator.EnsureValidBindFilter(
         filter,

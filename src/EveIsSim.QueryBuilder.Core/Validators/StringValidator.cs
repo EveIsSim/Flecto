@@ -3,26 +3,68 @@ using EveIsSim.QueryBuilder.Core.Validators.Enums;
 
 namespace EveIsSim.QueryBuilder.Core.Validators;
 
+/// <summary>
+/// Provides validation methods for <see cref="StringFilter"/> instances.
+/// </summary>
 public static class StringValidator
 {
+    /// <summary>
+    /// Validates the specified <see cref="StringFilter"/> with an optional maximum length and validation options.
+    /// Returns any validation errors found.
+    /// </summary>
+    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
+    /// <param name="maxLength">An optional maximum allowed length for string values.</param>
+    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
+    /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         StringFilter filter,
         int? maxLength = null,
         StringFilterValidationOptions options = StringFilterValidationOptions.All)
     => Validate(filter, maxLength, options, null, null);
 
+    /// <summary>
+    /// Validates the specified <see cref="StringFilter"/> with an optional single-value custom validator.
+    /// Returns any validation errors found.
+    /// </summary>
+    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
+    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
+    /// <param name="customValidator">
+    /// An optional user-defined validator for validating individual string values within the filter.
+    /// </param>
+    /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         StringFilter filter,
         StringFilterValidationOptions options = StringFilterValidationOptions.All,
         Func<string, (bool IsValid, string? ErrorMessage)>? customValidator = null)
     => Validate(filter, null, options, customValidator, null);
 
+    /// <summary>
+    /// Validates the specified <see cref="StringFilter"/> with an optional array-value custom validator.
+    /// Returns any validation errors found.
+    /// </summary>
+    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
+    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
+    /// <param name="customArrayValidator">
+    /// An optional user-defined validator for validating entire string arrays within the filter.
+    /// </param>
+    /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         StringFilter filter,
         StringFilterValidationOptions options = StringFilterValidationOptions.All,
         Func<string[], (bool IsValid, string? ErrorMessage)>? customArrayValidator = null)
     => Validate(filter, null, options, null, customArrayValidator);
 
+    /// <summary>
+    /// Validates the specified <see cref="StringFilter"/> with an optional maximum length and single-value custom validator.
+    /// Returns any validation errors found.
+    /// </summary>
+    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
+    /// <param name="maxLength">An optional maximum allowed length for string values.</param>
+    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
+    /// <param name="customValidator">
+    /// An optional user-defined validator for validating individual string values within the filter.
+    /// </param>
+    /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         StringFilter filter,
         int? maxLength = null,
@@ -30,6 +72,17 @@ public static class StringValidator
         Func<string, (bool IsValid, string? ErrorMessage)>? customValidator = null)
     => Validate(filter, maxLength, options, customValidator, null);
 
+    /// <summary>
+    /// Validates the specified <see cref="StringFilter"/> with an optional maximum length and array-value custom validator.
+    /// Returns any validation errors found.
+    /// </summary>
+    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
+    /// <param name="maxLength">An optional maximum allowed length for string values.</param>
+    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
+    /// <param name="customArrayValidator">
+    /// An optional user-defined validator for validating entire string arrays within the filter.
+    /// </param>
+    /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         StringFilter filter,
         int? maxLength = null,
@@ -37,7 +90,24 @@ public static class StringValidator
         Func<string[], (bool IsValid, string? ErrorMessage)>? customArrayValidator = null)
     => Validate(filter, maxLength, options, null, customArrayValidator);
 
-    // write why 2 validators, that customValidator will also be called for each element in the array
+    /// <summary>
+    /// Core validation method for <see cref="StringFilter"/> with support for maximum length,
+    /// single-value and array-value custom validators.
+    /// 
+    /// Note: Both single-value (<paramref name="customValidator"/>) and array-value (<paramref name="customArrayValidator"/>) validators
+    /// can be supplied. The single-value validator will be applied to each string and each element within arrays, while the array-value validator
+    /// will be applied to the entire array.
+    /// </summary>
+    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
+    /// <param name="maxLength">An optional maximum allowed length for string values.</param>
+    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
+    /// <param name="customValidator">
+    /// An optional user-defined validator for validating individual string values within the filter and within arrays.
+    /// </param>
+    /// <param name="customArrayValidator">
+    /// An optional user-defined validator for validating entire string arrays within the filter.
+    /// </param>
+    /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         StringFilter filter,
         int? maxLength = null,
@@ -148,6 +218,14 @@ public static class StringValidator
             yield return (fieldName, result.ErrorMessage ?? "Filter failed custom validation");
     }
 
+    /// <summary>
+    /// Ensures that the specified <see cref="StringFilter"/> is valid for binding to the specified table and column.
+    /// Throws an <see cref="ArgumentException"/> if the filter is invalid.
+    /// This method is used for internal validations within the <c>QueryBuilder</c>.
+    /// </summary>
+    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
+    /// <param name="table">The table associated with the filter.</param>
+    /// <param name="column">The column associated with the filter.</param>
     internal static void EnsureValid(StringFilter filter, string table, string column)
     => CommonValidator.EnsureValidBindFilter(
         filter,
