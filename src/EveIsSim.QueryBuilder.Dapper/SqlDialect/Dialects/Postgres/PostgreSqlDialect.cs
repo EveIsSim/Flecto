@@ -4,7 +4,11 @@ using EveIsSim.QueryBuilder.Dapper.SqlDialect.Enums;
 
 namespace EveIsSim.QueryBuilder.Dapper.SqlDialect.Dialects.Postgres;
 
-
+/// <summary>
+/// Provides a PostgreSQL-specific implementation of the <see cref="ISqlDialect"/> interface.
+/// This dialect is used by the <c>QueryBuilder</c> to generate SQL conditions compatible with PostgreSQL syntax,
+/// including search and full-text search capabilities.
+/// </summary>
 internal class PostgresSqlDialect : ISqlDialect
 {
     #region SearchBuilder
