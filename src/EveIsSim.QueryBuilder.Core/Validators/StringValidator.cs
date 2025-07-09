@@ -239,10 +239,9 @@ public static class StringValidator
 // RuleFor(x => x)
 //     .Custom((filter, context) =>
 //     {
-//         var errors = GetStringFilterValidationErrors(
+//         var errors = StringValidator.Validate(
 //             filter,
-//             maxLength: 100,
-//             disallowEmptyStrings: true);
+//             maxLength: 100);
 // 
 //         foreach (var error in errors)
 //         {
