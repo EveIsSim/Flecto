@@ -14,6 +14,9 @@ using EveIsSim.QueryBuilder.Dapper.SqlDialect.Helpers;
 namespace EveIsSim.QueryBuilder.Dapper;
 
 
+/// <summary>
+/// Provides a flexible and composable builder for dynamically constructing SQL queries in a safe
+/// </summary>
 public class QueryBuilder
 {
     private readonly ISqlDialect _dialect;
@@ -34,10 +37,27 @@ public class QueryBuilder
     private const string DefaultVectorConfig = "simple";
 
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="QueryBuilder"/> class,
+    /// building it to the specified table and SQL dialect.
+    /// </summary>
+    /// <param name="fromTable">
+    /// The table name from which to select data.
+    /// Must not be null, empty, or whitespace.
+    /// </param>
+    /// <param name="dialectType">
+    /// The SQL dialect to use for query generation (e.g., <see cref="DialectType.Postgres"/>).
+    /// </param>
+    /// <exception cref="ArgumentException">
+    /// Thrown if <paramref name="fromTable"/> is null, empty, or whitespace.
+    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown if an unsupported <paramref name="dialectType"/> is provided.
+    /// </exception>
     public QueryBuilder(string fromTable, DialectType dialectType)
     {
         if (string.IsNullOrWhiteSpace(fromTable))
-            throw new NullReferenceException("FromTable is required and cannot be null or empty");
+            throw new ArgumentException("FromTable is required and cannot be null or empty");
 
         _fromTable = fromTable;
 
@@ -52,6 +72,11 @@ public class QueryBuilder
 
     #region Select
 
+    /// <summary>
+    /// Selects all columns from the target table in the query.
+    /// This method sets the SELECT clause to <c>SELECT *</c>.
+    /// </summary>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder SelectAll()
     {
         SelectValidator.EnsureValid(_selectWasSet);
@@ -63,6 +88,11 @@ public class QueryBuilder
         return this;
     }
 
+    /// <summary>
+    /// Selects a count of all rows from the target table in the query.
+    /// This method sets the SELECT clause to <c>SELECT COUNT(*)</c> and disables ORDER BY since ordering is irrelevant for counting.
+    /// </summary>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder SelectCount()
     {
         SelectValidator.EnsureValid(_selectWasSet);
@@ -74,11 +104,27 @@ public class QueryBuilder
         return this;
     }
 
-    // doc: will attach to fromTable
+    /// <summary>
+    /// Selects the specified columns from the target table defined in the current <see cref="QueryBuilder"/> instance.
+    /// Internally attaches the columns to the <c>FROM</c> table associated with this query.
+    /// </summary>
+    /// <param name="columns">The column names to include in the SELECT clause.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder Select(params string[] columns)
     => Select((_fromTable, columns));
 
     // It will public when we implement JOIN ON logic
+
+    /// <summary>
+    /// Selects the specified columns from the specified tables in the query.
+    /// This overload is currently private and will be made public when JOIN ON logic is implemented for <see cref="QueryBuilder"/>.
+    /// Validates that the SELECT clause has not already been set and constructs the SELECT clause with fully qualified column references.
+    /// </summary>
+    /// <param name="tablesWithColumns">
+    /// An array of table and column name pairs to include in the SELECT clause.
+    /// Each tuple contains the table name and an array of column names associated with that table.
+    /// </param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     private QueryBuilder Select(params (string Table, string[] Columns)[] tablesWithColumns)
     {
         SelectValidator.EnsureValid(_selectWasSet, tablesWithColumns);
@@ -98,14 +144,36 @@ public class QueryBuilder
 
     #region Search
 
+    /// <summary>
+    /// Adds a LIKE-based search condition to the query using the specified columns of the target table.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <param name="filter">The search filter containing the search value and case sensitivity.</param>
+    /// <param name="columns">The columns of the target table to include in the search.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder Search(SearchFilter? filter, params string[] columns)
         => Search(filter, _fromTable, columns);
 
+    /// <summary>
+    /// Adds a LIKE-based search condition to the query using the specified table and columns.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <param name="filter">The search filter containing the search value and case sensitivity.</param>
+    /// <param name="table">The table containing the columns to include in the search.</param>
+    /// <param name="columns">The columns of the specified table to include in the search.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder Search(SearchFilter? filter, string table, string[] columns)
         => Search(filter, (table, columns));
 
-    // It will public when we implement JOIN ON logic
-    // there may be cases where Search may be requested twice. Check this in tests.
+    // 999 tests: there may be cases where Search may be requested twice. Check this in tests.
+
+    /// <summary>
+    /// Adds a LIKE-based search condition to the query using the specified tables and columns.
+    /// This overload is currently private and will be made public when JOIN support is implemented.
+    /// </summary>
+    /// <param name="filter">The search filter containing the search value and case sensitivity.</param>
+    /// <param name="tablesWithColumns">The tables and their columns to include in the search.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     private QueryBuilder Search(
         SearchFilter? filter,
         params (string Table, string[] Columns)[] tablesWithColumns)
@@ -122,6 +190,16 @@ public class QueryBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds a full-text search condition using PostgreSQL <c>tsvector</c> to the query,
+    /// using the specified columns of the target table.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <param name="filter">The search filter containing the search value.</param>
+    /// <param name="columns">The columns of the target table to include in the full-text search vector.</param>
+    /// <param name="mode">The text search mode (Plain or WebStyle). Defaults to Plain.</param>
+    /// <param name="config">The text search configuration (e.g., "simple", "english"). Defaults to "simple".</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder SearchTsVector(
         SearchFilter? filter,
         string[] columns,
@@ -129,6 +207,17 @@ public class QueryBuilder
         string config = DefaultVectorConfig)
     => SearchTsVector(filter, _fromTable, columns, mode, config);
 
+    /// <summary>
+    /// Adds a full-text search condition using PostgreSQL <c>tsvector</c> to the query,
+    /// using the specified table and columns.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <param name="filter">The search filter containing the search value.</param>
+    /// <param name="table">The table containing the columns for the full-text search vector.</param>
+    /// <param name="columns">The columns of the specified table to include in the full-text search vector.</param>
+    /// <param name="mode">The text search mode (Plain or WebStyle). Defaults to Plain.</param>
+    /// <param name="config">The text search configuration (e.g., "simple", "english"). Defaults to "simple".</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder SearchTsVector(
         SearchFilter? filter,
         string table,
@@ -137,7 +226,19 @@ public class QueryBuilder
         string config = DefaultVectorConfig)
     => SearchTsVector(filter, mode, config, (table, columns));
 
-    // did not check it, need check and tests 
+    // 999 did not check it, need check and tests 
+
+    /// <summary>
+    /// Adds a full-text search condition using PostgreSQL <c>tsvector</c> to the query,
+    /// using the specified tables and columns.
+    /// Validates the provided <paramref name="filter"/> and ensures compatibility with the configured SQL dialect.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <param name="filter">The search filter containing the search value.</param>
+    /// <param name="mode">The text search mode (Plain or WebStyle). Defaults to Plain.</param>
+    /// <param name="config">The text search configuration (e.g., "simple", "english"). Defaults to "simple".</param>
+    /// <param name="tablesWithColumns">The tables and their columns to include in the full-text search vector.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder SearchTsVector(
         SearchFilter? filter,
         TextSearchMode mode = TextSearchMode.Plain,
@@ -159,10 +260,28 @@ public class QueryBuilder
 
     #region Bind
 
+    /// <summary>
+    /// Binds a <see cref="BoolFilter"/> to the query for the specified column of the target table,
+    /// adding SQL conditions for equality, inequality, null checks, and sorting if specified in the filter.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <param name="filter">The <see cref="BoolFilter"/> specifying the conditions to apply.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder BindBool(BoolFilter? filter, string column)
     => BindBool(filter, _fromTable, column);
 
-    public QueryBuilder BindBool(BoolFilter? filter, string table, string column)
+    /// <summary>
+    /// Binds a <see cref="BoolFilter"/> to the query for the specified column of the specified table,
+    /// adding SQL conditions for equality, inequality, null checks, and sorting if specified in the filter.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// This overload is currently private and will be made public when JOIN support is implemented for <see cref="QueryBuilder"/>.
+    /// </summary>
+    /// <param name="filter">The <see cref="BoolFilter"/> specifying the conditions to apply.</param>
+    /// <param name="table">The table containing the column to bind the filter to.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
+    private QueryBuilder BindBool(BoolFilter? filter, string table, string column)
     {
         if (filter is null) return this;
         BoolValidator.EnsureValid(filter, table, column);
@@ -177,9 +296,29 @@ public class QueryBuilder
         return this;
     }
 
+    /// <summary>
+    /// Binds a <see cref="DateFilter"/> to the query for the specified column of the target table,
+    /// adding SQL conditions for equality, inequality, range comparisons, IN/NOT IN array checks,
+    /// null checks, and sorting if specified in the filter.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <param name="filter">The <see cref="DateFilter"/> specifying the conditions to apply.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder BindDate(DateFilter? filter, string column)
     => BindDate(filter, _fromTable, column);
 
+    /// <summary>
+    /// Binds a <see cref="DateFilter"/> to the query for the specified column of the specified table,
+    /// adding SQL conditions for equality, inequality, range comparisons, IN/NOT IN array checks,
+    /// null checks, and sorting if specified in the filter.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// This overload will be made public when JOIN support is implemented for <see cref="QueryBuilder"/>.
+    /// </summary>
+    /// <param name="filter">The <see cref="DateFilter"/> specifying the conditions to apply.</param>
+    /// <param name="table">The table containing the column to bind the filter to.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder BindDate(DateFilter? filter, string table, string column)
     {
         if (filter is null) return this;
@@ -201,10 +340,34 @@ public class QueryBuilder
         return this;
     }
 
+    /// <summary>
+    /// Binds an <see cref="EnumFilter{T}"/> to the query for the specified column of the target table,
+    /// adding SQL conditions for equality, inequality, IN/NOT IN array checks, null checks,
+    /// and sorting if specified in the filter.
+    /// Supports flexible enum filtering modes (name, numeric value, numeric value as string) via <see cref="EnumFilterMode"/>.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <typeparam name="T">The enum type to bind in the filter.</typeparam>
+    /// <param name="filter">The <see cref="EnumFilter{T}"/> specifying the conditions to apply.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder BindEnum<T>(EnumFilter<T>? filter, string column) where T : struct, Enum
     => BindEnum(filter, _fromTable, column);
 
-    public QueryBuilder BindEnum<T>(EnumFilter<T>? filter, string table, string column)
+    /// <summary>
+    /// Binds an <see cref="EnumFilter{T}"/> to the query for the specified column of the specified table,
+    /// adding SQL conditions for equality, inequality, IN/NOT IN array checks, null checks,
+    /// and sorting if specified in the filter.
+    /// Supports flexible enum filtering modes (name, numeric value, numeric value as string) via <see cref="EnumFilterMode"/>.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// This overload will be made public when JOIN support is implemented for <see cref="QueryBuilder"/>.
+    /// </summary>
+    /// <typeparam name="T">The enum type to bind in the filter.</typeparam>
+    /// <param name="filter">The <see cref="EnumFilter{T}"/> specifying the conditions to apply.</param>
+    /// <param name="table">The table containing the column to bind the filter to.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
+    private QueryBuilder BindEnum<T>(EnumFilter<T>? filter, string table, string column)
         where T : struct, Enum
     {
         if (filter is null) return this;
@@ -222,11 +385,33 @@ public class QueryBuilder
         return this;
     }
 
+    /// <summary>
+    /// Binds a <see cref="FlagsEnumFilter{T}"/> to the query for the specified column of the target table,
+    /// adding SQL conditions for equality, inequality, flag checks (HasFlag, NotHasFlag),
+    /// null checks, and sorting if specified in the filter.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <typeparam name="T">The enum type with the <c>[Flags]</c> attribute to bind in the filter.</typeparam>
+    /// <param name="filter">The <see cref="FlagsEnumFilter{T}"/> specifying the conditions to apply.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder BindFlagsEnum<T>(FlagsEnumFilter<T>? filter, string column)
         where T : struct, Enum
     => BindFlagsEnum(filter, _fromTable, column);
 
-    public QueryBuilder BindFlagsEnum<T>(FlagsEnumFilter<T>? filter, string table, string column)
+    /// <summary>
+    /// Binds a <see cref="FlagsEnumFilter{T}"/> to the query for the specified column of the specified table,
+    /// adding SQL conditions for equality, inequality, flag checks (HasFlag, NotHasFlag),
+    /// null checks, and sorting if specified in the filter.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// This overload will be made public when JOIN support is implemented for <see cref="QueryBuilder"/>.
+    /// </summary>
+    /// <typeparam name="T">The enum type with the <c>[Flags]</c> attribute to bind in the filter.</typeparam>
+    /// <param name="filter">The <see cref="FlagsEnumFilter{T}"/> specifying the conditions to apply.</param>
+    /// <param name="table">The table containing the column to bind the filter to.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
+    private QueryBuilder BindFlagsEnum<T>(FlagsEnumFilter<T>? filter, string table, string column)
         where T : struct, Enum
     {
         if (filter is null) return this;
@@ -244,10 +429,30 @@ public class QueryBuilder
         return this;
     }
 
+    /// <summary>
+    /// Binds a <see cref="GuidFilter"/> to the query for the specified column of the target table,
+    /// adding SQL conditions for equality, inequality, IN/NOT IN array checks, null checks,
+    /// and sorting if specified in the filter.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <param name="filter">The <see cref="GuidFilter"/> specifying the conditions to apply.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder BindGuid(GuidFilter? filter, string column)
     => BindGuid(filter, _fromTable, column);
 
-    public QueryBuilder BindGuid(GuidFilter? filter, string table, string column)
+    /// <summary>
+    /// Binds a <see cref="GuidFilter"/> to the query for the specified column of the specified table,
+    /// adding SQL conditions for equality, inequality, IN/NOT IN array checks, null checks,
+    /// and sorting if specified in the filter.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// This overload will be made public when JOIN support is implemented for <see cref="QueryBuilder"/>.
+    /// </summary>
+    /// <param name="filter">The <see cref="GuidFilter"/> specifying the conditions to apply.</param>
+    /// <param name="table">The table containing the column to bind the filter to.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
+    private QueryBuilder BindGuid(GuidFilter? filter, string table, string column)
     {
         if (filter is null) return this;
         GuidValidator.EnsureValid(filter, table, column);
@@ -274,10 +479,46 @@ public class QueryBuilder
         typeof(float),
     };
 
+    /// <summary>
+    /// Binds a <see cref="NumericFilter{T}"/> to the query for the specified column of the target table,
+    /// adding SQL conditions for equality, inequality, range comparisons, IN/NOT IN array checks,
+    /// null checks, and sorting if specified in the filter.
+    /// Supports only numeric types: <c>short</c>, <c>int</c>, <c>long</c>, <c>decimal</c>, <c>double</c>, and <c>float</c>.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The numeric value type to bind in the filter.
+    /// Must be one of the supported types: <c>short</c>, <c>int</c>, <c>long</c>, <c>decimal</c>, <c>double</c>, <c>float</c>.
+    /// </typeparam>
+    /// <param name="filter">The <see cref="NumericFilter{T}"/> specifying the conditions to apply.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown if <typeparamref name="T"/> is not one of the supported numeric types.
+    /// </exception>
     public QueryBuilder BindNumeric<T>(NumericFilter<T>? filter, string column) where T : struct, IComparable
     => BindNumeric(filter, _fromTable, column);
 
-    public QueryBuilder BindNumeric<T>(NumericFilter<T>? filter, string table, string column) where T : struct, IComparable
+    /// <summary>
+    /// Binds a <see cref="NumericFilter{T}"/> to the query for the specified column of the specified table,
+    /// adding SQL conditions for equality, inequality, range comparisons, IN/NOT IN array checks,
+    /// null checks, and sorting if specified in the filter.
+    /// Supports only numeric types: <c>short</c>, <c>int</c>, <c>long</c>, <c>decimal</c>, <c>double</c>, and <c>float</c>.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// This overload will be made public when JOIN support is implemented for <see cref="QueryBuilder"/>.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The numeric value type to bind in the filter.
+    /// Must be one of the supported types: <c>short</c>, <c>int</c>, <c>long</c>, <c>decimal</c>, <c>double</c>, <c>float</c>.
+    /// </typeparam>
+    /// <param name="filter">The <see cref="NumericFilter{T}"/> specifying the conditions to apply.</param>
+    /// <param name="table">The table containing the column to bind the filter to.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
+    /// <exception cref="ArgumentException">
+    /// Thrown if <typeparamref name="T"/> is not one of the supported numeric types.
+    /// </exception>
+    private QueryBuilder BindNumeric<T>(NumericFilter<T>? filter, string table, string column) where T : struct, IComparable
     {
         if (filter is null) return this;
         NumericValidator.EnsureValid(filter, table, column);
@@ -308,10 +549,32 @@ public class QueryBuilder
         return this;
     }
 
+    /// <summary>
+    /// Binds a <see cref="StringFilter"/> to the query for the specified column of the target table,
+    /// adding SQL conditions for equality, inequality, IN/NOT IN array checks, pattern matching
+    /// (contains, starts with, ends with), null checks, and sorting if specified in the filter.
+    /// Respects case sensitivity based on the <see cref="StringFilter.CaseSensitive"/> property.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// </summary>
+    /// <param name="filter">The <see cref="StringFilter"/> specifying the conditions to apply.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder BindString(StringFilter? filter, string column)
     => BindString(filter, _fromTable, column);
 
-    public QueryBuilder BindString(StringFilter? filter, string table, string column)
+    /// <summary>
+    /// Binds a <see cref="StringFilter"/> to the query for the specified column of the specified table,
+    /// adding SQL conditions for equality, inequality, IN/NOT IN array checks, pattern matching
+    /// (contains, starts with, ends with), null checks, and sorting if specified in the filter.
+    /// Respects case sensitivity based on the <see cref="StringFilter.CaseSensitive"/> property.
+    /// If <paramref name="filter"/> is <c>null</c>, this method has no effect.
+    /// This overload will be made public when JOIN support is implemented for <see cref="QueryBuilder"/>.
+    /// </summary>
+    /// <param name="filter">The <see cref="StringFilter"/> specifying the conditions to apply.</param>
+    /// <param name="table">The table containing the column to bind the filter to.</param>
+    /// <param name="column">The column name to bind the filter to.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
+    private QueryBuilder BindString(StringFilter? filter, string table, string column)
     {
         if (filter is null) return this;
         StringValidator.EnsureValid(filter, table, column);
@@ -333,6 +596,14 @@ public class QueryBuilder
 
     #endregion Bind
 
+    /// <summary>
+    /// Applies pagination to the query using the specified <see cref="PaginationFilter"/>.
+    /// Calculates the <c>LIMIT</c> and <c>OFFSET</c> based on the filter,
+    /// where offset is computed as <c>Limit * (Page - 1)</c>.
+    /// Validation is performed via <see cref="PaginationValidator"/> to ensure correctness.
+    /// </summary>
+    /// <param name="filter">The <see cref="PaginationFilter"/> specifying the page number and page size to apply.</param>
+    /// <returns>The current <see cref="QueryBuilder"/> instance for chaining.</returns>
     public QueryBuilder ApplyPaging(PaginationFilter filter)
     {
         PaginationValidator.EnsureValid(filter);
@@ -342,7 +613,15 @@ public class QueryBuilder
         return this;
     }
 
-    // cover tests
+    // 999 cover tests
+
+    /// <summary>
+    /// Creates a deep copy of the current <see cref="QueryBuilder"/> instance,
+    /// duplicating all query state including select columns, conditions, pagination,
+    /// parameters, and sorting configurations.
+    /// This allows further modifications on the cloned instance without affecting the original instance.
+    /// </summary>
+    /// <returns>A new <see cref="QueryBuilder"/> instance with the same configuration as the current instance.</returns>
     public QueryBuilder Clone()
     {
         var clone = new QueryBuilder(_fromTable, _dialectType);
@@ -372,6 +651,16 @@ public class QueryBuilder
         return clone;
     }
 
+    /// <summary>
+    /// Builds the final SQL query and its associated parameters based on the current state of the <see cref="QueryBuilder"/>.
+    /// </summary>
+    /// <returns>
+    /// A tuple containing the generated SQL query string and the <see cref="DynamicParameters"/> for parameterized execution.
+    /// </returns>
+    /// <exception cref="NullReferenceException">
+    /// Thrown if no <c>SELECT</c> clause was specified before building the query.
+    /// Ensure that <see cref="Select()"/>, <see cref="SelectAll()"/>, or <see cref="SelectCount()"/> is called before <see cref="Build()"/>.
+    /// </exception>
     public (string Sql, DynamicParameters Parameters) Build()
     {
         if (_selectColumns == null)
@@ -391,6 +680,12 @@ public class QueryBuilder
         return (sql.ToString(), _parameters);
     }
 
+    /// <summary>
+    /// Appends the <c>ORDER BY</c> clause to the SQL if sorting fields are specified
+    /// and ordering is not explicitly suppressed via <c>_exceptOrderBy</c>.
+    /// Sorting fields are ordered by their specified <see cref="Sort.Position"/> and direction (ASC/DESC).
+    /// </summary>
+    /// <param name="sql">The <see cref="StringBuilder"/> containing the SQL to append to.</param>
     private void AppendOrderByIfPresent(StringBuilder sql)
     {
         if (_exceptOrderBy || _sortFields.Count == 0) return;
@@ -404,6 +699,11 @@ public class QueryBuilder
         sql.Append(string.Join(", ", values));
     }
 
+    /// <summary>
+    /// Appends the <c>LIMIT</c> and <c>OFFSET</c> clauses to the SQL if pagination is specified.
+    /// Binds the limit and offset values to the <see cref="_parameters"/> dictionary for parameterized execution.
+    /// </summary>
+    /// <param name="sql">The <see cref="StringBuilder"/> containing the SQL to append to.</param>
     private void AppendPagingIfPresent(StringBuilder sql)
     {
         if (_paging == null) return;
