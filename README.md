@@ -54,10 +54,13 @@ public async Task<SearchResult<Employee[]>> Search(Request request, Cancellation
         .BindNumeric(request.Id, "id")
         .BindString(request.Name, "first_name");
 
-    var (countSql, countParams) = builder.Clone().SelectCount().Build();
+    var (countSql, countParams) = builder
+        .SelectCount()
+        .Build();
     var totalRecords = await connection.QueryFirstAsync<int>(countSql, countParams);
 
-    var (sql, parameters) = builder.Clone()
+    var (sql, parameters) = builder
+        .Clone()
         .Select("id", "first_name", "last_name")
         .ApplyPaging(request.Paging)
         .Build();
