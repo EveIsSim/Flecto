@@ -1,10 +1,10 @@
-# EveIsSim.QueryBuilder
+# Flecto
 
 Fluent, safe, and flexible SQL SELECT query builder for .NET (starting with .NET 9+) with structured filters, sorting, and pagination, designed for use with Dapper and extensible to other providers and sql dialects.
 
-## Why EveIsSim.QueryBuilder?
+## Why Flecto?
 
-Stop building SQL manually. EveIsSim.QueryBuilder lets you dynamically and safely construct SQL queries in .NET using structured filters, sorting, and pagination. It automatically manages parameters, prevents SQL injection, and keeps your query logic clean and maintainable, whether used in HTTP APIs or internal services.
+Stop building SQL manually. Flecto lets you dynamically and safely construct SQL queries in .NET using structured filters, sorting, and pagination. It automatically manages parameters, prevents SQL injection, and keeps your query logic clean and maintainable, whether used in HTTP APIs or internal services.
 
 ## Who is this for?
 * Building Read APIs with structured, dynamic queries.
@@ -32,8 +32,8 @@ Use strongly-typed filters (`NumericFilter`, `StringFilter`, `BoolFilter`, etc.)
 ### Installation
 
 ```bash
-dotnet add package EveIsSim.QueryBuilder
-dotnet add package EveIsSim.QueryBuilder.Dapper
+dotnet add package Flecto
+dotnet add package Flecto.Dapper
 ```
 
 ### Basic HTTP Usage with SearchMetadata
@@ -49,7 +49,7 @@ public class Request
 
 public async Task<SearchResult<Employee[]>> Search(Request request, CancellationToken token)
 {
-    var builder = new QueryBuilder("employees", DialectType.Postgres)
+    var builder = new FlectoBuilder("employees", DialectType.Postgres)
         .Search(request.Search, "first_name", "last_name")
         .BindNumeric(request.Id, "id")
         .BindString(request.Name, "first_name");
@@ -77,7 +77,7 @@ This pattern provides a **ready-to-use response with pagination on the frontend.
 
 ```csharp
 var filter = new NumericFilter<decimal> { Gte = 5000m };
-var builder = new QueryBuilder("employees", DialectType.Postgres)
+var builder = new FlectoBuilder("employees", DialectType.Postgres)
     .BindNumeric(filter, "salary");
 
 var (sql, parameters) = builder.Build();
@@ -94,20 +94,27 @@ var errors = StringValidator.Validate(nameFilter, maxLength: 100, customValidato
 });
 ```
 
-Or use FluentValidation to validate DTOs before using QueryBuilder.
+Or use FluentValidation to validate DTOs before using FlectoBuilder.
 
 ## Roadmap
 
 * JOIN and ON support for building related queries.
 * GET request support with hybrid sorting (sort=field,-createdAt).
 * DISTINCT support.
-* GROUP BY and HAVING support.
+* support system extended filters:
+    var builder = new FlectoBuilder("employees", DialectType.Postgres)
+    .BindNumeric(request.Id, "id")
+    .BindString(request.Name, "first_name")
+    .AndWhere("is_deleted = false") // системный фильтр
+    .GroupBy("department_id")
+    .Having("SUM(salary) > @minSalary", new { minSalary = 10000 });
+* ? GROUP BY and HAVING support.
     * * Aggregate functions support (Sum, Count, Max, Min).
-* Subquery support.
+* ? Subquery support.
 * ? Advanced usage: OR, AND, NOT grouping in WHERE clauses.
 * ? pretty-print for SQL debugging.
 
 ## Conclusion
 
-EveIsSim.QueryBuilder provides a lightweight, powerful way to build clear, safe SQL queries in .NET. With filters, search, sorting, pagination, and validation, you can generate precise queries easily for APIs and internal services without manual SQL handling.
+Flecto provides a lightweight, powerful way to build clear, safe SQL queries in .NET. With filters, search, sorting, pagination, and validation, you can generate precise queries easily for APIs and internal services without manual SQL handling.
 
