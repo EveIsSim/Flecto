@@ -97,22 +97,7 @@ var errors = StringValidator.Validate(nameFilter, maxLength: 100, customValidato
 Or use FluentValidation to validate DTOs before using FlectoBuilder.
 
 ## Roadmap
-
-* JOIN and ON support for building related queries.
-* GET request support with hybrid sorting (sort=field,-createdAt).
-* DISTINCT support.
-* support system extended filters:
-    var builder = new FlectoBuilder("employees", DialectType.Postgres)
-    .BindNumeric(request.Id, "id")
-    .BindString(request.Name, "first_name")
-    .AndWhere("is_deleted = false") // системный фильтр
-    .GroupBy("department_id")
-    .Having("SUM(salary) > @minSalary", new { minSalary = 10000 });
-* ? GROUP BY and HAVING support.
-    * * Aggregate functions support (Sum, Count, Max, Min).
-* ? Subquery support.
-* ? Advanced usage: OR, AND, NOT grouping in WHERE clauses.
-* ? pretty-print for SQL debugging.
+- You can read on GitHub pages.
 
 ## Conclusion
 
