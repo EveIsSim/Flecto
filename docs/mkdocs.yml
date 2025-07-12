@@ -1,0 +1,44 @@
+site_name: Flecto
+repo_url: https://github.com/EveIsSim/Flecto
+site_url: https://your-org.github.io/Flecto/
+docs_dir: pages
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: blue
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: blue
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Introduction: introduction.md
+  - Filters: filters.md
+  - Validations: validations.md
+  - Bindings: bindings.md
+  - FlectoBuilder: flecto_builder.md
+  - Usages: usages.md
+  - Roadmap: roadmap.md
+
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.highlight
+
+plugins:
+  - search
