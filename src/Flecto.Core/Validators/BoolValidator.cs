@@ -19,7 +19,7 @@ public static class BoolValidator
     public static IEnumerable<(string Field, string Error)> Validate(
         BoolFilter? filter,
         BoolFilterValidationOptions options = BoolFilterValidationOptions.None)
-    => Validate(filter, options, null);
+    => Validate(filter, null, options);
 
     /// <summary>
     /// Performs basic logical validation on the specified <see cref="BoolFilter"/> with optional custom validation logic,
@@ -36,8 +36,8 @@ public static class BoolValidator
     /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         BoolFilter? filter,
-        BoolFilterValidationOptions options = BoolFilterValidationOptions.None,
-        Func<BoolFilter, (bool IsValid, string? ErrorMessage)>? customValidator = null)
+        Func<BoolFilter, (bool IsValid, string? ErrorMessage)>? customValidator,
+        BoolFilterValidationOptions options = BoolFilterValidationOptions.None)
     => CommonValidator.ValidateNullOr(
         filter,
         options.HasFlag(BoolFilterValidationOptions.AllowNullable),

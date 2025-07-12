@@ -7,3 +7,5 @@ using System.Runtime.CompilerServices;
 /// </summary>
 [assembly: InternalsVisibleTo("Flecto.Dapper")]
 
+[assembly: InternalsVisibleTo("Flecto.Core.UnitTests")]
+

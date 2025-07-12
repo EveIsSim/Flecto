@@ -28,7 +28,7 @@ internal static class CommonValidator
     {
         if (filter == null && allowNullable) yield break;
 
-        yield return (nameof(TFilter), "Filter should not be null");
+        yield return (typeof(TFilter).Name, "Filter must not be null");
     }
 
     internal static IEnumerable<(string Field, string Error)> ValidateEqAndNotEq<T>(
@@ -37,7 +37,7 @@ internal static class CommonValidator
         string fieldName)
     {
         if (eq is not null && notEq is not null)
-            yield return (fieldName, "Cannot specify Eq and NotEq simultaneously");
+            yield return (fieldName, "Cannot specify both Eq and NotEq simultaneously");
     }
 
     internal static IEnumerable<(string Field, string Error)> ValidateArrayIfNeeded<T>(
@@ -62,7 +62,7 @@ internal static class CommonValidator
         var result = customValidator(filter);
 
         if (!result.IsValid)
-            yield return (nameof(TFilter), result.ErrorMessage ?? "Filter failed custom validation");
+            yield return (typeof(TFilter).Name, result.ErrorMessage ?? "Filter failed custom validation");
     }
 
     internal static void ThrowIfErrors(
@@ -91,7 +91,7 @@ internal static class CommonValidator
         EnsureValidBind(filter, table, column);
         ThrowIfErrors(
             validator(filter).ToArray(),
-            $"{typeof(TFilter).Name} validation for table: '{table}', column: '{column}' failed:"
+            $"{typeof(TFilter).Name}: validation for table: '{table}', column: '{column}' failed:"
         );
     }
 
