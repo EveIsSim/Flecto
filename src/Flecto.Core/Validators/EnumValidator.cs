@@ -76,32 +76,3 @@ public static class EnumValidator
         where T : struct, Enum
     => CommonValidator.EnsureValidBindFilter(filter, table, column, f => Validate(f, false));
 }
-
-// For docs
-// without FluentValidation
-// var errors = GetEnumFilterValidationErrors(filter);
-// 
-// if (errors.Count > 0)
-// {
-//     foreach (var error in errors)
-//     {
-//         Console.WriteLine($"{error.Field}: {error.Error}");
-//     }
-// 
-//     throw new ValidationException(
-//         "EnumFilter validation failed",
-//         errors.Select(e => new ValidationFailure(e.Field, e.Error)));
-// }
-//
-// with FluentValidation
-// RuleFor(x => x.MyEnumFilter)
-//    .Custom((filter, context) =>
-//    {
-//    var errors = GetEnumFilterValidationErrors(filter);
-//
-//    foreach (var error in errors)
-//    {
-//        context.AddFailure(error.Field, error.Error);
-//    }
-// });
-//

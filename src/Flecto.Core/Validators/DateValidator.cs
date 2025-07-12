@@ -79,32 +79,3 @@ public static class DateValidator
     internal static void EnsureValid(DateFilter filter, string table, string column)
     => CommonValidator.EnsureValidBindFilter(filter, table, column, f => Validate(f, false));
 }
-
-
-// for docs
-// with fluentValidation
-//RuleFor(x => x.DateFilter)
-//    .Custom((filter, context) =>
-//    {
-//        var errors = GetDateFilterValidationErrors(filter);
-//
-//        foreach (var error in errors)
-//        {
-//            context.AddFailure(error.Field, error.Error);
-//        }
-//    });
-//
-// without 
-// var errors = GetDateFilterValidationErrors(filter);
-// 
-// if (errors.Count > 0)
-// {
-//     foreach (var error in errors)
-//     {
-//         Console.WriteLine($"{error.Field}: {error.Error}");
-//     }
-// 
-//     throw new ValidationException(
-//         "DateFilter validation failed",
-//         errors.Select(e => new ValidationFailure(e.Field, e.Error)));
-// }

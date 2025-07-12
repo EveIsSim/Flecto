@@ -56,31 +56,3 @@ public static class PaginationValidator
             nameof(filter));
     }
 }
-
-// for doc 
-// without FluentV
-// var errors = GetPaginationFilterValidationErrors(filter, maxLimit: 500);
-// 
-// if (errors.Count > 0)
-// {
-//     foreach (var error in errors)
-//     {
-//         Console.WriteLine($"{error.Field}: {error.Error}");
-//     }
-// 
-//     throw new ValidationException(
-//         "PaginationFilter validation failed",
-//         errors.Select(e => new ValidationFailure(e.Field, e.Error)));
-// }
-//
-// with FluentV
-// RuleFor(x => x.PaginationFilter)
-//     .Custom((filter, context) =>
-//     {
-//         var errors = GetPaginationFilterValidationErrors(filter, maxLimit: 500);
-// 
-//         foreach (var error in errors)
-//         {
-//             context.AddFailure(error.Field, error.Error);
-//         }
-//     });

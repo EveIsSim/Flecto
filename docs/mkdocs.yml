@@ -20,13 +20,16 @@ theme:
     - search.suggest
     - search.highlight
     - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - content.tooltips
+    - diagrams
 
 nav:
   - Introduction: introduction.md
   - Filters: filters.md
   - Validations: validations.md
   - Bindings: bindings.md
-  - FlectoBuilder: flecto_builder.md
   - Usages: usages.md
   - Roadmap: roadmap.md
 
@@ -36,9 +39,16 @@ markdown_extensions:
       permalink: true
   - tables
   - pymdownx.details
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed
   - pymdownx.highlight
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js
 
 plugins:
   - search

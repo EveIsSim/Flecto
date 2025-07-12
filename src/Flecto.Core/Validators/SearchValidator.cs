@@ -85,31 +85,3 @@ public static class SearchValidator
             "SearchFilter validation failed:");
     }
 }
-
-// for doc
-// with FluentValidation
-// RuleFor(x => x.SearchFilter)
-//     .Custom((filter, context) =>
-//     {
-//         foreach (var (field, error) in SearchValidator.Validate(filter))
-//         {
-//             context.AddFailure(field, error);
-//         }
-//     });
-//
-//
-// Without FluentValidation
-//var errors = SearchValidator.Validate(filter).ToArray();
-// 
-// if (errors.Length > 0)
-// {
-//     foreach (var (field, error) in errors)
-//     {
-//         Console.WriteLine($"{field}: {error}");
-//     }
-// 
-//     throw new ValidationException(
-//         "SearchFilter validation failed",
-//         errors.Select(e => new ValidationFailure(e.Field, e.Error)));
-// }
-//

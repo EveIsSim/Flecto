@@ -69,34 +69,3 @@ public static class GuidValidator
     internal static void EnsureValid(GuidFilter filter, string table, string column)
     => CommonValidator.EnsureValidBindFilter(filter, table, column, f => Validate(f, false));
 }
-
-// For Doc
-// without FluentValidation
-// var errors = GetGuidFilterValidationErrors(filter);
-// 
-// if (errors.Count > 0)
-// {
-//     foreach (var error in errors)
-//     {
-//         Console.WriteLine($"{error.Field}: {error.Error}");
-//     }
-// 
-//     throw new ValidationException(
-//         "GuidFilter validation failed",
-//         errors.Select(e => new ValidationFailure(e.Field, e.Error)));
-// }
-//
-// with FluentValidation
-// RuleFor(x => x.GuidFilter)
-//    .Custom((filter, context) =>
-//    {
-//    var errors = GetGuidFilterValidationErrors(filter);
-//
-//    foreach (var error in errors)
-//    {
-//        context.AddFailure(error.Field, error.Error);
-//    }
-// });
-//
-//
-//

@@ -45,7 +45,7 @@ public static class FlagsEnumFilter
         allowNullable,
         filter => ValidateInternal(filter, customValidator));
 
-    public static IEnumerable<(string Field, string Error)> ValidateInternal<T>(
+    internal static IEnumerable<(string Field, string Error)> ValidateInternal<T>(
     FlagsEnumFilter<T> filter,
     Func<FlagsEnumFilter<T>, (bool IsValid, string? ErrorMessage)>? customValidator = null)
     where T : struct, Enum
@@ -73,30 +73,3 @@ public static class FlagsEnumFilter
         where T : struct, Enum
     => CommonValidator.EnsureValidBindFilter(filter, table, column, f => Validate(f, false));
 }
-
-// without Fluent
-// var errors = GetFlagsEnumFilterValidationErrors(filter);
-// 
-// if (errors.Count > 0)
-// {
-//     foreach (var error in errors)
-//     {
-//         Console.WriteLine($"{error.Field}: {error.Error}");
-//     }
-// 
-//     throw new ValidationException(
-//         "FlagsEnumFilter validation failed",
-//         errors.Select(e => new ValidationFailure(e.Field, e.Error)));
-// }
-//
-// with FluentV
-// RuleFor(x => x.MyFlagsEnumFilter)
-//     .Custom((filter, context) =>
-//     {
-//     var errors = GetFlagsEnumFilterValidationErrors(filter);
-// 
-//     foreach (var error in errors)
-//     {
-//         context.AddFailure(error.Field, error.Error);
-//     }
-// });

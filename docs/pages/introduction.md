@@ -39,4 +39,3 @@ enabling clean, maintainable filtering before executing read queries.
 - [Bindings](bindings.md): Using filters with HTTP and JSON binding.
 - [Usages](usages.md): Practical examples with Dapper and other providers.
 - [Roadmap](roadmap.md): Planned enhancements for Flecto.
-

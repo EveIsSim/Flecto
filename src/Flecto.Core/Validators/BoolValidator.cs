@@ -89,34 +89,3 @@ public static class BoolValidator
         column,
         f => Validate(f, BoolFilterValidationOptions.None));
 }
-
-// For documentation
-// with FluentValidation
-//RuleFor(x => x.BoolFilter)
-//    .Custom((filter, context) =>
-//    {
-//        var errors = GetBoolFilterValidationErrors(filter, requireAtLeastOne: false);
-//
-//        foreach (var error in errors)
-//        {
-//            context.AddFailure(error.Field, error.Error);
-//        }
-//    });
-//
-// Without 
-// var errors = GetBoolFilterValidationErrors(
-//     filter,
-//     requireAtLeastOne: true,
-//     disallowEqAndNotEqSimultaneously: true);
-// 
-// if (errors.Count > 0)
-// {
-//     foreach (var error in errors)
-//     {
-//         Console.WriteLine($"{error.Field}: {error.Error}");
-//     }
-// 
-//     throw new ValidationException(
-//         "BoolFilter validation failed",
-//         errors.Select(e => new ValidationFailure(e.Field, e.Error)));
-// }

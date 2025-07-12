@@ -86,33 +86,3 @@ public static class NumericValidator
         where T : struct, IComparable
     => CommonValidator.EnsureValidBindFilter(filter, table, column, f => Validate(f, false));
 }
-
-
-// for doc
-// without FluentV
-// var errors = GetNumericFilterValidationErrors(filter);
-// 
-// if (errors.Count > 0)
-// {
-//     foreach (var error in errors)
-//     {
-//         Console.WriteLine($"{error.Field}: {error.Error}");
-//     }
-// 
-//     throw new ValidationException(
-//         "NumericFilter validation failed",
-//         errors.Select(e => new ValidationFailure(e.Field, e.Error)));
-// }
-//
-// with FluentV
-//RuleFor(x => x.MyNumericFilter)
-//    .Custom((filter, context) =>
-//    {
-//        var errors = GetNumericFilterValidationErrors(filter);
-//
-//        foreach (var error in errors)
-//        {
-//            context.AddFailure(error.Field, error.Error);
-//        }
-//    });
-//

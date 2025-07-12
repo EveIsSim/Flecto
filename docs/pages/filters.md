@@ -244,5 +244,5 @@ var (sqlCount, parametersCount) = new FlectoBuilder("table_name", DialectType.Po
     .Build();
 ```
 
-Filters in Flecto help keep your query layer clean, safe, and adaptable while supporting structured dynamic query building.
-
+Filters in Flecto help keep your query layer clean, safe, and adaptable while supporting structured 
+dynamic query building.
