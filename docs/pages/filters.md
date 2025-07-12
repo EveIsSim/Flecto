@@ -232,6 +232,53 @@ var filter = new StringFilter { Contains = "admin", CaseSensitive = true };
 
 ---
 
+### Custom Filter Projection
+
+Flecto filters are modular and reusable, but sometimes you may want to restrict or 
+simplify their functionality for public APIs or external consumers. 
+
+For example, you may want to disallow sorting and array-based operations 
+like `In` and `NotIn` from `NumericFilter<T>`.
+
+You can achieve this by introducing a custom DTO (e.g., `CustomNumericFilter`) 
+and mapping it internally to Flecto's standard filters.
+
+#### Example: Customizing `NumericFilter<T>`
+
+```csharp
+public class CustomNumericFilter
+{
+    public int? Eq { get; set; }
+    public int? NotEq { get; set; }
+}
+```
+
+Then map it inside your application or service layer:
+
+```csharp
+var mapped = new NumericFilter<int>
+{
+    Eq = request.Id?.Eq,
+    NotEq = request.Id?.NotEq
+};
+```
+
+Use the mapped version in your builder:
+
+```csharp
+var builder = new FlectoBuilder("employees", DialectType.Postgres)
+    .BindNumeric(mapped, "id")
+    .Select("*");
+```
+
+This allows you to:
+
+- Hide advanced options like sorting or range filtering from end users.
+- Provide strict or simplified filters for public APIs.
+- Maintain full compatibility with the internal Flecto engine.
+
+--- 
+
 ## Usage Example
 Filters in Flecto are typically used together with FlectoBuilder to dynamically construct SQL SELECT
 Details about FlectoBuilder will be covered in the next sections.
