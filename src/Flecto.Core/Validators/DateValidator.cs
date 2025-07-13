@@ -18,7 +18,7 @@ public static class DateValidator
     public static IEnumerable<(string Field, string Error)> Validate(
         DateFilter filter,
         bool allowNullable = true)
-    => Validate(filter, allowNullable, null);
+    => Validate(filter, null, allowNullable);
 
     /// <summary>
     /// Performs basic logical validation on the specified <see cref="DateFilter"/> with an optional custom validator,
@@ -34,8 +34,8 @@ public static class DateValidator
     /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         DateFilter filter,
-        bool allowNullable = true,
-        Func<DateFilter, (bool IsValid, string? ErrorMessage)>? customValidator = null)
+        Func<DateFilter, (bool IsValid, string? ErrorMessage)>? customValidator,
+        bool allowNullable = true)
     => CommonValidator.ValidateNullOr(
         filter,
         allowNullable,

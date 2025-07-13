@@ -23,7 +23,7 @@ public class BoolValidatorTests
         var result = BoolValidator.Validate(null).ToArray();
 
         // Assert
-        Assert.Equal(1, result.Length);
+        Assert.Single(result);
 
         var error = result.First();
         Assert.Equal("BoolFilter", error.Field);
@@ -44,7 +44,7 @@ public class BoolValidatorTests
         var result = BoolValidator.Validate(filter).ToArray();
 
         // Assert
-        Assert.Equal(1, result.Length);
+        Assert.Single(result);
 
         var error = result.First();
         Assert.Equal("BoolFilter", error.Field);

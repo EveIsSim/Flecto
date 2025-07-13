@@ -259,6 +259,7 @@ public class FlectoBuilder
     #endregion
 
     #region Bind
+    // 999 need cover points for jsonb, I do not allow it at the moment due to regex
 
     /// <summary>
     /// Binds a <see cref="BoolFilter"/> to the query for the specified column of the target table,
