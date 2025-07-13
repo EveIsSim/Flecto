@@ -20,7 +20,7 @@ public static class EnumValidator
         EnumFilter<T> filter,
         bool allowNullable = true)
     where T : struct, Enum
-    => Validate(filter, allowNullable, null);
+    => Validate(filter, null, allowNullable);
 
     /// <summary>
     /// Performs basic logical validation on the specified <see cref="EnumFilter{T}"/> with an optional custom validator,
@@ -37,8 +37,8 @@ public static class EnumValidator
     /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate<T>(
         EnumFilter<T> filter,
-        bool allowNullable = true,
-        Func<EnumFilter<T>, (bool IsValid, string? ErrorMessage)>? customValidator = null)
+        Func<EnumFilter<T>, (bool IsValid, string? ErrorMessage)>? customValidator,
+        bool allowNullable = true)
         where T : struct, Enum
     => CommonValidator.ValidateNullOr(
         filter,

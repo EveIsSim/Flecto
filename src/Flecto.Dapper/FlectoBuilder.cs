@@ -416,7 +416,7 @@ public class FlectoBuilder
         where T : struct, Enum
     {
         if (filter is null) return this;
-        FlagsEnumFilter.EnsureValid(filter, table, column);
+        FlagsEnumValidator.EnsureValid(filter, table, column);
 
         var c = Common.CombineColumn(table, column);
 

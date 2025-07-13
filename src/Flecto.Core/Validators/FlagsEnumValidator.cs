@@ -5,7 +5,7 @@ namespace Flecto.Core.Validators;
 /// <summary>
 /// Provides basic logical validation methods for <see cref="FlagsEnumFilter{T}"/> instances.
 /// </summary>
-public static class FlagsEnumFilter
+public static class FlagsEnumValidator
 {
     /// <summary>
     /// Performs basic logical validation on the specified <see cref="FlagsEnumFilter{T}"/> and returns any validation errors found.
@@ -20,7 +20,7 @@ public static class FlagsEnumFilter
         FlagsEnumFilter<T> filter,
         bool allowNullable = true)
     where T : struct, Enum
-    => Validate(filter, allowNullable, null);
+    => Validate(filter, null, allowNullable);
 
     /// <summary>
     /// Performs basic logical validation on the specified <see cref="FlagsEnumFilter{T}"/> with an optional custom validator,
@@ -37,8 +37,8 @@ public static class FlagsEnumFilter
     /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate<T>(
     FlagsEnumFilter<T> filter,
-    bool allowNullable = true,
-    Func<FlagsEnumFilter<T>, (bool IsValid, string? ErrorMessage)>? customValidator = null)
+    Func<FlagsEnumFilter<T>, (bool IsValid, string? ErrorMessage)>? customValidator,
+    bool allowNullable = true)
     where T : struct, Enum
     => CommonValidator.ValidateNullOr(
         filter,
@@ -53,8 +53,11 @@ public static class FlagsEnumFilter
         foreach (var error in CommonValidator.ValidateEqAndNotEq(filter.Eq, filter.NotEq, nameof(FlagsEnumFilter<T>)))
             yield return error;
 
-        if (filter.HasFlag.HasValue && filter.NotHasFlag.HasValue)
-            yield return (nameof(FlagsEnumFilter<T>), "Cannot specify HasFlag and NotHasFlag simultaneously");
+        if (filter.HasFlag.HasValue && filter.NotHasFlag.HasValue &&
+            EqualityComparer<T>.Default.Equals(filter.HasFlag.Value, filter.NotHasFlag.Value))
+        {
+            yield return (nameof(FlagsEnumFilter<T>), $"HasFlag and NotHasFlag cannot be equal ({filter.HasFlag.Value})");
+        }
 
         foreach (var error in CommonValidator.ValidateViaCustomValidatorIfNeeded(filter, customValidator))
             yield return error;
