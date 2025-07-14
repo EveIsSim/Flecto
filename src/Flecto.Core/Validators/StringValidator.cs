@@ -9,86 +9,25 @@ namespace Flecto.Core.Validators;
 public static class StringValidator
 {
     /// <summary>
-    /// Validates the specified <see cref="StringFilter"/> with an optional maximum length and validation options.
+    /// Validates the specified <see cref="StringFilter"/>
     /// Returns any validation errors found.
     /// </summary>
     /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
-    /// <param name="maxLength">An optional maximum allowed length for string values.</param>
-    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
     /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
-    public static IEnumerable<(string Field, string Error)> Validate(
-        StringFilter filter,
-        int? maxLength = null,
-        StringFilterValidationOptions options = StringFilterValidationOptions.All)
-    => Validate(filter, maxLength, options, null, null);
+    public static IEnumerable<(string Field, string Error)> Validate(StringFilter filter)
+        => Validate(filter, null, StringFilterValidationOptions.All, null, null);
 
     /// <summary>
-    /// Validates the specified <see cref="StringFilter"/> with an optional single-value custom validator.
+    /// Validates the specified <see cref="StringFilter"/> with validation options.
     /// Returns any validation errors found.
     /// </summary>
     /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
     /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
-    /// <param name="customValidator">
-    /// An optional user-defined validator for validating individual string values within the filter.
-    /// </param>
     /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         StringFilter filter,
-        StringFilterValidationOptions options = StringFilterValidationOptions.All,
-        Func<string, (bool IsValid, string? ErrorMessage)>? customValidator = null)
-    => Validate(filter, null, options, customValidator, null);
-
-    /// <summary>
-    /// Validates the specified <see cref="StringFilter"/> with an optional array-value custom validator.
-    /// Returns any validation errors found.
-    /// </summary>
-    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
-    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
-    /// <param name="customArrayValidator">
-    /// An optional user-defined validator for validating entire string arrays within the filter.
-    /// </param>
-    /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
-    public static IEnumerable<(string Field, string Error)> Validate(
-        StringFilter filter,
-        StringFilterValidationOptions options = StringFilterValidationOptions.All,
-        Func<string[], (bool IsValid, string? ErrorMessage)>? customArrayValidator = null)
-    => Validate(filter, null, options, null, customArrayValidator);
-
-    /// <summary>
-    /// Validates the specified <see cref="StringFilter"/> with an optional maximum length and single-value custom validator.
-    /// Returns any validation errors found.
-    /// </summary>
-    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
-    /// <param name="maxLength">An optional maximum allowed length for string values.</param>
-    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
-    /// <param name="customValidator">
-    /// An optional user-defined validator for validating individual string values within the filter.
-    /// </param>
-    /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
-    public static IEnumerable<(string Field, string Error)> Validate(
-        StringFilter filter,
-        int? maxLength = null,
-        StringFilterValidationOptions options = StringFilterValidationOptions.All,
-        Func<string, (bool IsValid, string? ErrorMessage)>? customValidator = null)
-    => Validate(filter, maxLength, options, customValidator, null);
-
-    /// <summary>
-    /// Validates the specified <see cref="StringFilter"/> with an optional maximum length and array-value custom validator.
-    /// Returns any validation errors found.
-    /// </summary>
-    /// <param name="filter">The <see cref="StringFilter"/> to validate.</param>
-    /// <param name="maxLength">An optional maximum allowed length for string values.</param>
-    /// <param name="options">Validation options controlling nullability and empty string allowance.</param>
-    /// <param name="customArrayValidator">
-    /// An optional user-defined validator for validating entire string arrays within the filter.
-    /// </param>
-    /// <returns>A collection of field-error pairs indicating validation errors, if any.</returns>
-    public static IEnumerable<(string Field, string Error)> Validate(
-        StringFilter filter,
-        int? maxLength = null,
-        StringFilterValidationOptions options = StringFilterValidationOptions.All,
-        Func<string[], (bool IsValid, string? ErrorMessage)>? customArrayValidator = null)
-    => Validate(filter, maxLength, options, null, customArrayValidator);
+        StringFilterValidationOptions options)
+        => Validate(filter, null, options, null, null);
 
     /// <summary>
     /// Core validation method for <see cref="StringFilter"/> with support for maximum length,
@@ -231,5 +170,5 @@ public static class StringValidator
         filter,
         table,
         column,
-        f => Validate(f, null, StringFilterValidationOptions.AllowEmptyStrings));
+        f => Validate(f, StringFilterValidationOptions.AllowEmptyStrings));
 }

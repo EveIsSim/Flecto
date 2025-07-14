@@ -24,5 +24,5 @@ public enum StringFilterValidationOptions
     /// <summary>
     /// All validation options are applied
     /// </summary>
-    All = AllowNullable | AllowNullable
+    All = AllowNullable | AllowEmptyStrings
 }

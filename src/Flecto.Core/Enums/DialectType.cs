@@ -5,6 +5,7 @@ namespace Flecto.Core.Enums;
 /// </summary>
 public enum DialectType
 {
+    Unknown,
     /// <summary>
     /// The PostgreSQL dialect
     /// </summary>

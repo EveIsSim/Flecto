@@ -10,8 +10,20 @@ internal static class TableColumnValidator
     const string TableNameLabel = "Table name";
     const string ColumnNameLabel = "Column name";
 
+    // Matches valid SQL column names and optional JSONB path expressions.
+    // Supports:
+    // - Simple column names: e.g., "price", "user_data"
+    // - JSONB path with -> or ->>: e.g., "data->'info'->>'name'"
+    // Constraints:
+    // - Base column must start with a letter or underscore, followed by letters, digits, or underscores
+    // - JSON path keys must be alphanumeric or underscore, enclosed in single quotes
+    private static readonly Regex ColumnOrJsonPathRegex = new Regex(
+        @"^[a-zA-Z_][a-zA-Z0-9_]*(->>'[a-zA-Z0-9_]+'|->'[a-zA-Z0-9_]+')*$",
+        RegexOptions.Compiled);
+
+
     // Valid SQL identifiers: start with a letter or underscore, followed by letters, numbers, or underscores.
-    private static readonly Regex ColumnRegex = new Regex(
+    private static readonly Regex TableNameRegex = new Regex(
         @"^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
     /// <summary>
@@ -52,12 +64,19 @@ internal static class TableColumnValidator
             EnsureValidSqlName(c, ColumnNameLabel);
     }
 
-    private static void EnsureValidSqlName(string name, string sqlNameType)
+    private static void EnsureValidSqlName(string name, string label)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException($"{sqlNameType} cannot be null or whitespace");
+            throw new ArgumentException($"{label} cannot be null or whitespace");
 
-        if (!ColumnRegex.IsMatch(name))
-            throw new ArgumentException($"Invalid {sqlNameType} syntax: '{name}'");
+        var regex = label switch
+        {
+            TableNameLabel => TableNameRegex,
+            ColumnNameLabel => ColumnOrJsonPathRegex,
+            _ => throw new ArgumentException($"Unknown SQL name type: '{label}'")
+        };
+
+        if (!regex.IsMatch(name))
+            throw new ArgumentException($"Invalid {label} syntax: '{name}'");
     }
 }

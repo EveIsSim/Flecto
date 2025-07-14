@@ -207,7 +207,7 @@ public class CommonValidatorTests
 
         // Assert
         var error = Assert.Single(result);
-        Assert.Equal("DummyFilter", error.Field);
+        Assert.Equal("BoolFilter", error.Field);
         Assert.Equal("Custom validation failed", error.Error);
     }
 
@@ -221,7 +221,7 @@ public class CommonValidatorTests
 
         // Assert
         var error = Assert.Single(result);
-        Assert.Equal("DummyFilter", error.Field);
+        Assert.Equal("BoolFilter", error.Field);
         Assert.Equal("Filter failed custom validation", error.Error);
     }
 
@@ -284,7 +284,6 @@ public class CommonValidatorTests
             CommonValidator.ThrowIfErrors(errors, prefix: "Validation failed"));
 
         // Assert
-        Console.WriteLine(ex.Message);
         var expected = """
             Validation failed
             FieldX: Invalid value

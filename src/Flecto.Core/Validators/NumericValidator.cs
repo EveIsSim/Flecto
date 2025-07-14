@@ -20,7 +20,7 @@ public static class NumericValidator
         NumericFilter<T> filter,
         bool allowNullable = true)
         where T : struct, IComparable
-    => Validate<T>(filter, allowNullable, null);
+    => Validate<T>(filter, null, allowNullable);
 
     /// <summary>
     /// Performs basic logical validation on the specified <see cref="NumericFilter{T}"/> with an optional custom validator,
@@ -37,8 +37,8 @@ public static class NumericValidator
     /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate<T>(
         NumericFilter<T> filter,
-        bool allowNullable = true,
-        Func<NumericFilter<T>, (bool IsValid, string? ErrorMessage)>? customValidator = null)
+        Func<NumericFilter<T>, (bool IsValid, string? ErrorMessage)>? customValidator,
+        bool allowNullable = true)
         where T : struct, IComparable
     => CommonValidator.ValidateNullOr(
         filter,

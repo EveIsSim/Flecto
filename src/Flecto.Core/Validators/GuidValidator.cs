@@ -18,7 +18,7 @@ public static class GuidValidator
     public static IEnumerable<(string Field, string Error)> Validate(
         GuidFilter filter,
         bool allowNullable = true)
-    => Validate(filter, allowNullable, null);
+    => Validate(filter, null, allowNullable);
 
     /// <summary>
     /// Performs basic logical validation on the specified <see cref="GuidFilter"/> with an optional custom validator,
@@ -34,8 +34,8 @@ public static class GuidValidator
     /// </returns>
     public static IEnumerable<(string Field, string Error)> Validate(
         GuidFilter filter,
-        bool allowNullable = true,
-        Func<GuidFilter, (bool IsValid, string? ErrorMessage)>? customValidator = null)
+        Func<GuidFilter, (bool IsValid, string? ErrorMessage)>? customValidator,
+        bool allowNullable = true)
     => CommonValidator.ValidateNullOr(
         filter,
         allowNullable,

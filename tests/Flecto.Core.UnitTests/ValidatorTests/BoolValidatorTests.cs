@@ -129,7 +129,6 @@ public class BoolValidatorTests
             BoolValidator.EnsureValid(filter, "my_table", "my_column"));
 
         // Assert
-        Console.WriteLine(ex.Message);
         Assert.Equal(
             """
             BoolFilter: validation for table: 'my_table', column: 'my_column' failed:
