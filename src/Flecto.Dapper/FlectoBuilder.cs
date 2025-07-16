@@ -113,8 +113,6 @@ public class FlectoBuilder
     public FlectoBuilder Select(params string[] columns)
     => Select((_fromTable, columns));
 
-    // It will public when we implement JOIN ON logic
-
     /// <summary>
     /// Selects the specified columns from the specified tables in the query.
     /// This overload is currently private and will be made public when JOIN ON logic is implemented for <see cref="FlectoBuilder"/>.
@@ -143,6 +141,7 @@ public class FlectoBuilder
     #endregion Select
 
     #region Search
+    /// 999 HERE
 
     /// <summary>
     /// Adds a LIKE-based search condition to the query using the specified columns of the target table.
@@ -226,8 +225,6 @@ public class FlectoBuilder
         string config = DefaultVectorConfig)
     => SearchTsVector(filter, mode, config, (table, columns));
 
-    // 999 did not check it, need check and tests 
-
     /// <summary>
     /// Adds a full-text search condition using PostgreSQL <c>tsvector</c> to the query,
     /// using the specified tables and columns.
@@ -259,6 +256,7 @@ public class FlectoBuilder
     #endregion
 
     #region Bind
+    // 999 HERE
     // 999 need cover points for jsonb, I do not allow it at the moment due to regex
 
     /// <summary>

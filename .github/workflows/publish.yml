@@ -1,0 +1,42 @@
+name: Publish NuGet Packages
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Get version from tag
+      id: get_version
+      run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release
+
+    - name: Pack Flecto.Core
+      run: dotnet pack ./src/Flecto.Core/Flecto.Core.csproj --configuration Release -p:PackageVersion=${{ steps.get_version.outputs.version }}
+
+    - name: Pack Flecto.Dapper
+      run: dotnet pack ./src/Flecto.Dapper/Flecto.Dapper.csproj --configuration Release -p:PackageVersion=${{ steps.get_version.outputs.version }}
+
+    - name: Publish to NuGet
+      run: |
+        dotnet nuget push "**/Flecto.*.nupkg" \
+          --api-key ${{ secrets.NUGET_API_KEY }} \
+          --source https://api.nuget.org/v3/index.json \
+          --skip-duplicate

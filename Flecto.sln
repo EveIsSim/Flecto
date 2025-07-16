@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flecto.Core.UnitTests", "tests\Flecto.Core.UnitTests\Flecto.Core.UnitTests.csproj", "{3A6FDFDE-6F51-45F0-B420-D7F19C91F306}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flecto.Dapper.UnitTests", "tests\Flecto.Dapper.UnitTests\Flecto.Dapper.UnitTests.csproj", "{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,18 @@ Global
 		{3A6FDFDE-6F51-45F0-B420-D7F19C91F306}.Release|x64.Build.0 = Release|Any CPU
 		{3A6FDFDE-6F51-45F0-B420-D7F19C91F306}.Release|x86.ActiveCfg = Release|Any CPU
 		{3A6FDFDE-6F51-45F0-B420-D7F19C91F306}.Release|x86.Build.0 = Release|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Debug|x64.Build.0 = Debug|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Debug|x86.Build.0 = Debug|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Release|x64.ActiveCfg = Release|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Release|x64.Build.0 = Release|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Release|x86.ActiveCfg = Release|Any CPU
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +81,6 @@ Global
 		{D0FBA61A-8AE6-426B-9BC3-4F1A61CBE19A} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{D695D22F-EC54-46EB-A00B-5CE000D58342} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{3A6FDFDE-6F51-45F0-B420-D7F19C91F306} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{D4FB611B-2DE7-49BD-A13D-DAAC5A82B029} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

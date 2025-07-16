@@ -2,6 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+
+    <Authors>EveIsSim</Authors>
+    <Company>EveIsSim</Company>
+
+    <PackageId>Flecto.Core</PackageId>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/EveIsSim/Flecto</RepositoryUrl>
+    <PackageTags>sql, dapper, filter, builder, query, postgres, database</PackageTags>
+    <RepositoryType>git</RepositoryType>
+
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+
+    <Version>0.1.0-beta</Version>
+
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
