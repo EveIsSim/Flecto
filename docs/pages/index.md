@@ -1,5 +1,3 @@
-# Introduction
-
 > ⚠️ **Beta Disclaimer**  
 > This library is under active development. Its API is not stable and may change at any time.  
 > It is not recommended for production use yet.
