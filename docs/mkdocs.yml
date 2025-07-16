@@ -2,8 +2,6 @@ site_name: Flecto
 repo_url: https://github.com/EveIsSim/Flecto
 site_url: https://your-org.github.io/Flecto/
 docs_dir: pages
-nav:
-  - Home: introduction.md
 
 theme:
   name: material
@@ -28,7 +26,7 @@ theme:
     - diagrams
 
 nav:
-  - Introduction: introduction.md
+  - Home: index.md
   - Filters: filters.md
   - Validations: validations.md
   - Bindings: bindings.md
