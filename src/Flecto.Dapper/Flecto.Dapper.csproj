@@ -24,6 +24,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 
     <Version>0.1.0-beta</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
