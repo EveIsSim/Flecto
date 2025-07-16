@@ -1,3 +1,7 @@
+> ⚠️ **Beta Disclaimer**  
+> This library is under active development. Its API is not stable and may change at any time.  
+> It is not recommended for production use yet.
+
 # Flecto
 
 Fluent, safe, and flexible SQL SELECT query builder for .NET (starting with .NET 9+) with structured filters, sorting, and pagination, designed for use with Dapper and extensible to other providers and sql dialects.

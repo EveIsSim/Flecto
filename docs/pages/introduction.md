@@ -1,5 +1,9 @@
 # Introduction
 
+> ⚠️ **Beta Disclaimer**  
+> This library is under active development. Its API is not stable and may change at any time.  
+> It is not recommended for production use yet.
+
 Flecto is a fluent, type-safe **SQL SELECT query generator and filtering layer for .NET 9+**, 
 focusing on structured filtering, sorting, and pagination at the moment. 
 While designed for seamless use with Dapper, Flecto is **provider-agnostic and extensible**, 
