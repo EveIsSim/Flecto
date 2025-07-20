@@ -3,12 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
 
-    <Authors>EveIsSim</Authors>
+    <Authors>Sergei Petrov(EveIsSim)</Authors>
     <Company>EveIsSim</Company>
 
     <PackageId>Flecto.Core</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/EveIsSim/Flecto</RepositoryUrl>
+    <RepositoryUrl>https://github.com/flecto-labs/Flecto</RepositoryUrl>
     <PackageTags>sql, dapper, filter, builder, query, postgres, database</PackageTags>
     <RepositoryType>git</RepositoryType>
 

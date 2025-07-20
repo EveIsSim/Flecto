@@ -1,6 +1,6 @@
 site_name: Flecto
-repo_url: https://github.com/EveIsSim/Flecto
-site_url: https://your-org.github.io/Flecto/
+repo_url: https://github.com/flecto-labs/Flecto
+site_url: https://flecto-labs.github.io/Flecto/
 docs_dir: pages
 
 theme:
