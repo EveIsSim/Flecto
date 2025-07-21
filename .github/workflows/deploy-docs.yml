@@ -3,7 +3,7 @@ name: Deploy MkDocs to GitHub Pages
 on:
   push:
     branches:
-      - master 
+      - master
 
 jobs:
   deploy:
@@ -22,7 +22,11 @@ jobs:
         run: |
           pip install mkdocs mkdocs-material
 
+      - name: Set Git credentials and override origin
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/flecto-labs/Flecto.git
+
       - name: Deploy to GitHub Pages
-        env:
-            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: mkdocs gh-deploy --config-file docs/mkdocs.yml --force --clean
