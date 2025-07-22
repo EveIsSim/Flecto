@@ -26,9 +26,12 @@ jobs:
         run: |
           mkdocs build --config-file docs/mkdocs.yml
 
-      - name: Deploy manually to GitHub Pages
+      - name: Deploy manually using git and token
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/flecto-labs/Flecto.git
-          ghp-import -n -p -f docs/site -m "Deploy MkDocs from CI"
+          ghp-import -n -f docs/site -m "Deploy MkDocs from CI"
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/flecto-labs/Flecto.git
+          git push origin gh-pages --force
