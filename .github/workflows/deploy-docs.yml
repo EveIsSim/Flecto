@@ -24,11 +24,13 @@ jobs:
 
       - name: Set Git credentials and override origin
         run: |
+          echo "Token starts with:" ${GH_TOKEN:0:4}
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/flecto-labs/Flecto.git
-          echo "🧪 Remote URL is:"
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/flecto-labs/Flecto.git
           git remote -v
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --config-file docs/mkdocs.yml --force --clean
