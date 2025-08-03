@@ -5,9 +5,6 @@ namespace Flecto.Dapper.Commons;
 /// </summary>
 internal static class Common
 {
-    internal static string CombineColumn(string table, string column)
-    => table + "." + column;
-
     /// <summary>
     /// Generates a unique parameter name for search or filtering operations by combining a prefix with a counter.
     /// This ensures uniqueness of parameter names within dynamically constructed SQL queries.

@@ -65,7 +65,7 @@ public static class BoolValidator
             yield return error;
 
         if (options.HasFlag(BoolFilterValidationOptions.RequireAtLeastOne) &&
-            !filter.Eq.HasValue && !filter.NotEq.HasValue && !filter.Null.HasValue)
+            !filter.Eq.HasValue && !filter.NotEq.HasValue && !filter.IsNull.HasValue)
         {
             yield return (nameof(BoolFilter), "At least one of Eq, NotEq, Null must be specified");
         }

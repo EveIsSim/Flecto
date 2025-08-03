@@ -1,21 +1,25 @@
 
 using Flecto.Dapper.Commons;
+using Flecto.Dapper.Models;
+using Flecto.Dapper.SqlDialect.Dialects.Postgres.Casting;
 
 namespace Flecto.Dapper.UnitTests.CommonTests;
 
 public class CommonTests
 {
     [Theory]
-    [InlineData("users", "id", "users.id")]
-    [InlineData("orders", "amount", "orders.amount")]
-    [InlineData("data", "json->>'field'", "data.json->>'field'")]
-    public void CombineColumn_ValidInputs_ReturnsCombinedString(
+    [InlineData("users", "id", "users.id", typeof(long))]
+    [InlineData("orders", "amount", "orders.amount", typeof(decimal))]
+    [InlineData("data", "json->>'field'", "(data.json->>'field')::text", typeof(string))]
+    public void ColumnRef_SqlName_ValidInputs_ReturnsCombinedString(
         string table,
         string column,
-        string expected)
+        string expected,
+        Type clrType)
     {
         // Act
-        var result = Common.CombineColumn(table, column);
+        var cr = new ColumnRef(table, column, 0, new PgCastTypeMapper());
+        var result = cr.SqlName(clrType);
 
         // Assert
         Assert.Equal(expected, result);

@@ -1,3 +1,4 @@
+using Flecto.Core.Models.Select;
 using Flecto.Core.Validators;
 
 namespace Flecto.Core.UnitTests.ValidatorTests;
@@ -23,7 +24,9 @@ public class SelectValidatorTests
     {
         // Arrange
         var selectWasSet = false;
-        var tablesWithColumns = new[] { ("users", new[] { "id", "name" }) };
+        var tablesWithColumns = new FromTable[] {
+            new ("users", new Field[] { new ("id"), new ("name")})
+        };
 
         // Act
         var ex = Record.Exception(() =>

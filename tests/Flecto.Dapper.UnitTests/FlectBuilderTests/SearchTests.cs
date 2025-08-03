@@ -1,5 +1,6 @@
 using Flecto.Core.Enums;
 using Flecto.Core.Models.Filters;
+using Flecto.Core.Models.Select;
 
 namespace Flecto.Dapper.UnitTests.FlectoBuilderTests;
 
@@ -14,15 +15,17 @@ public class SearchTests
     {
         // Arrange
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
+        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select("id")
+            .Select(tc)
             .Search(null, "name", "email")
             .Build();
 
         // Assert
         Assert.Equal("SELECT users.id FROM users", result.Sql);
+        Assert.Empty(result.Parameters.ParameterNames);
     }
 
     [Fact]
@@ -49,9 +52,11 @@ public class SearchTests
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
+        var tc = new FromTable(Table, new Field[] { new("id") });
+
         // Act
         var result = builder
-            .Select("id")
+            .Select(tc)
             .Search(filter, "name", "email")
             .Build();
 
@@ -83,9 +88,11 @@ public class SearchTests
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
+        var tc = new FromTable(Table, new Field[] { new("id"), new("name"), new("role") });
+
         // Act
         var result = builder
-            .Select("id", "name", "role")
+            .Select(tc)
             .Search(filter, "role")
             .Build();
 
@@ -117,16 +124,16 @@ public class SearchTests
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
+        var tc = new FromTable(Table, new Field[] { new("id") });
+
         // Act
         var result = builder
-            .Select("id")
+            .Select(tc)
             .Search(filter1, "name", "last_name")
             .Search(filter2, "role", "additional_role")
             .Build();
 
         // Assert SQL
-        Console.WriteLine(result.Sql);
-
         Assert.Equal(
             "SELECT users.id " +
             "FROM users " +
@@ -151,6 +158,43 @@ public class SearchTests
 
         Assert.True(paramDict.ContainsKey("search_param_1"));
         Assert.Equal("%Admin%", paramDict["search_param_1"]);
+    }
+
+    [Fact]
+    public void Search_JsonbFields_AddConditions()
+    {
+        // Arrange
+        var filter = new SearchFilter { Value = "Admin", CaseSensitive = true };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        var tc = new FromTable(Table, new Field[] { new("id"), new("name"), new("role") });
+
+        // Act
+        var result = builder
+            .Select(tc)
+            .Search(filter, "role", "social->>'platform'", "profile->'personal'->>'full_name'")
+            .Build();
+
+        // Assert SQL
+        Assert.Equal(
+            "SELECT users.id, users.name, users.role " +
+            "FROM users " +
+            "WHERE (" +
+                "users.role LIKE @search_param_0 " +
+                "OR users.social->>'platform' LIKE @search_param_0 " +
+                "OR users.profile->'personal'->>'full_name' LIKE @search_param_0)",
+            result.Sql);
+
+        // Assert params
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                name => name,
+                name => result.Parameters.Get<string>(name));
+
+        Assert.Single(paramDict);
+        Assert.True(paramDict.ContainsKey("search_param_0"));
+        Assert.Equal("%Admin%", paramDict["search_param_0"]);
     }
 
     #endregion
@@ -198,17 +242,23 @@ public class SearchTests
         var filter = new SearchFilter { Value = "developer" };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
+        var tc = new FromTable(Table, new Field[] { new("id"), new("bio") });
+
         // Act
         var result = builder
-            .Select("id", "bio")
-            .SearchTsVector(filter, new[] { "bio", "notes" }) // Default: mode = Plain, config = "simple"
+            .Select(tc)
+            .SearchTsVector(filter, new[] { "bio", "notes", "profile->'personal'->>'full_name'" }) // Default: mode = Plain, config = "simple"
             .Build();
 
         // Assert SQL
         Assert.Equal(
             "SELECT users.id, users.bio " +
             "FROM users " +
-            "WHERE to_tsvector('simple', COALESCE(users.bio, '') || ' ' || COALESCE(users.notes, '')) @@ plainto_tsquery('simple', @tsvector_query_0)",
+            "WHERE to_tsvector('simple', " +
+                    "COALESCE(users.bio, '') || ' ' || " +
+                    "COALESCE(users.notes, '') || ' ' || " +
+                    "COALESCE(users.profile->'personal'->>'full_name', '')" +
+                ") @@ plainto_tsquery('simple', @tsvector_query_0)",
             result.Sql);
 
         // Assert params
@@ -227,18 +277,22 @@ public class SearchTests
         var filter = new SearchFilter { Value = "csharp & backend" };
         var builder = new FlectoBuilder("profiles", DialectType.Postgres);
 
+        var tc = new FromTable(Table, new Field[] { new("id") });
+
         // Act
         var result = builder
-            .Select("id")
-            .SearchTsVector(filter, new[] { "summary" }, TextSearchMode.WebStyle, "english")
+            .Select(tc)
+            .SearchTsVector(filter, new[] { "summary", "profile->'personal'->>'full_name'" }, TextSearchMode.WebStyle, "english")
             .Build();
 
         // Assert SQL
-        Console.WriteLine(result.Sql);
         Assert.Equal(
-            "SELECT profiles.id " +
+            "SELECT users.id " +
             "FROM profiles " +
-            "WHERE to_tsvector('english', COALESCE(profiles.summary, '')) @@ websearch_to_tsquery('english', @tsvector_query_0)",
+            "WHERE to_tsvector('english', " +
+                    "COALESCE(profiles.summary, '') || ' ' || " +
+                    "COALESCE(profiles.profile->'personal'->>'full_name', '')" +
+                ") @@ websearch_to_tsquery('english', @tsvector_query_0)",
             result.Sql);
 
         // Assert params

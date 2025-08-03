@@ -1,5 +1,4 @@
 using Flecto.Core.Models.Filters;
-using Flecto.Dapper.Commons;
 using Flecto.Dapper.Constants;
 
 namespace Flecto.Dapper.SqlDialect.Dialects.Postgres;
@@ -45,8 +44,7 @@ internal static class SearchBuilder
         {
             foreach (var column in columns)
             {
-                var colRef = Common.CombineColumn(table, column);
-                var condition = $"{colRef} {op} @{paramName}";
+                var condition = $"{table}.{column} {op} @{paramName}";
 
                 conditions.Add(condition);
             }

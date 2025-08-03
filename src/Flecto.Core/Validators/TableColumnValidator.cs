@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Flecto.Core.Models.Select;
 
 namespace Flecto.Core.Validators;
 
@@ -9,6 +10,7 @@ internal static class TableColumnValidator
 {
     const string TableNameLabel = "Table name";
     const string ColumnNameLabel = "Column name";
+    const string AliasNameLabel = "Alias name";
 
     // Matches valid SQL column names and optional JSONB path expressions.
     // Supports:
@@ -21,10 +23,47 @@ internal static class TableColumnValidator
         @"^[a-zA-Z_][a-zA-Z0-9_]*(->>'[a-zA-Z0-9_]+'|->'[a-zA-Z0-9_]+')*$",
         RegexOptions.Compiled);
 
-
     // Valid SQL identifiers: start with a letter or underscore, followed by letters, numbers, or underscores.
-    private static readonly Regex TableNameRegex = new Regex(
+    private static readonly Regex CommonNameRegex = new Regex(
         @"^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
+
+    /// <summary>
+    /// Ensures that the provided list of tables and their fields (columns with optional aliases)
+    /// are valid for use in a SQL SELECT clause.
+    /// 
+    /// Validation includes:
+    /// - At least one table with columns must be provided.
+    /// - Each table must have a valid name (non-null, non-empty, valid syntax).
+    /// - Each table must have at least one field (column).
+    /// - Column names must not be null, empty, or contain invalid SQL characters.
+    /// - If provided, aliases must not be null, empty, or contain invalid SQL characters.
+    /// - Alias names are validated against the same rules as table/column names.
+    /// 
+    /// Throws an <see cref="ArgumentException"/> if validation fails.
+    /// </summary>
+    /// <param name="tablesWithColumns">
+    /// An array of <see cref="FromTable"/> objects, where each represents a SQL table and its fields.
+    /// Each field includes a column name and an optional alias used for SQL SELECT clause generation.
+    /// </param>
+    internal static void EnsureValidSelectTableWithColumns(FromTable[] tablesWithColumns)
+    {
+        if (tablesWithColumns == null || tablesWithColumns.Length == 0)
+            throw new ArgumentException("At least one table with columns must be specified");
+
+        var aliases = tablesWithColumns
+            .SelectMany(t => t.Fields)
+            .Select(x => x.Alias)
+            .Where(x => x != null);
+
+        foreach (var alias in aliases)
+            EnsureValidSqlName(alias!, AliasNameLabel);
+
+        var tableWithColumns = tablesWithColumns
+            .Select(t => (t.Table, t.Fields.Select(f => f.Column).ToArray()))
+            .ToArray();
+
+        EnsureValidTableWithColumns(tableWithColumns);
+    }
 
     /// <summary>
     /// Ensures that the provided tables and their columns are valid for use in SQL queries.
@@ -71,7 +110,8 @@ internal static class TableColumnValidator
 
         var regex = label switch
         {
-            TableNameLabel => TableNameRegex,
+            TableNameLabel => CommonNameRegex,
+            AliasNameLabel => CommonNameRegex,
             ColumnNameLabel => ColumnOrJsonPathRegex,
             _ => throw new ArgumentException($"Unknown SQL name type: '{label}'")
         };

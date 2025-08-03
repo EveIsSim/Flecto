@@ -339,7 +339,7 @@ public class CommonValidatorTests
                 _ => Enumerable.Empty<(string Field, string Error)>()));
 
         // Assert
-        Assert.Equal("table should be null or empty", ex.Message);
+        Assert.Equal("Table name cannot be null or whitespace", ex.Message);
     }
 
     [Theory]
@@ -357,7 +357,7 @@ public class CommonValidatorTests
                 _ => Enumerable.Empty<(string Field, string Error)>()));
 
         // Assert
-        Assert.Equal("column should be null or empty", ex.Message);
+        Assert.Equal("Column name cannot be null or whitespace", ex.Message);
     }
 
     [Fact]

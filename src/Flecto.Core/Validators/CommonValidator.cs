@@ -88,20 +88,12 @@ internal static class CommonValidator
         Func<TFilter, IEnumerable<(string Field, string Error)>> validator)
     where TFilter : class, IQueryFilter
     {
-        EnsureValidBind(filter, table, column);
+        TableColumnValidator.EnsureValidTableWithColumns((table, [column]));
+
         ThrowIfErrors(
             validator(filter).ToArray(),
             $"{typeof(TFilter).Name}: validation for table: '{table}', column: '{column}' failed:"
         );
-    }
-
-    private static void EnsureValidBind(IQueryFilter filter, string table, string column)
-    {
-        if (string.IsNullOrWhiteSpace(table))
-            throw new ArgumentException("table should be null or empty");
-
-        if (string.IsNullOrWhiteSpace(column))
-            throw new ArgumentException("column should be null or empty");
     }
 
     internal static IEnumerable<(string Field, string Error)> ValidateRangeConsistency<T>(

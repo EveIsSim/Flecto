@@ -1,4 +1,5 @@
 using Flecto.Core.Enums;
+using Flecto.Core.Models.Select;
 
 namespace Flecto.Dapper.UnitTests.FlectoBuilderTests;
 
@@ -78,11 +79,14 @@ public class SelectTests
     [Fact]
     public void Select_Columns_SetsSelectClauseCorrectly()
     {
+        // Arrange
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        var tc = new FromTable(Table, new Field[] { new("id"), new("salary") });
 
         // Act
         var result = builder
-            .Select("id", "salary")
+            .Select(tc)
             .Build();
 
         Assert.Equal("SELECT users.id, users.salary FROM users", result.Sql);
@@ -94,20 +98,23 @@ public class SelectTests
         // Arrange
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
+        var tc = new FromTable(
+            Table,
+            new Field[] {
+                new("social->>'platform'", "social_platform"),
+                new("social->'github'"),
+                new("profile->'personal'->>'full_name'", "profile_personal_full_name")});
+
         // Act
         var result = builder
-            .Select(
-                "social->>'platform'",
-                "social->'github'",
-                "profile->'personal'->>'full_name'"
-            )
+            .Select(tc)
             .Build();
 
         // Assert
         Assert.Equal(
-            "SELECT users.social->>'platform', " +
+            "SELECT users.social->>'platform' AS social_platform, " +
             "users.social->'github', " +
-            "users.profile->'personal'->>'full_name' " +
+            "users.profile->'personal'->>'full_name' AS profile_personal_full_name " +
             "FROM users",
             result.Sql);
     }
@@ -116,12 +123,13 @@ public class SelectTests
     public void Select_SecondCall_Throws()
     {
         // Arrange
-        var column = "id";
+        var tc = new FromTable(Table, new Field[] { new("id") });
+
         var builder = new FlectoBuilder(Table, DialectType.Postgres)
-            .Select(column);
+            .Select(tc);
 
         // Act
-        var ex = Assert.Throws<InvalidOperationException>(() => builder.Select(column));
+        var ex = Assert.Throws<InvalidOperationException>(() => builder.Select(tc));
 
         // Assert
         Assert.Equal("Select can only be called once per query", ex.Message);

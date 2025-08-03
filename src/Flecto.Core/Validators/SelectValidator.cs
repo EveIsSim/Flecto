@@ -1,3 +1,5 @@
+using Flecto.Core.Models.Select;
+
 namespace Flecto.Core.Validators;
 
 /// <summary>
@@ -23,19 +25,19 @@ internal static class SelectValidator
     /// <param name="tablesWithColumns">The tables and columns to validate for the SELECT clause.</param>
     internal static void EnsureValid(
         bool selectWasSet,
-        params (string Table, string[] Columns)[] tablesWithColumns)
+        FromTable[] tablesWithColumns)
     => EnsureValid(selectWasSet, false, tablesWithColumns);
 
     private static void EnsureValid(
     bool selectWasSet,
     bool skipTableValidation,
-    params (string Table, string[] Columns)[] tablesWithColumns)
+    FromTable[] tablesWithColumns)
     {
         if (selectWasSet)
             throw new InvalidOperationException("Select can only be called once per query");
 
         if (skipTableValidation) return;
 
-        TableColumnValidator.EnsureValidTableWithColumns(tablesWithColumns);
+        TableColumnValidator.EnsureValidSelectTableWithColumns(tablesWithColumns);
     }
 }

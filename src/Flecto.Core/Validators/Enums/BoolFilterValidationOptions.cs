@@ -18,10 +18,4 @@ public enum BoolFilterValidationOptions
     /// Requires that at least one filter condition is specified
     /// </summary>
     RequireAtLeastOne = 1 << 1,
-
-    // 999 add tests
-    /// <summary>
-    /// All validation options are applied
-    /// </summary>
-    All = AllowNullable | RequireAtLeastOne
 }

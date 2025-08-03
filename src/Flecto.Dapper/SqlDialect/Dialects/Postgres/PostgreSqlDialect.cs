@@ -114,4 +114,3 @@ internal class PostgresSqlDialect : ISqlDialect
 
     #endregion
 }
-

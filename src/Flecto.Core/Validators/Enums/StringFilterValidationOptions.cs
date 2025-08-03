@@ -19,8 +19,6 @@ public enum StringFilterValidationOptions
     /// </summary>
     AllowNullable = 1 << 1,
 
-    // 999 add tests
-
     /// <summary>
     /// All validation options are applied
     /// </summary>

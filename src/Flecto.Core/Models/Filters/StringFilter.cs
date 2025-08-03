@@ -32,7 +32,7 @@ public class StringFilter : IQueryFilter
     /// <summary>
     /// Gets or sets a value indicating whether to filter for null values
     /// </summary>
-    public bool? Null { get; set; }
+    public bool? IsNull { get; set; }
     /// <summary>
     /// Gets or sets a value indicating that the property should start with the specified substring
     /// </summary>

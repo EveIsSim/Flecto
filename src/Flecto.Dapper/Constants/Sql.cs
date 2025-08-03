@@ -3,6 +3,7 @@ namespace Flecto.Dapper.Constants;
 internal static class Sql
 {
     internal const string AND = "AND";
+    internal const string AS = "AS";
     internal const string ASC = "ASC";
     internal const string COALESCE = "COALESCE";
     internal const string DESC = "DESC";

@@ -42,7 +42,7 @@ public class DateFilter : IQueryFilter
     /// <summary>
     /// Gets or sets a value indicating whether to filter for null values
     /// </summary>
-    public bool? Null { get; set; }
+    public bool? IsNull { get; set; }
     /// <summary>
     /// Gets or sets the sort direction for the filtered property
     /// </summary>
