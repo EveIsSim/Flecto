@@ -96,7 +96,7 @@ internal class PgCastTypeMapper : ICastTypeMapper
         CastType.Numeric => "numeric",
         CastType.Text => "text",
         CastType.Date => "date",
-        CastType.Timestamp => "timestamp",
+        CastType.Timestamp => "timestamptz",
         CastType.Guid => "uuid",
         _ => throw new NotSupportedException($"Unsupported PostgreSQL cast type: {type}")
     };

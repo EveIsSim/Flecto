@@ -304,8 +304,6 @@ public class FlectoBuilder
         return this;
     }
 
-    // 999 HERE tests 02.08.2026
-
     /// <summary>
     /// Binds a <see cref="DateFilter"/> to the query for the specified column of the target table,
     /// adding SQL conditions for equality, inequality, range comparisons, IN/NOT IN array checks,
@@ -350,6 +348,8 @@ public class FlectoBuilder
 
         return this;
     }
+
+    // 999 HERE tests 09.08.2025
 
     /// <summary>
     /// Binds an <see cref="EnumFilter{T}"/> to the query for the specified column of the target table,
