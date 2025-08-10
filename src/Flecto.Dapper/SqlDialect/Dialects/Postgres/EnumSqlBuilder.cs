@@ -12,8 +12,6 @@ namespace Flecto.Dapper.SqlDialect.Dialects.Postgres;
 /// </summary>
 internal static class EnumSqlBuilder
 {
-    // 999 tests that there are only two types of numeric or string Runtime can easily recognize and write tests for all this
-
     /// <summary>
     /// Builds a SQL condition for comparing an enum column with a single enum value using the specified comparison operator and filter mode.
     /// </summary>
@@ -56,7 +54,7 @@ internal static class EnumSqlBuilder
     {
         var values = rowArr.Select(x => ConvertValue(x, filterMode)).ToArray();
 
-        return ($"{column} = {PgSqlOps.ANY}(@{paramName})", values);
+        return ($"{column} {SqlOps.Eq} {PgSqlOps.ANY}(@{paramName})", values);
     }
 
     /// <summary>
@@ -100,9 +98,9 @@ internal static class EnumSqlBuilder
     {
         return filterMode switch
         {
-            EnumFilterMode.Name => value.ToString(), // 999 test : Enum (A : 0) => "A"
-            EnumFilterMode.Value => value, // 999 test : Enum (A : 0) => 0
-            EnumFilterMode.ValueString => value.ToString("D"), // 999 test : Enum (A : 0) => "0"
+            EnumFilterMode.Name => value.ToString(),
+            EnumFilterMode.Value => value,
+            EnumFilterMode.ValueString => value.ToString("D"),
             _ => throw new ArgumentOutOfRangeException(nameof(filterMode), filterMode, null)
         };
     }

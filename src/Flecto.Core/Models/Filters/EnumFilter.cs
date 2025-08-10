@@ -1,5 +1,3 @@
-using Flecto.Core.Models.Filters.Enums;
-
 namespace Flecto.Core.Models.Filters;
 
 /// <summary>
@@ -30,10 +28,6 @@ public class EnumFilter<T> : IQueryFilter where T : struct, Enum
     /// Gets or sets a value idicating whether to filter for null values 
     /// </summary>
     public bool? IsNull { get; set; }
-    /// <summary>
-    /// Gets or sets the mode used for filtering enumeration values
-    /// </summary>
-    public EnumFilterMode FilterMode { get; set; }
     /// <summary>
     /// Gets or sets the sort direction for the filtered property
     /// </summary>

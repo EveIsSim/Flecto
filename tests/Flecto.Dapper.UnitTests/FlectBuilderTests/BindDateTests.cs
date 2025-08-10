@@ -7,6 +7,8 @@ namespace Flecto.Dapper.UnitTests.FlectoBuilderTests;
 public class BindDateTests
 {
     private const string Table = "users";
+    private const string Column = "created_at";
+    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
 
     [Fact]
     public void BindDate_FilterIsNull_NotAddCondition()
@@ -15,12 +17,10 @@ public class BindDateTests
         DateFilter? filter = null;
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id") });
-
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -39,13 +39,12 @@ public class BindDateTests
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var ex = Assert.Throws<ArgumentException>(() =>
             builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build());
 
         // Assert
@@ -66,12 +65,11 @@ public class BindDateTests
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -103,12 +101,11 @@ public class BindDateTests
             NotEq = DateTime.Parse("2025-08-08T00:00:00Z")
         };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -142,12 +139,11 @@ public class BindDateTests
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -186,12 +182,11 @@ public class BindDateTests
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -235,12 +230,11 @@ public class BindDateTests
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -275,12 +269,11 @@ public class BindDateTests
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -309,12 +302,11 @@ public class BindDateTests
         var filter = new DateFilter { IsNull = true };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -334,12 +326,11 @@ public class BindDateTests
         var filter = new DateFilter { IsNull = false };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -362,12 +353,11 @@ public class BindDateTests
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter, "created_at")
+            .Select(_tc)
+            .BindDate(filter, Column)
             .Build();
 
         // Assert
@@ -388,11 +378,10 @@ public class BindDateTests
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
+            .Select(_tc)
             .BindDate(filter, "profile->>'created_at'")
             .Build();
 
@@ -424,13 +413,12 @@ public class BindDateTests
         var filter1 = new DateFilter { Eq = DateTime.Parse("2025-08-08T00:00:00Z") };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindDate(filter0, "created_at")
-            .BindDate(filter1, "created_at")
+            .Select(_tc)
+            .BindDate(filter0, Column)
+            .BindDate(filter1, Column)
             .Build();
 
         // Assert

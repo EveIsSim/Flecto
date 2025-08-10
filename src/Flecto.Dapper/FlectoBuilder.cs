@@ -349,8 +349,6 @@ public class FlectoBuilder
         return this;
     }
 
-    // 999 HERE tests 09.08.2025
-
     /// <summary>
     /// Binds an <see cref="EnumFilter{T}"/> to the query for the specified column of the target table,
     /// adding SQL conditions for equality, inequality, IN/NOT IN array checks, null checks,
@@ -361,9 +359,14 @@ public class FlectoBuilder
     /// <typeparam name="T">The enum type to bind in the filter.</typeparam>
     /// <param name="filter">The <see cref="EnumFilter{T}"/> specifying the conditions to apply.</param>
     /// <param name="column">The column name to bind the filter to.</param>
+    /// <param name="mode">Gets or sets the mode used for filtering enumeration values.</param>
     /// <returns>The current <see cref="FlectoBuilder"/> instance for chaining.</returns>
-    public FlectoBuilder BindEnum<T>(EnumFilter<T>? filter, string column) where T : struct, Enum
-    => BindEnum(filter, _fromTable, column);
+    public FlectoBuilder BindEnum<T>(
+        EnumFilter<T>? filter,
+        string column,
+        EnumFilterMode mode
+        ) where T : struct, Enum
+    => BindEnum(filter, _fromTable, column, mode);
 
     /// <summary>
     /// Binds an <see cref="EnumFilter{T}"/> to the query for the specified column of the specified table,
@@ -377,8 +380,13 @@ public class FlectoBuilder
     /// <param name="filter">The <see cref="EnumFilter{T}"/> specifying the conditions to apply.</param>
     /// <param name="table">The table containing the column to bind the filter to.</param>
     /// <param name="column">The column name to bind the filter to.</param>
+    /// <param name="mode">Gets or sets the mode used for filtering enumeration values.</param>
     /// <returns>The current <see cref="FlectoBuilder"/> instance for chaining.</returns>
-    private FlectoBuilder BindEnum<T>(EnumFilter<T>? filter, string table, string column)
+    private FlectoBuilder BindEnum<T>(
+        EnumFilter<T>? filter,
+        string table,
+        string column,
+        EnumFilterMode mode)
         where T : struct, Enum
     {
         if (filter is null) return this;
@@ -386,15 +394,17 @@ public class FlectoBuilder
 
         var cr = new ColumnRef(table, column, _enumCounter++, _castTypeMapper);
 
-        AddEnumComparisonIfPresent(cr, filter.Eq, ComparisonOperator.Eq, filter.FilterMode, _dialect.BuildEnumComparison);
-        AddEnumComparisonIfPresent(cr, filter.NotEq, ComparisonOperator.NotEq, filter.FilterMode, _dialect.BuildEnumComparison);
-        AddEnumArrayComparisonIfPresent(cr, filter.In, ArrayComparisonOperator.In, filter.FilterMode, _dialect.BuildEnumInArray);
-        AddEnumArrayComparisonIfPresent(cr, filter.NotIn, ArrayComparisonOperator.NotIn, filter.FilterMode, _dialect.BuildEnumInArray);
-        AddEnumNullCheckConditionIfPresent(cr, filter, filter.FilterMode);
-        AddEnumSortIfPresent(cr, filter, filter.FilterMode);
+        AddEnumComparisonIfPresent(cr, filter.Eq, ComparisonOperator.Eq, mode, _dialect.BuildEnumComparison);
+        AddEnumComparisonIfPresent(cr, filter.NotEq, ComparisonOperator.NotEq, mode, _dialect.BuildEnumComparison);
+        AddEnumArrayComparisonIfPresent(cr, filter.In, ArrayComparisonOperator.In, mode, _dialect.BuildEnumInArray);
+        AddEnumArrayComparisonIfPresent(cr, filter.NotIn, ArrayComparisonOperator.NotIn, mode, _dialect.BuildEnumNotInArray);
+        AddEnumNullCheckConditionIfPresent(cr, filter, mode);
+        AddEnumSortIfPresent(cr, filter, mode);
 
         return this;
     }
+
+    // 999 HERE tests 10.08.2025
 
     /// <summary>
     /// Binds a <see cref="FlagsEnumFilter{T}"/> to the query for the specified column of the target table,
@@ -742,6 +752,7 @@ public class FlectoBuilder
 
     #region AddSmthIfPresent
 
+    // 999 add multi tests with checking sorting order
     private void AddSortIfPresent(ColumnRef cr, IQueryFilter filter, Type clrType)
     {
         if (!filter.Sort.HasValue) return;

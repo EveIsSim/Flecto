@@ -1,4 +1,3 @@
-
 using Flecto.Core.Enums;
 using Flecto.Core.Models.Filters;
 using Flecto.Core.Models.Select;

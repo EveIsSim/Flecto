@@ -1,7 +1,5 @@
 namespace Flecto.Core.Models.Filters;
 
-// 999 tests: if someone will change format (check it)
-
 /// <summary>
 /// Represents a filter for <see cref="DateTime"/> values in queries
 /// </summary>
