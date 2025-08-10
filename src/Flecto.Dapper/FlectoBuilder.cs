@@ -404,8 +404,6 @@ public class FlectoBuilder
         return this;
     }
 
-    // 999 HERE tests 10.08.2025
-
     /// <summary>
     /// Binds a <see cref="FlagsEnumFilter{T}"/> to the query for the specified column of the target table,
     /// adding SQL conditions for equality, inequality, flag checks (HasFlag, NotHasFlag),
@@ -491,6 +489,8 @@ public class FlectoBuilder
 
         return this;
     }
+
+    // 999 HERE tests 10.08.2025
 
     private static readonly HashSet<Type> SupportedNumericTypes = new()
     {
@@ -944,7 +944,7 @@ public class FlectoBuilder
 
     private void AddCondition(string condition, string? paramName = null, object? value = null)
     {
-        // test: validate, that: is it definitely possible to add to conditioned if the parameter is null? 
+        // 999 test: validate, that: is it definitely possible to add to conditioned if the parameter is null? 
         _conditions.Add(condition);
         if (paramName != null)
             _parameters.Add(paramName, value);

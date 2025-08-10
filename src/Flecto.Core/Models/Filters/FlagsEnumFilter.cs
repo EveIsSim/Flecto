@@ -1,7 +1,5 @@
 namespace Flecto.Core.Models.Filters;
 
-// 999 tests: cover enum flags 
-
 /// <summary>
 /// Represents a filter for enumeration values with flags in queries
 /// </summary>
