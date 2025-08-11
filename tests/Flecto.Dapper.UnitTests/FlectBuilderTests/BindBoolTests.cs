@@ -7,6 +7,8 @@ namespace Flecto.Dapper.UnitTests.FlectoBuilderTests;
 public class BindBoolTests
 {
     private const string Table = "users";
+    private const string Column = "is_active";
+    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
 
     [Fact]
     public void BindBool_FilterIsNull_NotAddCondition()
@@ -15,12 +17,10 @@ public class BindBoolTests
         BoolFilter? filter = null;
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id") });
-
         // Act
         var result = builder
-            .Select(tc)
-            .BindBool(filter, "is_active")
+            .Select(_tc)
+            .BindBool(filter, Column)
             .Build();
 
         // Assert
@@ -34,13 +34,12 @@ public class BindBoolTests
         // Arrange
         var filter = new BoolFilter { Eq = true, NotEq = true };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var ex = Assert.Throws<ArgumentException>(() =>
             builder
-            .Select(tc)
-            .BindBool(filter, "is_active")
+            .Select(_tc)
+            .BindBool(filter, Column)
             .Build());
 
         // Assert
@@ -57,12 +56,11 @@ public class BindBoolTests
         // Arrange
         var filter = new BoolFilter { Eq = true };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindBool(filter, "is_active")
+            .Select(_tc)
+            .BindBool(filter, Column)
             .Build();
 
         // Assert
@@ -92,13 +90,12 @@ public class BindBoolTests
         var filter0 = new BoolFilter { Eq = true };
         var filter1 = new BoolFilter { Eq = false };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindBool(filter0, "is_active")
-            .BindBool(filter1, "is_active")
+            .Select(_tc)
+            .BindBool(filter0, Column)
+            .BindBool(filter1, Column)
             .Build();
 
         // Assert
@@ -136,8 +133,8 @@ public class BindBoolTests
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindBool(filter, "is_active")
+            .Select(_tc)
+            .BindBool(filter, Column)
             .Build();
 
         // Assert
@@ -166,12 +163,11 @@ public class BindBoolTests
         // Arrange
         var filter = new BoolFilter { IsNull = true };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindBool(filter, "is_active")
+            .Select(_tc)
+            .BindBool(filter, Column)
             .Build();
 
         // Assert
@@ -185,12 +181,11 @@ public class BindBoolTests
         // Arrange
         var filter = new BoolFilter { IsNull = false };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindBool(filter, "is_active")
+            .Select(_tc)
+            .BindBool(filter, Column)
             .Build();
 
         // Assert
@@ -208,12 +203,11 @@ public class BindBoolTests
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
-            .BindBool(filter, "is_active")
+            .Select(_tc)
+            .BindBool(filter, Column)
             .Build();
 
         // Assert
@@ -230,11 +224,10 @@ public class BindBoolTests
         // Arrange
         var filter = new BoolFilter { Eq = true };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
+            .Select(_tc)
             .BindBool(filter, "profile->'is_active'")
             .Build();
 

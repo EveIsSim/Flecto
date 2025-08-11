@@ -490,8 +490,6 @@ public class FlectoBuilder
         return this;
     }
 
-    // 999 HERE tests 10.08.2025
-
     private static readonly HashSet<Type> SupportedNumericTypes = new()
     {
         typeof(short),
@@ -550,7 +548,7 @@ public class FlectoBuilder
 
         if (!SupportedNumericTypes.Contains(typeof(T)))
             throw new ArgumentException(
-                $"NumericFilter<{typeof(T).Name}> is not supported for column '{cr.SqlName}'.",
+                $"NumericFilter<{typeof(T).Name}> is not supported for column '{column}'.",
                 nameof(filter));
 
         return BuildNumericFilter(cr, filter);
@@ -574,6 +572,8 @@ public class FlectoBuilder
 
         return this;
     }
+
+    // 999 HERE tests 12.08.2025
 
     /// <summary>
     /// Binds a <see cref="StringFilter"/> to the query for the specified column of the target table,

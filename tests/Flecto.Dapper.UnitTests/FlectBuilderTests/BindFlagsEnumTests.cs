@@ -192,7 +192,6 @@ public class BindFlagsEnumTests
         // Assert
         var expectedParam = "users_access_NotHasFlag_0";
 
-        Console.WriteLine(result.Sql);
         Assert.Equal(
             "SELECT users.id " +
             "FROM users " +
@@ -338,14 +337,12 @@ public class BindFlagsEnumTests
 
         // Assert
         var expectedParam = "users_profile_access_HasFlag_0";
-        Console.WriteLine(result.Sql);
         Assert.Equal(
             "SELECT users.id " +
             "FROM users " +
             $"WHERE (users.profile->>'access')::int4 & @{expectedParam} <> 0",
             result.Sql
         );
-
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
