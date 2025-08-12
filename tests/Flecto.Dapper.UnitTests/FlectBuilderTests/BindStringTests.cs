@@ -53,4 +53,263 @@ public class BindStringTests
             """;
         Assert.Equal(expected, ex.Message);
     }
+
+    [Theory]
+    [InlineData(true, "Alice", "=")]
+    [InlineData(false, "alice", "ILIKE")]
+    public void BindString_Eq_SensitiveCases(
+        bool caseSensitive,
+        string expectedValue,
+        string operation)
+    {
+        // Arrange
+        var filter = new StringFilter
+        {
+            Eq = "Alice",
+            CaseSensitive = caseSensitive
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindString(filter, Column)
+            .Build();
+
+        // Assert
+        var expectedParam = "users_name_Eq_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.name {operation} @{expectedParam}",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                name => name,
+                name => result.Parameters.Get<string>(name));
+
+        Assert.Single(paramDict);
+        Assert.True(paramDict.ContainsKey(expectedParam));
+        Assert.Equal(expectedValue, paramDict[expectedParam]);
+    }
+
+    [Theory]
+    [InlineData(true, "Alice", "<>")]
+    [InlineData(false, "alice", "NOT ILIKE")]
+    public void BindString_NotEq_SensitiveCases(
+        bool caseSensitive,
+        string expectedValue,
+        string operation)
+    {
+        // Arrange
+        var filter = new StringFilter
+        {
+            NotEq = "Alice",
+            CaseSensitive = caseSensitive
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindString(filter, Column)
+            .Build();
+
+        // Assert
+        var expectedParam = "users_name_NotEq_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.name {operation} @{expectedParam}",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                name => name,
+                name => result.Parameters.Get<string>(name));
+
+        Assert.Single(paramDict);
+        Assert.True(paramDict.ContainsKey(expectedParam));
+        Assert.Equal(expectedValue, paramDict[expectedParam]);
+    }
+
+    [Theory]
+    [InlineData(true, "%Ali%", "LIKE")]
+    [InlineData(false, "%ali%", "ILIKE")]
+    public void BindString_Contains_SensitiveCases(
+        bool caseSensitive,
+        string expectedValue,
+        string operation)
+    {
+        // Arrange
+        var filter = new StringFilter
+        {
+            Contains = "Ali",
+            CaseSensitive = caseSensitive
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindString(filter, Column)
+            .Build();
+
+        // Assert
+        var expectedParam = "users_name_Contains_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.name {operation} @{expectedParam}",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                name => name,
+                name => result.Parameters.Get<string>(name));
+
+        Assert.Single(paramDict);
+        Assert.True(paramDict.ContainsKey(expectedParam));
+        Assert.Equal(expectedValue, paramDict[expectedParam]);
+    }
+
+    [Theory]
+    [InlineData(true, "Ali%", "LIKE")]
+    [InlineData(false, "ali%", "ILIKE")]
+    public void BindString_StartsWith_SensitiveCases(
+        bool caseSensitive,
+        string expectedValue,
+        string operation)
+    {
+        // Arrange
+        var filter = new StringFilter
+        {
+            StartsWith = "Ali",
+            CaseSensitive = caseSensitive
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindString(filter, Column)
+            .Build();
+
+        // Assert
+        var expectedParam = "users_name_StartsWith_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.name {operation} @{expectedParam}",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                name => name,
+                name => result.Parameters.Get<string>(name));
+
+        Assert.Single(paramDict);
+        Assert.True(paramDict.ContainsKey(expectedParam));
+        Assert.Equal(expectedValue, paramDict[expectedParam]);
+    }
+
+    [Theory]
+    [InlineData(true, "%ICE", "LIKE")]
+    [InlineData(false, "%ice", "ILIKE")]
+    public void BindString_EndsWith_SensitiveCases(
+        bool caseSensitive,
+        string expectedValue,
+        string operation)
+    {
+        // Arrange
+        var filter = new StringFilter
+        {
+            EndsWith = "ICE",
+            CaseSensitive = caseSensitive
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindString(filter, Column)
+            .Build();
+
+        // Assert
+        var expectedParam = "users_name_EndsWith_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.name {operation} @{expectedParam}",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                name => name,
+                name => result.Parameters.Get<string>(name));
+
+        Assert.Single(paramDict);
+        Assert.True(paramDict.ContainsKey(expectedParam));
+        Assert.Equal(expectedValue, paramDict[expectedParam]);
+    }
+
+    // 999 we have problem here, need fix sql build for In, NotIn with caseSansitive
+    //[Theory]
+    //[InlineData(true, "= ANY", new string[] { "Anna", "Bob" })]
+    //[InlineData(false, "= ANY", new string[] { "anna", "bob" })]
+    //public void BindString_InArray_SensitiveCases(
+    //    bool caseSensitive,
+    //    string operation,
+    //    string[] expectedValue)
+    //{
+    //    // Arrange
+    //    var filter = new StringFilter
+    //    {
+    //        In = ["Anna", "Bob"],
+    //        CaseSensitive = caseSensitive
+    //    };
+
+    //    var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+    //    // Act
+    //    var result = builder
+    //        .Select(_tc)
+    //        .BindString(filter, Column)
+    //        .Build();
+
+    //    // Assert
+    //    var expectedParam = "users_name_In_0";
+
+    //    Assert.Equal(
+    //        "SELECT users.id " +
+    //        "FROM users " +
+    //        $"WHERE users.name {operation}(@{expectedParam})",
+    //        result.Sql
+    //    );
+
+    //    var paramDict = result.Parameters.ParameterNames
+    //        .ToDictionary(
+    //            name => name,
+    //            name => result.Parameters.Get<string[]>(name));
+
+    //    Assert.Single(paramDict);
+    //    Assert.True(paramDict.ContainsKey(expectedParam));
+    //    Assert.Equal(expectedValue, paramDict[expectedParam]);
+    //}
 }
