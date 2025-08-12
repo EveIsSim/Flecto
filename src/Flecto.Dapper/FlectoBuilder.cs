@@ -573,8 +573,6 @@ public class FlectoBuilder
         return this;
     }
 
-    // 999 HERE tests 12.08.2025
-
     /// <summary>
     /// Binds a <see cref="StringFilter"/> to the query for the specified column of the target table,
     /// adding SQL conditions for equality, inequality, IN/NOT IN array checks, pattern matching
@@ -622,6 +620,8 @@ public class FlectoBuilder
     }
 
     #endregion Bind
+
+    // 999 HERE tests 12.08.2025
 
     /// <summary>
     /// Applies pagination to the query using the specified <see cref="PaginationFilter"/>.

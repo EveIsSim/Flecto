@@ -121,6 +121,9 @@ public static class StringValidator
             }
         }
 
+        foreach (var error in CommonValidator.ValidateArrayIfNeeded(values, fieldName))
+            yield return error;
+
         foreach (var error in ValidateViaCustomValidatorIfNeeded<string[]>(values, fieldName, customArrayValidator))
             yield return error;
     }
