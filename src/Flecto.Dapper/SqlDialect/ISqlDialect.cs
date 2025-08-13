@@ -69,20 +69,12 @@ internal interface ISqlDialect
     /// <summary> 
     /// Builds a SQL condition for checking string equality on a column. 
     /// </summary>
-    (string SqlCondition, string ParamValue) BuildStringEquals(
-        string column,
-        string paramName,
-        string input,
-        bool caseSensitive);
+    string BuildStringEquals(string column, string paramName, bool caseSensitive);
 
     /// <summary> 
     /// Builds a SQL condition for checking string inequality on a column. 
     /// </summary>
-    (string SqlCondition, string ParamValue) BuildStringNotEquals(
-        string column,
-        string paramName,
-        string input,
-        bool caseSensitive);
+    string BuildStringNotEquals(string column, string paramName, bool caseSensitive);
 
     /// <summary> 
     /// Builds a SQL LIKE condition for a string column using the specified match type and case sensitivity. 

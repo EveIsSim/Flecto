@@ -55,12 +55,9 @@ public class BindStringTests
     }
 
     [Theory]
-    [InlineData(true, "Alice", "=")]
-    [InlineData(false, "alice", "ILIKE")]
-    public void BindString_Eq_SensitiveCases(
-        bool caseSensitive,
-        string expectedValue,
-        string operation)
+    [InlineData(true, "=")]
+    [InlineData(false, "ILIKE")]
+    public void BindString_Eq_SensitiveCases(bool caseSensitive, string operation)
     {
         // Arrange
         var filter = new StringFilter
@@ -94,16 +91,13 @@ public class BindStringTests
 
         Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
-        Assert.Equal(expectedValue, paramDict[expectedParam]);
+        Assert.Equal(filter.Eq, paramDict[expectedParam]);
     }
 
     [Theory]
-    [InlineData(true, "Alice", "<>")]
-    [InlineData(false, "alice", "NOT ILIKE")]
-    public void BindString_NotEq_SensitiveCases(
-        bool caseSensitive,
-        string expectedValue,
-        string operation)
+    [InlineData(true, "<>")]
+    [InlineData(false, "NOT ILIKE")]
+    public void BindString_NotEq_SensitiveCases(bool caseSensitive, string operation)
     {
         // Arrange
         var filter = new StringFilter
@@ -137,16 +131,13 @@ public class BindStringTests
 
         Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
-        Assert.Equal(expectedValue, paramDict[expectedParam]);
+        Assert.Equal(filter.NotEq, paramDict[expectedParam]);
     }
 
     [Theory]
-    [InlineData(true, "%Ali%", "LIKE")]
-    [InlineData(false, "%ali%", "ILIKE")]
-    public void BindString_Contains_SensitiveCases(
-        bool caseSensitive,
-        string expectedValue,
-        string operation)
+    [InlineData(true, "LIKE")]
+    [InlineData(false, "ILIKE")]
+    public void BindString_Contains_SensitiveCases(bool caseSensitive, string operation)
     {
         // Arrange
         var filter = new StringFilter
@@ -180,16 +171,13 @@ public class BindStringTests
 
         Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
-        Assert.Equal(expectedValue, paramDict[expectedParam]);
+        Assert.Equal($"%{filter.Contains}%", paramDict[expectedParam]);
     }
 
     [Theory]
-    [InlineData(true, "Ali%", "LIKE")]
-    [InlineData(false, "ali%", "ILIKE")]
-    public void BindString_StartsWith_SensitiveCases(
-        bool caseSensitive,
-        string expectedValue,
-        string operation)
+    [InlineData(true, "LIKE")]
+    [InlineData(false, "ILIKE")]
+    public void BindString_StartsWith_SensitiveCases(bool caseSensitive, string operation)
     {
         // Arrange
         var filter = new StringFilter
@@ -223,16 +211,13 @@ public class BindStringTests
 
         Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
-        Assert.Equal(expectedValue, paramDict[expectedParam]);
+        Assert.Equal($"{filter.StartsWith}%", paramDict[expectedParam]);
     }
 
     [Theory]
-    [InlineData(true, "%ICE", "LIKE")]
-    [InlineData(false, "%ice", "ILIKE")]
-    public void BindString_EndsWith_SensitiveCases(
-        bool caseSensitive,
-        string expectedValue,
-        string operation)
+    [InlineData(true, "LIKE")]
+    [InlineData(false, "ILIKE")]
+    public void BindString_EndsWith_SensitiveCases(bool caseSensitive, string operation)
     {
         // Arrange
         var filter = new StringFilter
@@ -266,7 +251,7 @@ public class BindStringTests
 
         Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
-        Assert.Equal(expectedValue, paramDict[expectedParam]);
+        Assert.Equal($"%{filter.EndsWith}", paramDict[expectedParam]);
     }
 
     // 999 we have problem here, need fix sql build for In, NotIn with caseSansitive

@@ -878,15 +878,15 @@ public class FlectoBuilder
         ComparisonOperator op,
         bool caseSensitive,
         Type clrType,
-        Func<string, string, string, bool, (string, string)> buildConditionSql)
+        Func<string, string, bool, string> buildConditionSql)
     {
         if (value is null) return;
 
         SqlOperatorHelper.EnsureEqualityOperator(op);
 
         var param = cr.GetParamName(op);
-        var (condition, values) = buildConditionSql(cr.SqlName(clrType), param, value, caseSensitive);
-        AddCondition(condition, param, values);
+        var condition = buildConditionSql(cr.SqlName(clrType), param, caseSensitive);
+        AddCondition(condition, param, value);
 
     }
 

@@ -70,53 +70,39 @@ internal static class StringSqlBuilder
     }
 
     /// <summary>
-    /// Builds a SQL condition for checking string equality on a column, using either <c>=</c> or <c>ILIKE</c> depending on case sensitivity.
-    /// Converts the input to lowercase if <paramref name="caseSensitive"/> is false.
+    /// Builds a SQL condition for checking string equality on a column, using either <c>=</c> 
+    /// or <c>ILIKE</c> depending on case sensitivity.
     /// </summary>
     /// <param name="column">The column name to compare.</param>
     /// <param name="paramName">The parameter name to use in the SQL query.</param>
-    /// <param name="input">The string value to compare against.</param>
     /// <param name="caseSensitive">Whether the comparison should be case-sensitive.</param>
-    /// <returns>A tuple containing the SQL condition and the processed parameter value.</returns>
-    internal static (string SqlCondition, string ParamValue) BuildEquals(
+    /// <returns>SQL condition</returns>
+    internal static string BuildEquals(
         string column,
         string paramName,
-        string input,
         bool caseSensitive)
     {
-        var val = caseSensitive ? input : input.ToLowerInvariant();
-        var sqlCondition = caseSensitive
+        return caseSensitive
             ? $"{column} {SqlOps.Eq} @{paramName}"
             : $"{column} {PgSql.ILIKE} @{paramName}";
-
-        return (sqlCondition, val);
     }
 
     /// <summary>
-    /// Builds a SQL condition for checking string inequality on a column, using either <c>!=</c> or <c>NOT ILIKE</c> depending on case sensitivity.
-    /// Converts the input to lowercase if <paramref name="caseSensitive"/> is false.
+    /// Builds a SQL condition for checking string inequality on a column, using either <c>!=</c> 
+    /// or <c>NOT ILIKE</c> depending on case sensitivity.
     /// </summary>
     /// <param name="column">The column name to compare.</param>
     /// <param name="paramName">The parameter name to use in the SQL query.</param>
-    /// <param name="input">The string value to compare against.</param>
     /// <param name="caseSensitive">Whether the comparison should be case-sensitive.</param>
-    /// <returns>A tuple containing the SQL condition and the processed parameter value.</returns>
-    internal static (string SqlCondition, string ParamValue) BuildNotEquals(
-        string column,
-        string paramName,
-        string input,
-        bool caseSensitive)
-    {
-        var val = caseSensitive ? input : input.ToLowerInvariant();
-        var sqlCondition = caseSensitive
-            ? $"{column} {SqlOps.NotEq} @{paramName}"
-            : $"{column} {PgSql.NOT_ILIKE} @{paramName}";
-
-        return (sqlCondition, val);
-    }
+    /// <returns>SQL condition</returns>
+    internal static string BuildNotEquals(string column, string paramName, bool caseSensitive)
+    => caseSensitive
+        ? $"{column} {SqlOps.NotEq} @{paramName}"
+        : $"{column} {PgSql.NOT_ILIKE} @{paramName}";
 
     /// <summary>
-    /// Builds a SQL LIKE-based condition for matching a string column using the specified <see cref="StringMatchType"/> and case sensitivity.
+    /// Builds a SQL LIKE-based condition for matching a string column using the specified 
+    /// <see cref="StringMatchType"/> and case sensitivity.
     /// Supports:
     /// <list type="bullet">
     /// <item><see cref="StringMatchType.Contains"/> - generates a pattern of <c>%value%</c>.</item>
@@ -124,7 +110,6 @@ internal static class StringSqlBuilder
     /// <item><see cref="StringMatchType.EndsWith"/> - generates a pattern of <c>%value</c>.</item>
     /// </list>
     /// Uses <c>LIKE</c> or <c>ILIKE</c> depending on <paramref name="caseSensitive"/>.
-    /// Converts the input to lowercase if <paramref name="caseSensitive"/> is false.
     /// </summary>
     /// <param name="column">The column name to apply the pattern match against.</param>
     /// <param name="paramName">The parameter name to use in the SQL query.</param>
@@ -141,13 +126,12 @@ internal static class StringSqlBuilder
         bool caseSensitive)
     {
         var op = CommonSqlBuilder.LikeOperator(caseSensitive);
-        var adoptInput = caseSensitive ? input : input.ToLowerInvariant();
 
         var val = matchType switch
         {
-            StringMatchType.Contains => $"%{adoptInput}%",
-            StringMatchType.StartsWith => $"{adoptInput}%",
-            StringMatchType.EndsWith => $"%{adoptInput}",
+            StringMatchType.Contains => $"%{input}%",
+            StringMatchType.StartsWith => $"{input}%",
+            StringMatchType.EndsWith => $"%{input}",
             _ => throw new ArgumentOutOfRangeException(nameof(matchType), matchType, null)
         };
 

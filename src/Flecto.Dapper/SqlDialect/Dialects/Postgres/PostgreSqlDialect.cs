@@ -38,13 +38,13 @@ internal class PostgresSqlDialect : ISqlDialect
         string column, string paramName, string[] input, bool caseSensitive)
     => StringSqlBuilder.BuildNotInArray(column, paramName, input, caseSensitive);
 
-    public (string SqlCondition, string ParamValue) BuildStringEquals(
-        string column, string paramName, string input, bool caseSensitive)
-    => StringSqlBuilder.BuildEquals(column, paramName, input, caseSensitive);
+    public string BuildStringEquals(
+        string column, string paramName, bool caseSensitive)
+    => StringSqlBuilder.BuildEquals(column, paramName, caseSensitive);
 
-    public (string SqlCondition, string ParamValue) BuildStringNotEquals(
-        string column, string paramName, string input, bool caseSensitive)
-    => StringSqlBuilder.BuildNotEquals(column, paramName, input, caseSensitive);
+    public string BuildStringNotEquals(
+        string column, string paramName, bool caseSensitive)
+    => StringSqlBuilder.BuildNotEquals(column, paramName, caseSensitive);
 
     public (string SqlCondition, string ParamValue) BuildStringLike(
         string column, string paramName, string input, StringMatchType matchType, bool caseSensitive)
