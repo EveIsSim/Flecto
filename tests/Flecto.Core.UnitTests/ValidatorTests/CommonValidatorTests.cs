@@ -169,6 +169,21 @@ public class CommonValidatorTests
         Assert.Equal("Array contains duplicate values", error.Error);
     }
 
+    [Fact]
+    public void ValidateArrayIfNeeded_ArrayWithAnyNull_ReturnsError()
+    {
+        // Arrange
+        var arr = new[] { "Alice", null };
+
+        // Act
+        var result = CommonValidator.ValidateArrayIfNeeded(arr, "MyField");
+
+        // Assert
+        var error = Assert.Single(result);
+        Assert.Equal("MyField", error.Field);
+        Assert.Equal("Array contains null values", error.Error);
+    }
+
     #endregion
 
     #region ValidateViaCustomValidatorIfNeeded

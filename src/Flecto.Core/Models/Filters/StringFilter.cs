@@ -7,8 +7,9 @@ public class StringFilter : IQueryFilter
 {
     /// <summary>
     /// Gets or sets a value indicating whether string comparisons should be case-sensitive
+    /// Default value is TRUE.
     /// </summary>
-    public bool CaseSensitive { get; set; }
+    public bool CaseSensitive { get; set; } = true;
     /// <summary>
     /// Gets or sets a value indicating that the property should be equal to the specified string
     /// </summary>

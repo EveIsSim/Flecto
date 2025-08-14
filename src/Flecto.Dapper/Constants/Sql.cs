@@ -10,6 +10,7 @@ internal static class Sql
     internal const string FROM = "FROM";
     internal const string INNER_JOIN = "INNER JOIN";
     internal const string LIKE = "LIKE";
+    internal const string NOT_LIKE = "NOT LIKE";
     internal const string LIMIT = "LIMIT";
     internal const string LOWER = "LOWER";
     internal const string ON = "ON";

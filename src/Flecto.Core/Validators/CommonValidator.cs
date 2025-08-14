@@ -48,7 +48,11 @@ internal static class CommonValidator
 
         if (arr.Length == 0)
             yield return (fieldName, "Array cannot be empty if specified");
-        else if (arr.Length != arr.Distinct().Count())
+
+        if (arr.Any(s => s is null))
+            yield return (fieldName, "Array contains null values");
+
+        if (arr.Length != arr.Distinct().Count())
             yield return (fieldName, "Array contains duplicate values");
     }
 

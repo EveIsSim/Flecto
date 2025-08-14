@@ -21,23 +21,19 @@ internal static class StringSqlBuilder
     /// <param name="input">The array of string values to check against.</param>
     /// <param name="caseSensitive">Whether the comparison should be case-sensitive.</param>
     /// <returns>A tuple containing the SQL condition and the processed array of parameter values.</returns>
-    /// <exception cref="ArgumentException">Thrown if the input array is null or empty.</exception>
     internal static (string SqlCondition, string[] paramValues) BuildInArray(
         string column,
         string paramName,
         string[] input,
         bool caseSensitive)
     {
-        if (input is null || input.Length == 0)
-            throw new ArgumentException("value should not be empty");
+        if (caseSensitive)
+        {
+            return ($"{column} {SqlOps.Eq} {PgSqlOps.ANY}(@{paramName})", input);
+        }
 
-        var values = caseSensitive
-            ? input
-            : input.Select(x => x.ToLowerInvariant()).ToArray();
-
-        var sqlCondition = $"{column} {SqlOps.Eq} {PgSqlOps.ANY}(@{paramName})";
-
-        return (sqlCondition, values);
+        var lowered = input.Select(x => x.ToLowerInvariant()).ToArray();
+        return ($"{Sql.LOWER}({column}) {SqlOps.Eq} {PgSqlOps.ANY}(@{paramName})", lowered);
     }
 
     /// <summary>
@@ -50,23 +46,19 @@ internal static class StringSqlBuilder
     /// <param name="input">The array of string values to check against.</param>
     /// <param name="caseSensitive">Whether the comparison should be case-sensitive.</param>
     /// <returns>A tuple containing the SQL condition and the processed array of parameter values.</returns>
-    /// <exception cref="ArgumentException">Thrown if the input array is null or empty.</exception>
     internal static (string SqlCondition, string[] paramValues) BuildNotInArray(
         string column,
         string paramName,
         string[] input,
         bool caseSensitive)
     {
-        if (input is null || input.Length == 0)
-            throw new ArgumentException("value should not be empty");
+        if (caseSensitive)
+        {
+            return ($"{column} {SqlOps.NotEq} {PgSqlOps.ALL}(@{paramName})", input);
+        }
 
-        var values = caseSensitive
-            ? input
-            : input.Select(x => x.ToLowerInvariant()).ToArray();
-
-        var sqlCondition = $"{column} {SqlOps.NotEq} {PgSqlOps.ANY}(@{paramName})";
-
-        return (sqlCondition, values);
+        var lowered = input.Select(x => x.ToLowerInvariant()).ToArray();
+        return ($"{Sql.LOWER}({column}) {SqlOps.NotEq} {PgSqlOps.ALL}(@{paramName})", lowered);
     }
 
     /// <summary>
