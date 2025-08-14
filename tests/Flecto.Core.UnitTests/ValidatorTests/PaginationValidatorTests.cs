@@ -127,10 +127,12 @@ public class PaginationValidatorTests
         var ex = Assert.Throws<ArgumentException>(() => PaginationValidator.EnsureValid(filter));
 
         // Assert
-        Assert.Equal("filter", ex.ParamName);
-        Assert.Contains("Invalid PaginationFilter", ex.Message);
-        Assert.Contains("Limit: Value should be greater than 0", ex.Message);
-        Assert.Contains("Page: Value should be greater than 0", ex.Message);
+        var expected = """
+            PaginationFilter: validation failed:
+            Limit: Value should be greater than 0
+            Page: Value should be greater than 0
+            """;
+        Assert.Equal(expected, ex.Message);
     }
 
     #endregion

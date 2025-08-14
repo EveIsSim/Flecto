@@ -621,8 +621,6 @@ public class FlectoBuilder
 
     #endregion Bind
 
-    // 999 HERE tests 12.08.2025
-
     /// <summary>
     /// Applies pagination to the query using the specified <see cref="PaginationFilter"/>.
     /// Calculates the <c>LIMIT</c> and <c>OFFSET</c> based on the filter,
@@ -640,7 +638,7 @@ public class FlectoBuilder
         return this;
     }
 
-    // 999 cover tests
+    // 999 HERE tests 14.08.2025
 
     /// <summary>
     /// Creates a deep copy of the current <see cref="FlectoBuilder"/> instance,

@@ -47,12 +47,7 @@ public static class PaginationValidator
     /// </summary>
     /// <param name="filter">The <see cref="PaginationFilter"/> to validate.</param>
     internal static void EnsureValid(PaginationFilter filter)
-    {
-        var errors = Validate(filter).ToArray();
-        if (errors.Length == 0) return;
-
-        throw new ArgumentException(
-            $"Invalid PaginationFilter: {string.Join("; ", errors.Select(e => $"{e.Field}: {e.Error}"))}",
-            nameof(filter));
-    }
+    => CommonValidator.ThrowIfErrors(
+            Validate(filter).ToArray(),
+            "PaginationFilter: validation failed:");
 }
