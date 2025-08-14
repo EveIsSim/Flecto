@@ -1,9 +1,11 @@
 using Flecto.Core.Enums;
 using Flecto.Core.Models.Filters;
+using Flecto.Core.UnitTests.Collections;
 using Flecto.Core.Validators;
 
 namespace Flecto.Core.UnitTests.ValidatorTests;
 
+[Collection(CollectionConsts.TestColletionName)]
 public class SearchValidatorTests
 {
     [Fact]

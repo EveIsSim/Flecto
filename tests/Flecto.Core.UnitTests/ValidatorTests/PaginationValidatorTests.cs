@@ -1,8 +1,10 @@
 using Flecto.Core.Models.Filters;
+using Flecto.Core.UnitTests.Collections;
 using Flecto.Core.Validators;
 
 namespace Flecto.Core.UnitTests.ValidatorTests;
 
+[Collection(CollectionConsts.TestColletionName)]
 public class PaginationValidatorTests
 {
     [Fact]
@@ -107,7 +109,7 @@ public class PaginationValidatorTests
         };
 
         // Act
-        var ex = Record.Exception(() => PaginationValidator.EnsureValid(filter));
+        var ex = Record.Exception(() => PaginationValidator.EnsureValid(filter, false));
 
         // Assert
         Assert.Null(ex);
@@ -124,13 +126,34 @@ public class PaginationValidatorTests
         };
 
         // Act
-        var ex = Assert.Throws<ArgumentException>(() => PaginationValidator.EnsureValid(filter));
+        var ex = Assert.Throws<ArgumentException>(() => PaginationValidator.EnsureValid(filter, false));
 
         // Assert
         var expected = """
             PaginationFilter: validation failed:
             Limit: Value should be greater than 0
             Page: Value should be greater than 0
+            """;
+        Assert.Equal(expected, ex.Message);
+    }
+
+    [Fact]
+    public void EnsureValid_WithForbiddenPagination_ThrowsDetailedError()
+    {
+        // Arrange
+        var filter = new PaginationFilter
+        {
+            Limit = 0,
+            Page = -1
+        };
+
+        // Act
+        var ex = Assert.Throws<ArgumentException>(() => PaginationValidator.EnsureValid(filter, true));
+
+        // Assert
+        var expected = """
+            PaginationFilter: validation failed:
+            Pagination (LIMIT/OFFSET) is not allowed when using COUNT(*) query.
             """;
         Assert.Equal(expected, ex.Message);
     }

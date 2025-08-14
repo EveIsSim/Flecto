@@ -30,6 +30,7 @@ public class FlectoBuilder
     private bool _selectWasSet = false;
 
     private int _searchCounter = 0;
+    private int _searchTsVectorCounter = 0;
     private int _boolCounter = 0;
     private int _dateCounter = 0;
     private int _enumCounter = 0;
@@ -40,6 +41,7 @@ public class FlectoBuilder
 
     private readonly string _fromTable;
     private bool _exceptOrderBy;
+    private bool _forbidPagination;
     private (int Limit, int Offset)? _paging;
     private List<string> _conditions = new();
     private readonly DynamicParameters _parameters = new();
@@ -94,6 +96,7 @@ public class FlectoBuilder
 
         _selectColumns = $"{Sql.SELECT} *";
         _exceptOrderBy = false;
+        _forbidPagination = false;
         _selectWasSet = true;
 
         return this;
@@ -110,6 +113,7 @@ public class FlectoBuilder
 
         _selectColumns = $"{Sql.SELECT} COUNT(*)";
         _exceptOrderBy = true;
+        _forbidPagination = true;
         _selectWasSet = true;
 
         return this;
@@ -146,6 +150,7 @@ public class FlectoBuilder
 
         _selectColumns = $"{Sql.SELECT} {string.Join(", ", columns)}";
         _exceptOrderBy = false;
+        _forbidPagination = false;
         _selectWasSet = true;
 
         return this;
@@ -255,8 +260,8 @@ public class FlectoBuilder
         if (filter is null) return this;
         SearchValidator.EnsureValidTsVector(filter, tablesWithColumns, _dialectType);
 
-        const string prefix = "tsvector_query_";
-        var paramName = Common.GenSearchParamName(prefix, _searchCounter);
+        const string prefix = "search_tsvector_param_";
+        var paramName = Common.GenSearchParamName(prefix, _searchTsVectorCounter++);
         var condition = _dialect.BuildTsVectorSearchCondition(paramName, mode, config, tablesWithColumns);
         AddCondition(condition, paramName, filter.Value);
 
@@ -631,14 +636,12 @@ public class FlectoBuilder
     /// <returns>The current <see cref="FlectoBuilder"/> instance for chaining.</returns>
     public FlectoBuilder ApplyPaging(PaginationFilter filter)
     {
-        PaginationValidator.EnsureValid(filter);
+        PaginationValidator.EnsureValid(filter, _forbidPagination);
 
         _paging = (filter.Limit, filter.Limit * (filter.Page - 1));
 
         return this;
     }
-
-    // 999 HERE tests 14.08.2025
 
     /// <summary>
     /// Creates a deep copy of the current <see cref="FlectoBuilder"/> instance,
@@ -655,6 +658,7 @@ public class FlectoBuilder
         clone._selectWasSet = _selectWasSet;
 
         clone._searchCounter = _searchCounter;
+        clone._searchTsVectorCounter = _searchTsVectorCounter;
         clone._boolCounter = _boolCounter;
         clone._dateCounter = _dateCounter;
         clone._enumCounter = _enumCounter;

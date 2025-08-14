@@ -7,6 +7,7 @@ namespace Flecto.Dapper.UnitTests.FlectoBuilderTests;
 public class SearchTests
 {
     private const string Table = "users";
+    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
 
     #region Search
 
@@ -15,11 +16,10 @@ public class SearchTests
     {
         // Arrange
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
 
         // Act
         var result = builder
-            .Select(tc)
+            .Select(_tc)
             .Search(null, "name", "email")
             .Build();
 
@@ -52,11 +52,9 @@ public class SearchTests
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id") });
-
         // Act
         var result = builder
-            .Select(tc)
+            .Select(_tc)
             .Search(filter, "name", "email")
             .Build();
 
@@ -124,11 +122,9 @@ public class SearchTests
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id") });
-
         // Act
         var result = builder
-            .Select(tc)
+            .Select(_tc)
             .Search(filter1, "name", "last_name")
             .Search(filter2, "role", "additional_role")
             .Build();
@@ -258,7 +254,7 @@ public class SearchTests
                     "COALESCE(users.bio, '') || ' ' || " +
                     "COALESCE(users.notes, '') || ' ' || " +
                     "COALESCE(users.profile->'personal'->>'full_name', '')" +
-                ") @@ plainto_tsquery('simple', @tsvector_query_0)",
+                ") @@ plainto_tsquery('simple', @search_tsvector_param_0)",
             result.Sql);
 
         // Assert params
@@ -266,8 +262,8 @@ public class SearchTests
             .ToDictionary(name => name, name => result.Parameters.Get<string>(name));
 
         Assert.Single(paramDict);
-        Assert.True(paramDict.ContainsKey("tsvector_query_0"));
-        Assert.Equal("developer", paramDict["tsvector_query_0"]);
+        Assert.True(paramDict.ContainsKey("search_tsvector_param_0"));
+        Assert.Equal("developer", paramDict["search_tsvector_param_0"]);
     }
 
     [Fact]
@@ -277,11 +273,9 @@ public class SearchTests
         var filter = new SearchFilter { Value = "csharp & backend" };
         var builder = new FlectoBuilder("profiles", DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id") });
-
         // Act
         var result = builder
-            .Select(tc)
+            .Select(_tc)
             .SearchTsVector(filter, new[] { "summary", "profile->'personal'->>'full_name'" }, TextSearchMode.WebStyle, "english")
             .Build();
 
@@ -292,7 +286,7 @@ public class SearchTests
             "WHERE to_tsvector('english', " +
                     "COALESCE(profiles.summary, '') || ' ' || " +
                     "COALESCE(profiles.profile->'personal'->>'full_name', '')" +
-                ") @@ websearch_to_tsquery('english', @tsvector_query_0)",
+                ") @@ websearch_to_tsquery('english', @search_tsvector_param_0)",
             result.Sql);
 
         // Assert params
@@ -300,7 +294,98 @@ public class SearchTests
             .ToDictionary(name => name, name => result.Parameters.Get<string>(name));
 
         Assert.Single(paramDict);
-        Assert.Equal("csharp & backend", paramDict["tsvector_query_0"]);
+        Assert.Equal("csharp & backend", paramDict["search_tsvector_param_0"]);
+    }
+
+    #endregion
+
+    #region Multi
+
+    [Fact]
+    public void SearchMulti_AddsCondition()
+    {
+        // Arrange
+        var searchfilter0 = new SearchFilter { Value = "joHn", CaseSensitive = false };
+        var searchfilter1 = new SearchFilter { Value = "Alice", CaseSensitive = true };
+
+        var plainFilter0 = new SearchFilter { Value = "developer" };
+        var plainFilter1 = new SearchFilter { Value = "tech_guy" };
+
+        var webStyleFilter2 = new SearchFilter { Value = "csharp & backend" };
+        var webStyleFilter3 = new SearchFilter { Value = "golang" };
+
+        var builder = new FlectoBuilder("profiles", DialectType.Postgres);
+
+        var tc = new FromTable(Table, new Field[] { new("id") });
+
+        // Act
+        var result = builder
+            .Select(tc)
+            .Search(searchfilter0, new[] { "a", "b" })
+            .Search(searchfilter1, new[] { "c", "d" })
+            .SearchTsVector(plainFilter0, new[] { "e", "ee->'eee'->>'eeee'" }, TextSearchMode.Plain)
+            .SearchTsVector(plainFilter1, new[] { "f", "ff->'fff'->>'ffff'" }, TextSearchMode.Plain, "english")
+            .SearchTsVector(webStyleFilter2, new[] { "g", "gg->'ggg'->>'gggg'" }, TextSearchMode.WebStyle, "english")
+            .SearchTsVector(webStyleFilter3, new[] { "k", "kk->'kkk'->>'kkkk'" }, TextSearchMode.WebStyle, "english")
+            .Build();
+
+        // Assert SQL
+        var searchParam0 = "search_param_0";
+        var searchParam1 = "search_param_1";
+
+        var plainParam0 = "search_tsvector_param_0";
+        var plainParam1 = "search_tsvector_param_1";
+        var webStyleParam2 = "search_tsvector_param_2";
+        var webStyleParam3 = "search_tsvector_param_3";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM profiles " +
+            $"WHERE (profiles.a ILIKE @search_param_0 OR profiles.b ILIKE @{searchParam0}) " +
+                $"AND (profiles.c LIKE @search_param_1 OR profiles.d LIKE @{searchParam1}) " +
+                "AND to_tsvector('simple', " +
+                        "COALESCE(profiles.e, '') || ' ' || " +
+                        "COALESCE(profiles.ee->'eee'->>'eeee', '')" +
+                    $") @@ plainto_tsquery('simple', @{plainParam0}) " +
+                "AND to_tsvector('english', " +
+                        "COALESCE(profiles.f, '') || ' ' || " +
+                        "COALESCE(profiles.ff->'fff'->>'ffff', '')" +
+                    $") @@ plainto_tsquery('english', @{plainParam1}) " +
+                "AND to_tsvector('english', " +
+                        "COALESCE(profiles.g, '') || ' ' || " +
+                        "COALESCE(profiles.gg->'ggg'->>'gggg', '')" +
+                    $") @@ websearch_to_tsquery('english', @{webStyleParam2}) " +
+                "AND to_tsvector('english', " +
+                        "COALESCE(profiles.k, '') || ' ' || " +
+                        "COALESCE(profiles.kk->'kkk'->>'kkkk', '')" +
+                    $") @@ websearch_to_tsquery('english', @{webStyleParam3})",
+            result.Sql);
+
+        // Assert params
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                name => name,
+                name => result.Parameters.Get<string>(name));
+
+        Assert.Equal(6, paramDict.Count());
+
+        Assert.True(paramDict.ContainsKey(searchParam0));
+        Assert.Equal("%joHn%", paramDict[searchParam0]);
+
+        Assert.True(paramDict.ContainsKey(searchParam1));
+        Assert.Equal("%Alice%", paramDict[searchParam1]);
+
+        Assert.True(paramDict.ContainsKey(searchParam1));
+        Assert.Equal(plainFilter0.Value, paramDict[plainParam0]);
+
+        Assert.True(paramDict.ContainsKey(searchParam1));
+        Assert.Equal(plainFilter1.Value, paramDict[plainParam1]);
+
+        Assert.True(paramDict.ContainsKey(searchParam1));
+        Assert.Equal(webStyleFilter2.Value, paramDict[webStyleParam2]);
+
+        Assert.True(paramDict.ContainsKey(searchParam1));
+        Assert.Equal(webStyleFilter3.Value, paramDict[webStyleParam3]);
     }
 
     #endregion

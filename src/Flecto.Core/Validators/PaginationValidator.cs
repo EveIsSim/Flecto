@@ -46,8 +46,18 @@ public static class PaginationValidator
     /// This method is used for internal validations within the <c>FlectoBuilder</c>.
     /// </summary>
     /// <param name="filter">The <see cref="PaginationFilter"/> to validate.</param>
-    internal static void EnsureValid(PaginationFilter filter)
-    => CommonValidator.ThrowIfErrors(
-            Validate(filter).ToArray(),
-            "PaginationFilter: validation failed:");
+    internal static void EnsureValid(PaginationFilter filter, bool forbidPagination)
+    {
+        var prefix = "PaginationFilter: validation failed:";
+
+        if (forbidPagination)
+            throw new ArgumentException(
+                $"""
+                {prefix}
+                Pagination (LIMIT/OFFSET) is not allowed when using COUNT(*) query.
+                """
+            );
+
+        CommonValidator.ThrowIfErrors(Validate(filter).ToArray(), prefix);
+    }
 }

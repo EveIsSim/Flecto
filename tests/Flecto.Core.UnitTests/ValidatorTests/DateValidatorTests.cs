@@ -1,4 +1,3 @@
-
 using Flecto.Core.Models.Filters;
 using Flecto.Core.UnitTests.Collections;
 using Flecto.Core.Validators;
