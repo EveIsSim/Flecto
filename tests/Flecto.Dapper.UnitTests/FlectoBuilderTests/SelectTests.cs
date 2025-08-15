@@ -33,7 +33,7 @@ public class SelectTests
             .SelectAll();
 
         // Act
-        var ex = Assert.Throws<InvalidOperationException>(() => builder.SelectAll());
+        var ex = Assert.Throws<InvalidOperationException>(builder.SelectAll);
 
         // Assert
         Assert.Equal("Select can only be called once per query", ex.Message);
@@ -66,7 +66,7 @@ public class SelectTests
             .SelectCount();
 
         // Act
-        var ex = Assert.Throws<InvalidOperationException>(() => builder.SelectAll());
+        var ex = Assert.Throws<InvalidOperationException>(builder.SelectAll);
 
         // Assert
         Assert.Equal("Select can only be called once per query", ex.Message);
@@ -82,7 +82,7 @@ public class SelectTests
         // Arrange
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id"), new("salary") });
+        var tc = new FromTable(Table, [new("id"), new("salary")]);
 
         // Act
         var result = builder
@@ -100,10 +100,10 @@ public class SelectTests
 
         var tc = new FromTable(
             Table,
-            new Field[] {
+            [
                 new("social->>'platform'", "social_platform"),
                 new("social->'github'"),
-                new("profile->'personal'->>'full_name'", "profile_personal_full_name")});
+                new("profile->'personal'->>'full_name'", "profile_personal_full_name")]);
 
         // Act
         var result = builder
@@ -123,7 +123,7 @@ public class SelectTests
     public void Select_SecondCall_Throws()
     {
         // Arrange
-        var tc = new FromTable(Table, new Field[] { new("id") });
+        var tc = new FromTable(Table, [new("id")]);
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres)
             .Select(tc);

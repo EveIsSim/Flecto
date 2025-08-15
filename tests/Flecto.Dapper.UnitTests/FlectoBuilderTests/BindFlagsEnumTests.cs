@@ -1,3 +1,4 @@
+using System.Globalization;
 using Flecto.Core.Enums;
 using Flecto.Core.Models.Filters;
 using Flecto.Core.Models.Select;
@@ -8,7 +9,7 @@ public class BindFlagsEnumTests
 {
     private const string Table = "users";
     private const string Column = "access";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     [Flags]
     private enum Access
@@ -29,7 +30,7 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, Column)
+            .BindFlagsEnum(filter, Column)
             .Build();
 
         // Assert
@@ -53,7 +54,7 @@ public class BindFlagsEnumTests
         var ex = Assert.Throws<ArgumentException>(() =>
             builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, Column)
+            .BindFlagsEnum(filter, Column)
             .Build());
 
         // Assert
@@ -78,7 +79,7 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, Column)
+            .BindFlagsEnum(filter, Column)
             .Build();
 
         // Assert
@@ -93,10 +94,10 @@ public class BindFlagsEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<long>(name));
+                static name => name,
+                result.Parameters.Get<long>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal((long)filter.Eq, paramDict[expectedParam]);
     }
@@ -114,7 +115,7 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, Column)
+            .BindFlagsEnum(filter, Column)
             .Build();
 
         // Assert
@@ -129,10 +130,10 @@ public class BindFlagsEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<long>(name));
+                static name => name,
+                result.Parameters.Get<long>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal((long)filter.NotEq, paramDict[expectedParam]);
     }
@@ -150,7 +151,7 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, Column)
+            .BindFlagsEnum(filter, Column)
             .Build();
 
         // Assert
@@ -165,10 +166,10 @@ public class BindFlagsEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<long>(name));
+                static name => name,
+                result.Parameters.Get<long>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(3, paramDict[expectedParam]);
     }
@@ -186,7 +187,7 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, Column)
+            .BindFlagsEnum(filter, Column)
             .Build();
 
         // Assert
@@ -201,10 +202,10 @@ public class BindFlagsEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<long>(name));
+                static name => name,
+                result.Parameters.Get<long>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal((long)Access.Admin, paramDict[expectedParam]);
     }
@@ -220,7 +221,7 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, Column)
+            .BindFlagsEnum(filter, Column)
             .Build();
 
         // Assert
@@ -244,7 +245,7 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, Column)
+            .BindFlagsEnum(filter, Column)
             .Build();
 
         // Assert
@@ -271,7 +272,7 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, Column)
+            .BindFlagsEnum(filter, Column)
             .Build();
 
         // Assert
@@ -296,7 +297,7 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter, "profile->>'access'")
+            .BindFlagsEnum(filter, "profile->>'access'")
             .Build();
 
         // Assert
@@ -311,10 +312,10 @@ public class BindFlagsEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<long>(name));
+                static name => name,
+                result.Parameters.Get<long>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal((long)filter.Eq, paramDict[expectedParam]);
     }
@@ -346,10 +347,10 @@ public class BindFlagsEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<long>(name));
+                static name => name,
+                result.Parameters.Get<long>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(5, paramDict[expectedParam]);
     }
@@ -366,8 +367,8 @@ public class BindFlagsEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindFlagsEnum<Access>(filter0, Column)
-            .BindFlagsEnum<Access>(filter1, Column)
+            .BindFlagsEnum(filter0, Column)
+            .BindFlagsEnum(filter1, Column)
             .Build();
 
         // Assert
@@ -384,14 +385,62 @@ public class BindFlagsEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<long>(name));
+                static name => name,
+                result.Parameters.Get<long>);
 
-        Assert.Equal(2, paramDict.Count());
+        Assert.Equal(2, paramDict.Count);
         Assert.True(paramDict.ContainsKey(expectedParam0));
         Assert.Equal((long)filter0.Eq, paramDict[expectedParam0]);
 
         Assert.True(paramDict.ContainsKey(expectedParam1));
         Assert.Equal((long)filter1.Eq, paramDict[expectedParam1]);
+    }
+
+    [Fact]
+    public void BindFlagsEnum_MultiConditions()
+    {
+        // Arrange
+        var filter = new FlagsEnumFilter<Access>
+        {
+            Eq = Access.Admin,
+            HasFlag = Access.Read,
+            IsNull = false,
+            Sort = new Sort(position: 1, descending: true)
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindFlagsEnum(filter, Column)
+            .Build();
+
+        // Assert
+        var eqParam = "users_access_Eq_0";
+        var hasFlagParam = "users_access_HasFlag_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.access = @{eqParam} " +
+                $"AND users.access & @{hasFlagParam} <> 0 " +
+                "AND users.access IS NOT NULL " +
+            "ORDER BY users.access DESC",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                static x => x,
+                result.Parameters.Get<object?>);
+
+        Assert.Equal(2, paramDict.Count);
+        Assert.Equal(
+            Convert.ToInt64(filter.Eq, CultureInfo.InvariantCulture),
+            paramDict[eqParam]);
+        Assert.Equal(
+            Convert.ToInt64(filter.HasFlag, CultureInfo.InvariantCulture),
+            paramDict[hasFlagParam]);
     }
 }

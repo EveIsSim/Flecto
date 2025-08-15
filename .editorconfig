@@ -1,0 +1,38 @@
+root = true
+
+[*.cs]
+dotnet_diagnostic.IDE0290.severity = none
+dotnet_diagnostic.IDE0061.severity = none
+dotnet_diagnostic.SYSLIB1045.severity = none
+otnet_diagnostic.IDE3000.severity = none
+# Anonymous function can be made static
+dotnet_diagnostic.IDE0320.severity = none
+
+# Allow single-line 'if' statements without braces when the entire statement fits on one line
+csharp_prefer_braces = when_multiline:warning
+csharp_style_allow_embedded_statements_on_same_line_experimental = true
+
+# Always allow 'var' usage
+csharp_style_var_for_built_in_types = true:silent
+csharp_style_var_when_type_is_apparent = true:silent
+csharp_style_var_elsewhere = true:silent
+
+# Do not recomend add scope for namespace
+dotnet_diagnostic.IDE0160.severity = none
+
+# Do not inform to deconstruct touples
+dotnet_diagnostic.IDE0042.severity = none
+
+csharp_style_expression_bodied_methods = always:silent
+
+# Do not recomend code blocks
+dotnet_diagnostic.IDE0022.severity = none
+
+[*Tests.cs]
+
+# Anonymous function can be made static
+dotnet_diagnostic.IDE0320.severity = none
+
+# Allow underscore naming in tests
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1861.severity = none

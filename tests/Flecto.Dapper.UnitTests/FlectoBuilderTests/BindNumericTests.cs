@@ -8,7 +8,7 @@ public class BindNumericTests
 {
     private const string Table = "users";
     private const string Column = "value";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     [Fact]
     public void BindNumeric_FilterIsNull_NotAddCondition()
@@ -20,7 +20,7 @@ public class BindNumericTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindNumeric<int>(filter, Column)
+            .BindNumeric(filter, Column)
             .Build();
 
         // Assert
@@ -44,7 +44,7 @@ public class BindNumericTests
         var ex = Assert.Throws<ArgumentException>(() =>
             builder
             .Select(_tc)
-            .BindNumeric<int>(filter, Column)
+            .BindNumeric(filter, Column)
             .Build());
 
         // Assert
@@ -66,7 +66,7 @@ public class BindNumericTests
         var ex = Assert.Throws<ArgumentException>(() =>
             builder
             .Select(_tc)
-            .BindNumeric<byte>(filter, Column)
+            .BindNumeric(filter, Column)
             .Build());
 
         // Assert
@@ -105,10 +105,10 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<int>(name));
+                static name => name,
+                result.Parameters.Get<int>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Eq, paramDict[expectedParam]);
     }
@@ -141,10 +141,10 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<int>(name));
+                static name => name,
+                result.Parameters.Get<int>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.NotEq, paramDict[expectedParam]);
     }
@@ -181,8 +181,8 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<int>(name));
+                static name => name,
+                result.Parameters.Get<int>);
 
         Assert.Equal(2, paramDict.Count);
         Assert.Equal(filter.Gte, paramDict[expectedGte]);
@@ -228,8 +228,8 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<int>(name));
+                static name => name,
+                result.Parameters.Get<int>);
 
         Assert.Equal(4, paramDict.Count);
         Assert.Equal(filter.Gt, paramDict[expectedGt]);
@@ -272,7 +272,7 @@ public class BindNumericTests
                 name => name,
                 name => result.Parameters.Get<int[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.Equal(filter.In, paramDict[expectedIn]);
     }
 
@@ -310,7 +310,7 @@ public class BindNumericTests
                 name => name,
                 name => result.Parameters.Get<int[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.Equal(filter.NotIn, paramDict[expectedIn]);
     }
 
@@ -417,10 +417,10 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<int>(name));
+                static name => name,
+                result.Parameters.Get<int>);
 
-        Assert.Equal(2, paramDict.Count());
+        Assert.Equal(2, paramDict.Count);
         Assert.True(paramDict.ContainsKey(expectedParam0));
         Assert.Equal(filter0.Eq, paramDict[expectedParam0]);
 
@@ -454,10 +454,10 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<short>(name));
+                static name => name,
+                result.Parameters.Get<short>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Gt, paramDict[expectedParam]);
     }
@@ -488,10 +488,10 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<int>(name));
+                static name => name,
+                result.Parameters.Get<int>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Gt, paramDict[expectedParam]);
     }
@@ -522,10 +522,10 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<long>(name));
+                static name => name,
+                result.Parameters.Get<long>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Gt, paramDict[expectedParam]);
     }
@@ -556,10 +556,10 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<float>(name));
+                static name => name,
+                result.Parameters.Get<float>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Gt, paramDict[expectedParam]);
     }
@@ -590,10 +590,10 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<double>(name));
+                static name => name,
+                result.Parameters.Get<double>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Gt, paramDict[expectedParam]);
     }
@@ -624,12 +624,70 @@ public class BindNumericTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<decimal>(name));
+                static name => name,
+                result.Parameters.Get<decimal>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Gt, paramDict[expectedParam]);
+    }
+
+    [Fact]
+    public void BindNumeric_MultiConditions()
+    {
+        // Arrange
+        var filter = new NumericFilter<int>
+        {
+            NotIn = [
+                10, 20
+            ],
+            In = [33, 432],
+            Gte = 2342,
+            Lt = 111111,
+            IsNull = false,
+            NotEq = 98,
+            Sort = new Sort(position: 1, descending: true)
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindNumeric(filter, Column)
+            .Build();
+
+        // Assert
+        var notEqParam = "users_value_NotEq_0";
+        var gteParam = "users_value_Gte_0";
+        var ltParam = "users_value_Lt_0";
+        var inParam = "users_value_In_0";
+        var notInParam = "users_value_NotIn_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.value <> @{notEqParam} " +
+                $"AND users.value >= @{gteParam} " +
+                $"AND users.value < @{ltParam} " +
+                $"AND users.value = ANY(@{inParam}) " +
+                $"AND users.value <> ANY(@{notInParam}) " +
+                "AND users.value IS NOT NULL " +
+            "ORDER BY users.value DESC",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                static x => x,
+                result.Parameters.Get<object?>);
+
+        Assert.Equal(5, paramDict.Count);
+        Assert.Equal(filter.NotEq, paramDict[notEqParam]);
+        Assert.Equal(filter.Gte, paramDict[gteParam]);
+        Assert.Equal(filter.Lt, paramDict[ltParam]);
+        Assert.Equal(filter.In, paramDict[inParam]);
+        Assert.Equal(filter.NotIn, paramDict[notInParam]);
     }
 }
 

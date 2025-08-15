@@ -1,3 +1,4 @@
+using System.Globalization;
 using Flecto.Core.Enums;
 using Flecto.Core.Models.Filters;
 using Flecto.Core.Models.Select;
@@ -8,7 +9,7 @@ public class BindDateTests
 {
     private const string Table = "users";
     private const string Column = "created_at";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     [Fact]
     public void BindDate_FilterIsNull_NotAddCondition()
@@ -61,7 +62,7 @@ public class BindDateTests
         // Arrange
         var filter = new DateFilter
         {
-            Eq = DateTime.Parse("2021-05-10T00:00:00Z")
+            Eq = DateTime.Parse("2021-05-10T00:00:00Z", CultureInfo.InvariantCulture)
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
@@ -84,10 +85,10 @@ public class BindDateTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<DateTime>(name));
+                static name => name,
+                result.Parameters.Get<DateTime>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Eq, paramDict[expectedParam]);
     }
@@ -98,7 +99,7 @@ public class BindDateTests
         // Arrange
         var filter = new DateFilter
         {
-            NotEq = DateTime.Parse("2025-08-08T00:00:00Z")
+            NotEq = DateTime.Parse("2025-08-08T00:00:00Z", CultureInfo.InvariantCulture)
         };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
@@ -121,9 +122,9 @@ public class BindDateTests
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
                 name => name,
-                name => result.Parameters.Get<DateTime>(name));
+                result.Parameters.Get<DateTime>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.NotEq, paramDict[expectedParam]);
     }
@@ -134,8 +135,8 @@ public class BindDateTests
         // Arrange
         var filter = new DateFilter
         {
-            Gte = DateTime.Parse("2025-01-01T00:00:00Z"),
-            Lt = DateTime.Parse("2025-08-08T00:00:00Z")
+            Gte = DateTime.Parse("2025-01-01T00:00:00Z", CultureInfo.InvariantCulture),
+            Lt = DateTime.Parse("2025-08-08T00:00:00Z", CultureInfo.InvariantCulture)
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
@@ -161,7 +162,7 @@ public class BindDateTests
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
                 name => name,
-                name => result.Parameters.Get<DateTime>(name));
+                result.Parameters.Get<DateTime>);
 
         Assert.Equal(2, paramDict.Count);
         Assert.Equal(filter.Gte, paramDict[expectedGte]);
@@ -175,10 +176,10 @@ public class BindDateTests
         // |--Gt--Gte--Lte--Lt--|
         var filter = new DateFilter
         {
-            Gt = DateTime.Parse("2025-01-01T00:00:00Z"),
-            Gte = DateTime.Parse("2025-01-02T00:00:00Z"),
-            Lte = DateTime.Parse("2025-08-07T00:00:00Z"),
-            Lt = DateTime.Parse("2025-08-08T00:00:00Z"),
+            Gt = DateTime.Parse("2025-01-01T00:00:00Z", CultureInfo.InvariantCulture),
+            Gte = DateTime.Parse("2025-01-02T00:00:00Z", CultureInfo.InvariantCulture),
+            Lte = DateTime.Parse("2025-08-07T00:00:00Z", CultureInfo.InvariantCulture),
+            Lt = DateTime.Parse("2025-08-08T00:00:00Z", CultureInfo.InvariantCulture),
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
@@ -208,7 +209,7 @@ public class BindDateTests
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
                 name => name,
-                name => result.Parameters.Get<DateTime>(name));
+                result.Parameters.Get<DateTime>);
 
         Assert.Equal(4, paramDict.Count);
         Assert.Equal(filter.Gt, paramDict[expectedGt]);
@@ -224,8 +225,8 @@ public class BindDateTests
         var filter = new DateFilter
         {
             In = [
-                DateTime.Parse("2025-01-01T00:00:00Z"),
-                DateTime.Parse("2025-08-08T00:00:00Z"),
+                DateTime.Parse("2025-01-01T00:00:00Z", CultureInfo.InvariantCulture),
+                DateTime.Parse("2025-08-08T00:00:00Z", CultureInfo.InvariantCulture),
             ]
         };
 
@@ -252,7 +253,7 @@ public class BindDateTests
                 name => name,
                 name => result.Parameters.Get<DateTime[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.Equal(filter.In, paramDict[expectedIn]);
     }
 
@@ -263,8 +264,8 @@ public class BindDateTests
         var filter = new DateFilter
         {
             NotIn = [
-                DateTime.Parse("2025-01-01T00:00:00Z"),
-                DateTime.Parse("2025-08-08T00:00:00Z"),
+                DateTime.Parse("2025-01-01T00:00:00Z", CultureInfo.InvariantCulture),
+                DateTime.Parse("2025-08-08T00:00:00Z", CultureInfo.InvariantCulture),
             ]
         };
 
@@ -291,7 +292,7 @@ public class BindDateTests
                 name => name,
                 name => result.Parameters.Get<DateTime[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.Equal(filter.NotIn, paramDict[expectedIn]);
     }
 
@@ -374,7 +375,7 @@ public class BindDateTests
         // Arrange
         var filter = new DateFilter
         {
-            Eq = DateTime.Parse("2025-01-01T00:00:00Z"),
+            Eq = DateTime.Parse("2025-01-01T00:00:00Z", CultureInfo.InvariantCulture),
         };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
@@ -398,9 +399,9 @@ public class BindDateTests
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
                 name => name,
-                name => result.Parameters.Get<DateTime>(name));
+                result.Parameters.Get<DateTime>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Eq, paramDict[expectedParam]);
     }
@@ -409,8 +410,8 @@ public class BindDateTests
     public void BindDate_MultiBind_AddConditions()
     {
         // Arrange
-        var filter0 = new DateFilter { Eq = DateTime.Parse("2025-01-01T00:00:00Z") };
-        var filter1 = new DateFilter { Eq = DateTime.Parse("2025-08-08T00:00:00Z") };
+        var filter0 = new DateFilter { Eq = DateTime.Parse("2025-01-01T00:00:00Z", CultureInfo.InvariantCulture) };
+        var filter1 = new DateFilter { Eq = DateTime.Parse("2025-08-08T00:00:00Z", CultureInfo.InvariantCulture) };
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
@@ -436,13 +437,75 @@ public class BindDateTests
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
                 name => name,
-                name => result.Parameters.Get<DateTime>(name));
+                result.Parameters.Get<DateTime>);
 
-        Assert.Equal(2, paramDict.Count());
+        Assert.Equal(2, paramDict.Count);
         Assert.True(paramDict.ContainsKey(expectedParam0));
         Assert.Equal(filter0.Eq, paramDict[expectedParam0]);
 
         Assert.True(paramDict.ContainsKey(expectedParam1));
         Assert.Equal(filter1.Eq, paramDict[expectedParam1]);
+    }
+
+    [Fact]
+    public void BindDate_MultiConditions()
+    {
+        // Arrange
+        var filter = new DateFilter
+        {
+            NotIn = [
+                DateTime.Parse("2020-05-01T00:00:00Z", CultureInfo.InvariantCulture),
+                DateTime.Parse("2020-06-02T00:00:00Z", CultureInfo.InvariantCulture)
+            ],
+            In = [
+                DateTime.Parse("2020-01-01T00:00:00Z", CultureInfo.InvariantCulture),
+                DateTime.Parse("2020-02-02T00:00:00Z", CultureInfo.InvariantCulture)
+            ],
+            Gte = DateTime.Parse("2010-01-01T00:00:00Z", CultureInfo.InvariantCulture),
+            Lt = DateTime.Parse("2030-01-01T00:00:00Z", CultureInfo.InvariantCulture),
+            IsNull = false,
+            NotEq = DateTime.Parse("2025-01-01T00:00:00Z", CultureInfo.InvariantCulture),
+            Sort = new Sort(position: 1, descending: true)
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindDate(filter, Column)
+            .Build();
+
+        // Assert
+        var notEqParam = "users_created_at_NotEq_0";
+        var gteParam = "users_created_at_Gte_0";
+        var ltParam = "users_created_at_Lt_0";
+        var inParam = "users_created_at_In_0";
+        var notInParam = "users_created_at_NotIn_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.created_at <> @{notEqParam} " +
+                $"AND users.created_at >= @{gteParam} " +
+                $"AND users.created_at < @{ltParam} " +
+                $"AND users.created_at = ANY(@{inParam}) " +
+                $"AND users.created_at <> ANY(@{notInParam}) " +
+                "AND users.created_at IS NOT NULL " +
+            "ORDER BY users.created_at DESC",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                static x => x,
+                result.Parameters.Get<object?>);
+
+        Assert.Equal(5, paramDict.Count);
+        Assert.Equal(filter.NotEq, paramDict[notEqParam]);
+        Assert.Equal(filter.Gte, paramDict[gteParam]);
+        Assert.Equal(filter.Lt, paramDict[ltParam]);
+        Assert.Equal(filter.In, paramDict[inParam]);
+        Assert.Equal(filter.NotIn, paramDict[notInParam]);
     }
 }

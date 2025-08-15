@@ -79,7 +79,7 @@ public class NumericValidatorTests
         // Arrange
         var filter = new NumericFilter<int>
         {
-            In = Array.Empty<int>()
+            In = []
         };
 
         // Act
@@ -97,7 +97,7 @@ public class NumericValidatorTests
         // Arrange
         var filter = new NumericFilter<int>
         {
-            NotIn = new[] { 2, 2 }
+            NotIn = [2, 2]
         };
 
         // Act
@@ -117,7 +117,7 @@ public class NumericValidatorTests
 
         // Act
         var result = NumericValidator.Validate(
-                filter, customValidator: _ => (false, "custom check failed"));
+                filter, customValidator: static _ => (false, "custom check failed"));
 
         // Assert
         var error = Assert.Single(result);
@@ -133,8 +133,8 @@ public class NumericValidatorTests
         {
             Gte = 10,
             Lte = 20,
-            In = new[] { 10, 15 },
-            NotIn = new[] { 0 }
+            In = [10, 15],
+            NotIn = [0]
         };
 
         // Act

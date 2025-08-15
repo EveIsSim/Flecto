@@ -1,7 +1,7 @@
 namespace Flecto.Core.Validators.Enums;
 
 /// <summary>
-/// Specifies validation options for a <see cref="Flecto.Core.Models.Filters.BoolFilter"/>
+/// Specifies validation options for a <see cref="Models.Filters.BoolFilter"/>
 /// </summary>
 [Flags]
 public enum BoolFilterValidationOptions

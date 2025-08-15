@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using Dapper;
 using Flecto.Core.Enums;
@@ -22,30 +23,31 @@ namespace Flecto.Dapper;
 /// </summary>
 public class FlectoBuilder
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1859:Use concrete types when possible for improved performance", Justification = "Interface ISqlDialect is required to support multiple dialect implementations")]
     private readonly ISqlDialect _dialect;
     private readonly ICastTypeMapper _castTypeMapper;
     private readonly DialectType _dialectType;
 
     private string? _selectColumns;
-    private bool _selectWasSet = false;
+    private bool _selectWasSet;
 
-    private int _searchCounter = 0;
-    private int _searchTsVectorCounter = 0;
-    private int _boolCounter = 0;
-    private int _dateCounter = 0;
-    private int _enumCounter = 0;
-    private int _flagsEnumCounter = 0;
-    private int _numericCounter = 0;
-    private int _guidCounter = 0;
-    private int _stringCounter = 0;
+    private int _searchCounter;
+    private int _searchTsVectorCounter;
+    private int _boolCounter;
+    private int _dateCounter;
+    private int _enumCounter;
+    private int _flagsEnumCounter;
+    private int _numericCounter;
+    private int _guidCounter;
+    private int _stringCounter;
 
     private readonly string _fromTable;
     private bool _exceptOrderBy;
     private bool _forbidPagination;
     private (int Limit, int Offset)? _paging;
-    private List<string> _conditions = new();
+    private List<string> _conditions = [];
     private readonly DynamicParameters _parameters = new();
-    private readonly Dictionary<string, Sort> _sortFields = new();
+    private readonly Dictionary<string, Sort> _sortFields = [];
 
     private const string DefaultVectorConfig = "simple";
 
@@ -77,6 +79,7 @@ public class FlectoBuilder
         (_dialect, _castTypeMapper) = dialectType switch
         {
             DialectType.Postgres => (new PostgresSqlDialect(), new PgCastTypeMapper()),
+            DialectType.Unknown => throw new ArgumentException($"Invalid dialect type '{DialectType.Unknown}' in method '{nameof(FlectoBuilder)}'."),
             _ => throw new ArgumentOutOfRangeException(nameof(dialectType), dialectType, null)
         };
 
@@ -299,12 +302,12 @@ public class FlectoBuilder
         BoolValidator.EnsureValid(filter, table, column);
 
         var cr = new ColumnRef(table, column, _boolCounter++, _castTypeMapper);
-        var clrType = typeof(bool);
+        var sqlName = cr.SqlName(typeof(bool));
 
-        AddNullCheckConditionIfPresent(cr, filter, clrType);
-        AddBoolComparisonIfPresent(cr, filter.Eq, ComparisonOperator.Eq, clrType, _dialect.BuildBoolComparison);
-        AddBoolComparisonIfPresent(cr, filter.NotEq, ComparisonOperator.NotEq, clrType, _dialect.BuildBoolComparison);
-        AddSortIfPresent(cr, filter, clrType);
+        AddBoolComparisonIfPresent(cr, sqlName, filter.Eq, ComparisonOperator.Eq, _dialect.BuildBoolComparison);
+        AddBoolComparisonIfPresent(cr, sqlName, filter.NotEq, ComparisonOperator.NotEq, _dialect.BuildBoolComparison);
+        AddNullCheckConditionIfPresent(sqlName, filter.IsNull);
+        AddSortIfPresent(sqlName, filter.Sort);
 
         return this;
     }
@@ -338,18 +341,18 @@ public class FlectoBuilder
         DateValidator.EnsureValid(filter, table, column);
 
         var cr = new ColumnRef(table, column, _dateCounter++, _castTypeMapper);
-        var clrType = typeof(DateTime);
+        var sqlName = cr.SqlName(typeof(DateTime));
 
-        AddComparisonIfPresent(cr, filter.Eq, ComparisonOperator.Eq, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.NotEq, ComparisonOperator.NotEq, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.Gt, ComparisonOperator.Gt, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.Gte, ComparisonOperator.Gte, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.Lt, ComparisonOperator.Lt, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.Lte, ComparisonOperator.Lte, clrType, _dialect.BuildCommonComparison);
-        AddArrayComparisonIfPresent(cr, filter.In, ArrayComparisonOperator.In, clrType, _dialect.BuildCommonInArray);
-        AddArrayComparisonIfPresent(cr, filter.NotIn, ArrayComparisonOperator.NotIn, clrType, _dialect.BuildCommonNotInArray);
-        AddNullCheckConditionIfPresent(cr, filter, clrType);
-        AddSortIfPresent(cr, filter, clrType);
+        AddComparisonIfPresent(cr, sqlName, filter.Eq, ComparisonOperator.Eq, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.NotEq, ComparisonOperator.NotEq, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.Gt, ComparisonOperator.Gt, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.Gte, ComparisonOperator.Gte, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.Lt, ComparisonOperator.Lt, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.Lte, ComparisonOperator.Lte, _dialect.BuildCommonComparison);
+        AddArrayComparisonIfPresent(cr, sqlName, filter.In, ArrayComparisonOperator.In, _dialect.BuildCommonInArray);
+        AddArrayComparisonIfPresent(cr, sqlName, filter.NotIn, ArrayComparisonOperator.NotIn, _dialect.BuildCommonNotInArray);
+        AddNullCheckConditionIfPresent(sqlName, filter.IsNull);
+        AddSortIfPresent(sqlName, filter.Sort);
 
         return this;
     }
@@ -398,13 +401,14 @@ public class FlectoBuilder
         EnumValidator.EnsureValid(filter, table, column);
 
         var cr = new ColumnRef(table, column, _enumCounter++, _castTypeMapper);
+        var sqlName = cr.SqlNameForEnum(mode);
 
-        AddEnumComparisonIfPresent(cr, filter.Eq, ComparisonOperator.Eq, mode, _dialect.BuildEnumComparison);
-        AddEnumComparisonIfPresent(cr, filter.NotEq, ComparisonOperator.NotEq, mode, _dialect.BuildEnumComparison);
-        AddEnumArrayComparisonIfPresent(cr, filter.In, ArrayComparisonOperator.In, mode, _dialect.BuildEnumInArray);
-        AddEnumArrayComparisonIfPresent(cr, filter.NotIn, ArrayComparisonOperator.NotIn, mode, _dialect.BuildEnumNotInArray);
-        AddEnumNullCheckConditionIfPresent(cr, filter, mode);
-        AddEnumSortIfPresent(cr, filter, mode);
+        AddEnumComparisonIfPresent(cr, sqlName, filter.Eq, ComparisonOperator.Eq, mode, _dialect.BuildEnumComparison);
+        AddEnumComparisonIfPresent(cr, sqlName, filter.NotEq, ComparisonOperator.NotEq, mode, _dialect.BuildEnumComparison);
+        AddEnumArrayComparisonIfPresent(cr, sqlName, filter.In, ArrayComparisonOperator.In, mode, _dialect.BuildEnumInArray);
+        AddEnumArrayComparisonIfPresent(cr, sqlName, filter.NotIn, ArrayComparisonOperator.NotIn, mode, _dialect.BuildEnumNotInArray);
+        AddNullCheckConditionIfPresent(sqlName, filter.IsNull);
+        AddSortIfPresent(sqlName, filter.Sort);
 
         return this;
     }
@@ -442,14 +446,14 @@ public class FlectoBuilder
         FlagsEnumValidator.EnsureValid(filter, table, column);
 
         var cr = new ColumnRef(table, column, _flagsEnumCounter++, _castTypeMapper);
-        var clrType = typeof(int);
+        var sqlName = cr.SqlName(typeof(int));
 
-        AddFlagsEnumComparisonIfPresent(cr, filter.Eq, ComparisonOperator.Eq, clrType, _dialect.BuildCommonComparison);
-        AddFlagsEnumComparisonIfPresent(cr, filter.NotEq, ComparisonOperator.NotEq, clrType, _dialect.BuildCommonComparison);
-        AddFlagCheckIfPresent(cr, filter.HasFlag, FlagCheckMode.HasFlag, clrType, _dialect.BuildHasFlag);
-        AddFlagCheckIfPresent(cr, filter.NotHasFlag, FlagCheckMode.NotHasFlag, clrType, _dialect.BuildNotHasFlag);
-        AddNullCheckConditionIfPresent(cr, filter, clrType);
-        AddSortIfPresent(cr, filter, clrType);
+        AddFlagsEnumComparisonIfPresent(cr, sqlName, filter.Eq, ComparisonOperator.Eq, _dialect.BuildCommonComparison);
+        AddFlagsEnumComparisonIfPresent(cr, sqlName, filter.NotEq, ComparisonOperator.NotEq, _dialect.BuildCommonComparison);
+        AddFlagCheckIfPresent(cr, sqlName, filter.HasFlag, FlagCheckMode.HasFlag, _dialect.BuildHasFlag);
+        AddFlagCheckIfPresent(cr, sqlName, filter.NotHasFlag, FlagCheckMode.NotHasFlag, _dialect.BuildNotHasFlag);
+        AddNullCheckConditionIfPresent(sqlName, filter.IsNull);
+        AddSortIfPresent(sqlName, filter.Sort);
 
         return this;
     }
@@ -483,27 +487,27 @@ public class FlectoBuilder
         GuidValidator.EnsureValid(filter, table, column);
 
         var cr = new ColumnRef(table, column, _guidCounter++, _castTypeMapper);
-        var clrType = typeof(Guid);
+        var sqlName = cr.SqlName(typeof(Guid));
 
-        AddComparisonIfPresent(cr, filter.Eq, ComparisonOperator.Eq, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.NotEq, ComparisonOperator.NotEq, clrType, _dialect.BuildCommonComparison);
-        AddArrayComparisonIfPresent(cr, filter.In, ArrayComparisonOperator.In, clrType, _dialect.BuildCommonInArray);
-        AddArrayComparisonIfPresent(cr, filter.NotIn, ArrayComparisonOperator.NotIn, clrType, _dialect.BuildCommonNotInArray);
-        AddNullCheckConditionIfPresent(cr, filter, clrType);
-        AddSortIfPresent(cr, filter, clrType);
+        AddComparisonIfPresent(cr, sqlName, filter.Eq, ComparisonOperator.Eq, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.NotEq, ComparisonOperator.NotEq, _dialect.BuildCommonComparison);
+        AddArrayComparisonIfPresent(cr, sqlName, filter.In, ArrayComparisonOperator.In, _dialect.BuildCommonInArray);
+        AddArrayComparisonIfPresent(cr, sqlName, filter.NotIn, ArrayComparisonOperator.NotIn, _dialect.BuildCommonNotInArray);
+        AddNullCheckConditionIfPresent(sqlName, filter.IsNull);
+        AddSortIfPresent(sqlName, filter.Sort);
 
         return this;
     }
 
-    private static readonly HashSet<Type> SupportedNumericTypes = new()
-    {
+    private static readonly HashSet<Type> SupportedNumericTypes =
+    [
         typeof(short),
         typeof(int),
         typeof(long),
         typeof(decimal),
         typeof(double),
         typeof(float),
-    };
+    ];
 
     /// <summary>
     /// Binds a <see cref="NumericFilter{T}"/> to the query for the specified column of the target table,
@@ -551,29 +555,28 @@ public class FlectoBuilder
 
         var cr = new ColumnRef(table, column, _numericCounter++, _castTypeMapper);
 
-        if (!SupportedNumericTypes.Contains(typeof(T)))
-            throw new ArgumentException(
+        return SupportedNumericTypes.Contains(typeof(T))
+            ? BuildNumericFilter(cr, filter)
+            : throw new ArgumentException(
                 $"NumericFilter<{typeof(T).Name}> is not supported for column '{column}'.",
                 nameof(filter));
-
-        return BuildNumericFilter(cr, filter);
     }
 
     private FlectoBuilder BuildNumericFilter<T>(ColumnRef cr, NumericFilter<T> filter) where T : struct, IComparable
     {
 
-        var clrType = typeof(T);
+        var sqlName = cr.SqlName(typeof(T));
 
-        AddComparisonIfPresent(cr, filter.Eq, ComparisonOperator.Eq, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.NotEq, ComparisonOperator.NotEq, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.Gt, ComparisonOperator.Gt, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.Gte, ComparisonOperator.Gte, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.Lt, ComparisonOperator.Lt, clrType, _dialect.BuildCommonComparison);
-        AddComparisonIfPresent(cr, filter.Lte, ComparisonOperator.Lte, clrType, _dialect.BuildCommonComparison);
-        AddArrayComparisonIfPresent(cr, filter.In, ArrayComparisonOperator.In, clrType, _dialect.BuildCommonInArray);
-        AddArrayComparisonIfPresent(cr, filter.NotIn, ArrayComparisonOperator.NotIn, clrType, _dialect.BuildCommonNotInArray);
-        AddNullCheckConditionIfPresent(cr, filter, clrType);
-        AddSortIfPresent(cr, filter, clrType);
+        AddComparisonIfPresent(cr, sqlName, filter.Eq, ComparisonOperator.Eq, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.NotEq, ComparisonOperator.NotEq, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.Gt, ComparisonOperator.Gt, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.Gte, ComparisonOperator.Gte, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.Lt, ComparisonOperator.Lt, _dialect.BuildCommonComparison);
+        AddComparisonIfPresent(cr, sqlName, filter.Lte, ComparisonOperator.Lte, _dialect.BuildCommonComparison);
+        AddArrayComparisonIfPresent(cr, sqlName, filter.In, ArrayComparisonOperator.In, _dialect.BuildCommonInArray);
+        AddArrayComparisonIfPresent(cr, sqlName, filter.NotIn, ArrayComparisonOperator.NotIn, _dialect.BuildCommonNotInArray);
+        AddNullCheckConditionIfPresent(sqlName, filter.IsNull);
+        AddSortIfPresent(sqlName, filter.Sort);
 
         return this;
     }
@@ -609,17 +612,17 @@ public class FlectoBuilder
         StringValidator.EnsureValid(filter, table, column);
 
         var cr = new ColumnRef(table, column, _stringCounter++, _castTypeMapper);
-        var clrType = typeof(string);
+        var sqlName = cr.SqlName(typeof(string));
 
-        AddStringComparisonIfPresent(cr, filter.Eq, ComparisonOperator.Eq, filter.CaseSensitive, clrType, _dialect.BuildStringEquals);
-        AddStringComparisonIfPresent(cr, filter.NotEq, ComparisonOperator.NotEq, filter.CaseSensitive, clrType, _dialect.BuildStringNotEquals);
-        AddStringArrayComparisonIfPresent(cr, filter.In, ArrayComparisonOperator.In, filter.CaseSensitive, clrType, _dialect.BuildStringInArray);
-        AddStringArrayComparisonIfPresent(cr, filter.NotIn, ArrayComparisonOperator.NotIn, filter.CaseSensitive, clrType, _dialect.BuildStringNotInArray);
-        AddMatchComparisonIfPresent(cr, filter.Contains, StringMatchType.Contains, filter.CaseSensitive, clrType, _dialect.BuildStringLike);
-        AddMatchComparisonIfPresent(cr, filter.StartsWith, StringMatchType.StartsWith, filter.CaseSensitive, clrType, _dialect.BuildStringLike);
-        AddMatchComparisonIfPresent(cr, filter.EndsWith, StringMatchType.EndsWith, filter.CaseSensitive, clrType, _dialect.BuildStringLike);
-        AddNullCheckConditionIfPresent(cr, filter, clrType);
-        AddSortIfPresent(cr, filter, clrType);
+        AddStringComparisonIfPresent(cr, sqlName, filter.Eq, ComparisonOperator.Eq, filter.CaseSensitive, _dialect.BuildStringEquals);
+        AddStringComparisonIfPresent(cr, sqlName, filter.NotEq, ComparisonOperator.NotEq, filter.CaseSensitive, _dialect.BuildStringNotEquals);
+        AddStringArrayComparisonIfPresent(cr, sqlName, filter.In, ArrayComparisonOperator.In, filter.CaseSensitive, _dialect.BuildStringInArray);
+        AddStringArrayComparisonIfPresent(cr, sqlName, filter.NotIn, ArrayComparisonOperator.NotIn, filter.CaseSensitive, _dialect.BuildStringNotInArray);
+        AddMatchComparisonIfPresent(cr, sqlName, filter.Contains, StringMatchType.Contains, filter.CaseSensitive, _dialect.BuildStringLike);
+        AddMatchComparisonIfPresent(cr, sqlName, filter.StartsWith, StringMatchType.StartsWith, filter.CaseSensitive, _dialect.BuildStringLike);
+        AddMatchComparisonIfPresent(cr, sqlName, filter.EndsWith, StringMatchType.EndsWith, filter.CaseSensitive, _dialect.BuildStringLike);
+        AddNullCheckConditionIfPresent(sqlName, filter.IsNull);
+        AddSortIfPresent(sqlName, filter.Sort);
 
         return this;
     }
@@ -652,27 +655,28 @@ public class FlectoBuilder
     /// <returns>A new <see cref="FlectoBuilder"/> instance with the same configuration as the current instance.</returns>
     public FlectoBuilder Clone()
     {
-        var clone = new FlectoBuilder(_fromTable, _dialectType);
+        var clone = new FlectoBuilder(_fromTable, _dialectType)
+        {
+            _selectColumns = _selectColumns,
+            _selectWasSet = _selectWasSet,
 
-        clone._selectColumns = _selectColumns;
-        clone._selectWasSet = _selectWasSet;
-
-        clone._searchCounter = _searchCounter;
-        clone._searchTsVectorCounter = _searchTsVectorCounter;
-        clone._boolCounter = _boolCounter;
-        clone._dateCounter = _dateCounter;
-        clone._enumCounter = _enumCounter;
-        clone._flagsEnumCounter = _flagsEnumCounter;
-        clone._numericCounter = _numericCounter;
-        clone._guidCounter = _guidCounter;
-        clone._stringCounter = _stringCounter;
+            _searchCounter = _searchCounter,
+            _searchTsVectorCounter = _searchTsVectorCounter,
+            _boolCounter = _boolCounter,
+            _dateCounter = _dateCounter,
+            _enumCounter = _enumCounter,
+            _flagsEnumCounter = _flagsEnumCounter,
+            _numericCounter = _numericCounter,
+            _guidCounter = _guidCounter,
+            _stringCounter = _stringCounter,
 
 
-        clone._exceptOrderBy = _exceptOrderBy;
+            _exceptOrderBy = _exceptOrderBy,
 
-        clone._paging = _paging;
+            _paging = _paging,
 
-        clone._conditions = new List<string>(_conditions);
+            _conditions = [.. _conditions]
+        };
 
         foreach (var paramName in _parameters.ParameterNames)
         {
@@ -701,14 +705,14 @@ public class FlectoBuilder
     public (string Sql, DynamicParameters Parameters) Build()
     {
         if (_selectColumns == null)
-            throw new NullReferenceException("Cannot build query: no SELECT clause specified. Call Select(), SelectAll(), or SelectCount() before building the query.");
+            throw new ArgumentNullException("Cannot build query: no SELECT clause specified. Call Select(), SelectAll(), or SelectCount() before building the query.");
 
         var sql = new StringBuilder($"{_selectColumns} {Sql.FROM} {_fromTable}");
 
-        if (_conditions.Any())
+        if (_conditions.Count != 0)
         {
-            sql.Append($" {Sql.WHERE} ");
-            sql.Append(string.Join($" {Sql.AND} ", _conditions));
+            _ = sql.Append($" {Sql.WHERE} ");
+            _ = sql.Append(string.Join($" {Sql.AND} ", _conditions));
         }
 
         AppendOrderByIfPresent(sql);
@@ -727,13 +731,13 @@ public class FlectoBuilder
     {
         if (_exceptOrderBy || _sortFields.Count == 0) return;
 
-        sql.Append($" {Sql.ORDER_BY} ");
+        _ = sql.Append($" {Sql.ORDER_BY} ");
 
         var values = _sortFields
-            .OrderBy(x => x.Value.Position)
-            .Select(x => $"{x.Key} {(x.Value.Descending ? Sql.DESC : Sql.ASC)}");
+            .OrderBy(static x => x.Value.Position)
+            .Select(static x => $"{x.Key} {(x.Value.Descending ? Sql.DESC : Sql.ASC)}");
 
-        sql.Append(string.Join(", ", values));
+        _ = sql.Append(string.Join(", ", values));
     }
 
     /// <summary>
@@ -745,141 +749,128 @@ public class FlectoBuilder
     {
         if (_paging == null) return;
 
-        sql.Append($" {Sql.LIMIT} @_Limit");
+        _ = sql.Append($" {Sql.LIMIT} @_Limit");
         _parameters.Add("_Limit", _paging.Value.Limit);
 
-        sql.Append($" {Sql.OFFSET} @_Offset");
+        _ = sql.Append($" {Sql.OFFSET} @_Offset");
         _parameters.Add("_Offset", _paging.Value.Offset);
     }
 
     #region AddSmthIfPresent
 
     // 999 add multi tests with checking sorting order
-    private void AddSortIfPresent(ColumnRef cr, IQueryFilter filter, Type clrType)
+    private void AddSortIfPresent(string sqlName, Sort? sort)
     {
-        if (!filter.Sort.HasValue) return;
-        _sortFields.Add(cr.SqlName(clrType), filter.Sort.Value);
+        if (!sort.HasValue) return;
+
+        if (!_sortFields.TryAdd(sqlName, sort.Value))
+        {
+            _sortFields[sqlName] = sort.Value;
+        }
     }
 
-    private void AddEnumSortIfPresent(ColumnRef cr, IQueryFilter filter, EnumFilterMode filterMode)
+    private void AddNullCheckConditionIfPresent(string sqlName, bool? isNull)
     {
-        if (!filter.Sort.HasValue) return;
-        _sortFields.Add(cr.SqlNameForEnum(filterMode), filter.Sort.Value);
-    }
+        if (!isNull.HasValue) return;
 
-    private void AddEnumNullCheckConditionIfPresent(
-        ColumnRef cr,
-        IQueryFilter filter,
-        EnumFilterMode filterMode)
-    {
-        if (!filter.IsNull.HasValue) return;
-
-        var condition = _dialect.BuildCommonNullCheck(cr.SqlNameForEnum(filterMode), filter.IsNull.Value);
-        AddCondition(condition);
-    }
-
-    private void AddNullCheckConditionIfPresent(ColumnRef cr, IQueryFilter filter, Type clrType)
-    {
-        if (!filter.IsNull.HasValue) return;
-
-        var condition = _dialect.BuildCommonNullCheck(cr.SqlName(clrType), filter.IsNull.Value);
+        var condition = _dialect.BuildCommonNullCheck(sqlName, isNull.Value);
         AddCondition(condition);
     }
 
     private void AddComparisonIfPresent<T>(
         ColumnRef cr,
+        string sqlName,
         T? value,
         ComparisonOperator op,
-        Type clrType,
         Func<string, string, ComparisonOperator, string> buildConditionSql) where T : struct
     {
         if (!value.HasValue) return;
 
         var param = cr.GetParamName(op);
-        var condition = buildConditionSql(cr.SqlName(clrType), param, op);
+        var condition = buildConditionSql(sqlName, param, op);
         AddCondition(condition, param, value.Value);
     }
 
     private void AddFlagsEnumComparisonIfPresent<T>(
         ColumnRef cr,
+        string sqlName,
         T? value,
         ComparisonOperator op,
-        Type clrType,
         Func<string, string, ComparisonOperator, string> buildConditionSql) where T : struct
     {
         if (!value.HasValue) return;
 
         var param = cr.GetParamName(op);
-        var condition = buildConditionSql(cr.SqlName(clrType), param, op);
-        AddCondition(condition, param, Convert.ToInt64(value.Value));
+        var condition = buildConditionSql(sqlName, param, op);
+        AddCondition(condition, param, Convert.ToInt64(value.Value, CultureInfo.InvariantCulture));
     }
 
     private void AddFlagCheckIfPresent<T>(
         ColumnRef cr,
+        string sqlName,
         T? value,
         FlagCheckMode mode,
-        Type clrType,
         Func<string, string, string> buildConditionSql) where T : struct, Enum
     {
         if (!value.HasValue) return;
 
         var param = cr.GetParamName(mode);
-        var condition = buildConditionSql(cr.SqlName(clrType), param);
-        AddCondition(condition, param, Convert.ToInt64(value.Value));
+        var condition = buildConditionSql(sqlName, param);
+        AddCondition(condition, param, Convert.ToInt64(value.Value, CultureInfo.InvariantCulture));
     }
 
     private void AddArrayComparisonIfPresent<T>(
         ColumnRef cr,
+        string sqlName,
         T[]? value,
         ArrayComparisonOperator op,
-        Type clrType,
         Func<string, string, string> buildConditionSql) where T : struct
     {
-        if (value is null || !value.Any()) return;
+        if (value is null || value.Length == 0) return;
 
         var param = cr.GetParamName(op);
-        var condition = buildConditionSql(cr.SqlName(clrType), param);
+        var condition = buildConditionSql(sqlName, param);
         AddCondition(condition, param, value);
 
     }
 
     private void AddStringArrayComparisonIfPresent(
         ColumnRef cr,
+        string sqlName,
         string[]? value,
         ArrayComparisonOperator op,
         bool caseSensitive,
-        Type clrType,
         Func<string, string, string[], bool, (string, string[])> buildConditionSql)
     {
-        if (value is null || !value.Any()) return;
+        if (value is null || value.Length == 0) return;
 
         var param = cr.GetParamName(op);
-        var (condition, values) = buildConditionSql(cr.SqlName(clrType), param, value, caseSensitive);
+        var (condition, values) = buildConditionSql(sqlName, param, value, caseSensitive);
         AddCondition(condition, param, values);
 
     }
 
     private void AddMatchComparisonIfPresent(
         ColumnRef cr,
+        string sqlName,
         string? value,
         StringMatchType matchType,
         bool caseSensitive,
-        Type clrType,
         Func<string, string, string, StringMatchType, bool, (string, string)> buildConditionSql)
     {
         if (value is null) return;
 
         var param = cr.GetParamName(matchType);
-        var (condition, values) = buildConditionSql(cr.SqlName(clrType), param, value, matchType, caseSensitive);
+        var (condition, values) = buildConditionSql(sqlName, param, value, matchType, caseSensitive);
         AddCondition(condition, param, values);
     }
 
     private void AddStringComparisonIfPresent(
         ColumnRef cr,
+        string sqlName,
         string? value,
         ComparisonOperator op,
         bool caseSensitive,
-        Type clrType,
         Func<string, string, bool, string> buildConditionSql)
     {
         if (value is null) return;
@@ -887,16 +878,16 @@ public class FlectoBuilder
         SqlOperatorHelper.EnsureEqualityOperator(op);
 
         var param = cr.GetParamName(op);
-        var condition = buildConditionSql(cr.SqlName(clrType), param, caseSensitive);
+        var condition = buildConditionSql(sqlName, param, caseSensitive);
         AddCondition(condition, param, value);
 
     }
 
     private void AddBoolComparisonIfPresent(
         ColumnRef cr,
+        string sqlName,
         bool? value,
         ComparisonOperator op,
-        Type clrType,
         Func<string, string, ComparisonOperator, string> buildConditionSql)
     {
         if (value is null) return;
@@ -904,13 +895,14 @@ public class FlectoBuilder
         SqlOperatorHelper.EnsureEqualityOperator(op);
 
         var param = cr.GetParamName(op);
-        var condition = buildConditionSql(cr.SqlName(clrType), param, op);
+        var condition = buildConditionSql(sqlName, param, op);
         AddCondition(condition, param, value);
 
     }
 
     private void AddEnumComparisonIfPresent<T>(
         ColumnRef cr,
+        string sqlName,
         T? data,
         ComparisonOperator op,
         EnumFilterMode filterMode,
@@ -922,22 +914,23 @@ public class FlectoBuilder
         SqlOperatorHelper.EnsureEqualityOperator(op);
 
         var param = cr.GetParamName(op);
-        var (condition, value) = buildConditionSql(cr.SqlNameForEnum(filterMode), param, data.Value, op, filterMode);
+        var (condition, value) = buildConditionSql(sqlName, param, data.Value, op, filterMode);
         AddCondition(condition, param, value);
     }
 
     private void AddEnumArrayComparisonIfPresent<T>(
         ColumnRef cr,
+        string sqlName,
         T[]? rowArr,
         ArrayComparisonOperator op,
         EnumFilterMode filterMode,
         Func<string, string, T[], EnumFilterMode, (string, object[])> buildConditionSql)
         where T : struct, Enum
     {
-        if (rowArr is null || !rowArr.Any()) return;
+        if (rowArr is null || rowArr.Length == 0) return;
 
         var param = cr.GetParamName(op);
-        var (condition, values) = buildConditionSql(cr.SqlNameForEnum(filterMode), param, rowArr, filterMode);
+        var (condition, values) = buildConditionSql(sqlName, param, rowArr, filterMode);
         AddCondition(condition, param, values);
 
     }

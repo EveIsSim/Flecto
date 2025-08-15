@@ -1,4 +1,5 @@
 
+using System.Globalization;
 using Flecto.Core.Enums;
 using Flecto.Core.Models.Filters;
 using Flecto.Core.Models.Filters.Enums;
@@ -10,7 +11,7 @@ public class BindEnumTests
 {
     private const string Table = "users";
     private const string Column = "status";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     private enum UserStatus
     {
@@ -29,7 +30,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.Name)
+            .BindEnum(filter, Column, EnumFilterMode.Name)
             .Build();
 
         // Assert
@@ -53,7 +54,7 @@ public class BindEnumTests
         var ex = Assert.Throws<ArgumentException>(() =>
             builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.Name)
+            .BindEnum(filter, Column, EnumFilterMode.Name)
             .Build());
 
         // Assert
@@ -84,7 +85,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, mode)
+            .BindEnum(filter, Column, mode)
             .Build();
 
         // Assert
@@ -99,13 +100,13 @@ public class BindEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<object>(name));
+                static name => name,
+                result.Parameters.Get<object>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
 
-        var convertedValue = Convert.ChangeType(paramDict[expectedParam], expectedType);
+        var convertedValue = Convert.ChangeType(paramDict[expectedParam], expectedType, CultureInfo.InvariantCulture);
         Assert.Equal(expectedValue, convertedValue);
     }
 
@@ -129,7 +130,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, mode)
+            .BindEnum(filter, Column, mode)
             .Build();
 
         // Assert
@@ -144,13 +145,13 @@ public class BindEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<object>(name));
+                static name => name,
+                result.Parameters.Get<object>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
 
-        var convertedValue = Convert.ChangeType(paramDict[expectedParam], expectedType);
+        var convertedValue = Convert.ChangeType(paramDict[expectedParam], expectedType, CultureInfo.InvariantCulture);
         Assert.Equal(expectedValue, convertedValue);
     }
 
@@ -168,7 +169,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.Name)
+            .BindEnum(filter, Column, EnumFilterMode.Name)
             .Build();
 
         // Assert
@@ -186,11 +187,11 @@ public class BindEnumTests
                 name => name,
                 name => result.Parameters.Get<object[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(
             ["Active", "Unknown"],
-            paramDict[expectedParam].Cast<string>().ToArray());
+            [.. paramDict[expectedParam].Cast<string>()]);
     }
 
     [Fact]
@@ -207,7 +208,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.Value)
+            .BindEnum(filter, Column, EnumFilterMode.Value)
             .Build();
 
         // Assert
@@ -225,11 +226,11 @@ public class BindEnumTests
                 name => name,
                 name => result.Parameters.Get<object[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(
             [1, 0],
-            paramDict[expectedParam].Cast<int>().ToArray());
+            [.. paramDict[expectedParam].Cast<int>()]);
     }
 
     [Fact]
@@ -246,7 +247,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.ValueString)
+            .BindEnum(filter, Column, EnumFilterMode.ValueString)
             .Build();
 
         // Assert
@@ -264,11 +265,11 @@ public class BindEnumTests
                 name => name,
                 name => result.Parameters.Get<object[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(
             ["1", "0"],
-            paramDict[expectedParam].Cast<string>().ToArray());
+            [.. paramDict[expectedParam].Cast<string>()]);
     }
 
     [Fact]
@@ -285,7 +286,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.Name)
+            .BindEnum(filter, Column, EnumFilterMode.Name)
             .Build();
 
         // Assert
@@ -303,11 +304,11 @@ public class BindEnumTests
                 name => name,
                 name => result.Parameters.Get<object[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(
             ["Active", "Unknown"],
-            paramDict[expectedParam].Cast<string>().ToArray());
+            [.. paramDict[expectedParam].Cast<string>()]);
     }
 
     [Fact]
@@ -324,7 +325,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.Value)
+            .BindEnum(filter, Column, EnumFilterMode.Value)
             .Build();
 
         // Assert
@@ -342,11 +343,11 @@ public class BindEnumTests
                 name => name,
                 name => result.Parameters.Get<object[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(
             [1, 0],
-            paramDict[expectedParam].Cast<int>().ToArray());
+            [.. paramDict[expectedParam].Cast<int>()]);
     }
 
     [Fact]
@@ -363,7 +364,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.ValueString)
+            .BindEnum(filter, Column, EnumFilterMode.ValueString)
             .Build();
 
         // Assert
@@ -381,11 +382,11 @@ public class BindEnumTests
                 name => name,
                 name => result.Parameters.Get<object[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(
             ["1", "0"],
-            paramDict[expectedParam].Cast<string>().ToArray());
+            [.. paramDict[expectedParam].Cast<string>()]);
     }
 
     [Fact]
@@ -399,7 +400,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.Name)
+            .BindEnum(filter, Column, EnumFilterMode.Name)
             .Build();
 
         // Assert
@@ -423,7 +424,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.Name)
+            .BindEnum(filter, Column, EnumFilterMode.Name)
             .Build();
 
         // Assert
@@ -450,7 +451,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, Column, EnumFilterMode.Name)
+            .BindEnum(filter, Column, EnumFilterMode.Name)
             .Build();
 
         // Assert
@@ -482,7 +483,7 @@ public class BindEnumTests
         // Act
         var result = builder
             .Select(_tc)
-            .BindEnum<UserStatus>(filter, "profile->>'status'", mode)
+            .BindEnum(filter, "profile->>'status'", mode)
             .Build();
 
         // Assert
@@ -498,12 +499,58 @@ public class BindEnumTests
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
                 name => name,
-                name => result.Parameters.Get<object>(name));
+                result.Parameters.Get<object>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
 
-        var convertedValue = Convert.ChangeType(paramDict[expectedParam], expectedType);
+        var convertedValue = Convert.ChangeType(paramDict[expectedParam], expectedType, CultureInfo.InvariantCulture);
         Assert.Equal(expectedValue, convertedValue);
+    }
+
+    [Fact]
+    public void BindEnum_MultiConditions()
+    {
+        // Arrange
+        var filter = new EnumFilter<UserStatus>
+        {
+            NotIn = [UserStatus.Inactive],
+            In = [UserStatus.Unknown],
+            NotEq = UserStatus.Active,
+            Sort = new Sort(position: 1, descending: true)
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindEnum(filter, Column, EnumFilterMode.Name)
+            .Build();
+
+        // Assert
+        var notEqParam = "users_status_NotEq_0";
+        var inParam = "users_status_In_0";
+        var notInParam = "users_status_NotIn_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.status <> @{notEqParam} " +
+                $"AND users.status = ANY(@{inParam}) " +
+                $"AND users.status <> ANY(@{notInParam}) " +
+            "ORDER BY users.status DESC",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                static x => x,
+                result.Parameters.Get<object?>);
+
+        Assert.Equal(3, paramDict.Count);
+        Assert.Equal(filter.NotEq.ToString(), paramDict[notEqParam]);
+        Assert.Equal(filter.In.Select(x => x.ToString()), paramDict[inParam]);
+        Assert.Equal(filter.NotIn.Select(x => x.ToString()), paramDict[notInParam]);
     }
 }

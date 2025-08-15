@@ -121,7 +121,7 @@ public class DateValidatorTests
         // Act
         var result = DateValidator.Validate(
             filter,
-            customValidator: f => (false, "Date is invalid"));
+            customValidator: static f => (false, "Date is invalid"));
 
         // Assert
         var error = Assert.Single(result);
@@ -137,8 +137,8 @@ public class DateValidatorTests
         {
             Gte = new DateTime(2024, 1, 1),
             Lte = new DateTime(2024, 12, 31),
-            In = new[] { new DateTime(2024, 5, 1), new DateTime(2024, 6, 1) },
-            NotIn = new[] { new DateTime(2024, 7, 1) }
+            In = [new DateTime(2024, 5, 1), new DateTime(2024, 6, 1)],
+            NotIn = [new DateTime(2024, 7, 1)]
         };
 
         // Act

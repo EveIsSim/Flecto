@@ -1,5 +1,6 @@
 using Flecto.Core.Enums;
 using Flecto.Core.Models.Filters;
+using Flecto.Core.Models.Filters.Enums;
 using Flecto.Core.Models.Select;
 
 namespace Flecto.Dapper.UnitTests.FlectoBuilderTests;
@@ -7,7 +8,7 @@ namespace Flecto.Dapper.UnitTests.FlectoBuilderTests;
 public class SearchTests
 {
     private const string Table = "users";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     #region Search
 
@@ -38,7 +39,7 @@ public class SearchTests
 
         // Act
         var ex = Assert.Throws<ArgumentException>(() =>
-            builder.Search(filter, new string[0]));
+            builder.Search(filter, []));
 
         // Assert
         Assert.Equal("Table 'users' must have at least one column specified", ex.Message);
@@ -70,10 +71,10 @@ public class SearchTests
         // Assert params
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey("search_param_0"));
         Assert.Equal("%joHn%", paramDict["search_param_0"]);
     }
@@ -86,7 +87,7 @@ public class SearchTests
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id"), new("name"), new("role") });
+        var tc = new FromTable(Table, [new("id"), new("name"), new("role")]);
 
         // Act
         var result = builder
@@ -105,10 +106,10 @@ public class SearchTests
         // Assert params
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey("search_param_0"));
         Assert.Equal("%Admin%", paramDict["search_param_0"]);
     }
@@ -145,10 +146,10 @@ public class SearchTests
         // Assert params
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Equal(2, paramDict.Count());
+        Assert.Equal(2, paramDict.Count);
         Assert.True(paramDict.ContainsKey("search_param_0"));
         Assert.Equal("%john%", paramDict["search_param_0"]);
 
@@ -164,7 +165,7 @@ public class SearchTests
 
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id"), new("name"), new("role") });
+        var tc = new FromTable(Table, [new("id"), new("name"), new("role")]);
 
         // Act
         var result = builder
@@ -185,10 +186,10 @@ public class SearchTests
         // Assert params
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey("search_param_0"));
         Assert.Equal("%Admin%", paramDict["search_param_0"]);
     }
@@ -206,7 +207,7 @@ public class SearchTests
         // Act
         var result = builder
             .SelectAll()
-            .SearchTsVector(null, new[] { "text" })
+            .SearchTsVector(null, ["text"])
             .Build();
 
         // Assert
@@ -225,7 +226,7 @@ public class SearchTests
 
         // Act
         var ex = Assert.Throws<ArgumentException>(() =>
-            builder.SearchTsVector(filter, new string[0]));
+            builder.SearchTsVector(filter, []));
 
         // Assert
         Assert.Equal("Table 'users' must have at least one column specified", ex.Message);
@@ -238,12 +239,12 @@ public class SearchTests
         var filter = new SearchFilter { Value = "developer" };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id"), new("bio") });
+        var tc = new FromTable(Table, [new("id"), new("bio")]);
 
         // Act
         var result = builder
             .Select(tc)
-            .SearchTsVector(filter, new[] { "bio", "notes", "profile->'personal'->>'full_name'" }) // Default: mode = Plain, config = "simple"
+            .SearchTsVector(filter, ["bio", "notes", "profile->'personal'->>'full_name'"]) // Default: mode = Plain, config = "simple"
             .Build();
 
         // Assert SQL
@@ -259,9 +260,9 @@ public class SearchTests
 
         // Assert params
         var paramDict = result.Parameters.ParameterNames
-            .ToDictionary(name => name, name => result.Parameters.Get<string>(name));
+            .ToDictionary(static name => name, result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey("search_tsvector_param_0"));
         Assert.Equal("developer", paramDict["search_tsvector_param_0"]);
     }
@@ -276,7 +277,7 @@ public class SearchTests
         // Act
         var result = builder
             .Select(_tc)
-            .SearchTsVector(filter, new[] { "summary", "profile->'personal'->>'full_name'" }, TextSearchMode.WebStyle, "english")
+            .SearchTsVector(filter, ["summary", "profile->'personal'->>'full_name'"], TextSearchMode.WebStyle, "english")
             .Build();
 
         // Assert SQL
@@ -291,9 +292,9 @@ public class SearchTests
 
         // Assert params
         var paramDict = result.Parameters.ParameterNames
-            .ToDictionary(name => name, name => result.Parameters.Get<string>(name));
+            .ToDictionary(static name => name, result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.Equal("csharp & backend", paramDict["search_tsvector_param_0"]);
     }
 
@@ -316,17 +317,17 @@ public class SearchTests
 
         var builder = new FlectoBuilder("profiles", DialectType.Postgres);
 
-        var tc = new FromTable(Table, new Field[] { new("id") });
+        var tc = new FromTable(Table, [new("id")]);
 
         // Act
         var result = builder
             .Select(tc)
-            .Search(searchfilter0, new[] { "a", "b" })
-            .Search(searchfilter1, new[] { "c", "d" })
-            .SearchTsVector(plainFilter0, new[] { "e", "ee->'eee'->>'eeee'" }, TextSearchMode.Plain)
-            .SearchTsVector(plainFilter1, new[] { "f", "ff->'fff'->>'ffff'" }, TextSearchMode.Plain, "english")
-            .SearchTsVector(webStyleFilter2, new[] { "g", "gg->'ggg'->>'gggg'" }, TextSearchMode.WebStyle, "english")
-            .SearchTsVector(webStyleFilter3, new[] { "k", "kk->'kkk'->>'kkkk'" }, TextSearchMode.WebStyle, "english")
+            .Search(searchfilter0, ["a", "b"])
+            .Search(searchfilter1, ["c", "d"])
+            .SearchTsVector(plainFilter0, ["e", "ee->'eee'->>'eeee'"], TextSearchMode.Plain)
+            .SearchTsVector(plainFilter1, ["f", "ff->'fff'->>'ffff'"], TextSearchMode.Plain, "english")
+            .SearchTsVector(webStyleFilter2, ["g", "gg->'ggg'->>'gggg'"], TextSearchMode.WebStyle, "english")
+            .SearchTsVector(webStyleFilter3, ["k", "kk->'kkk'->>'kkkk'"], TextSearchMode.WebStyle, "english")
             .Build();
 
         // Assert SQL
@@ -364,10 +365,10 @@ public class SearchTests
         // Assert params
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Equal(6, paramDict.Count());
+        Assert.Equal(6, paramDict.Count);
 
         Assert.True(paramDict.ContainsKey(searchParam0));
         Assert.Equal("%joHn%", paramDict[searchParam0]);

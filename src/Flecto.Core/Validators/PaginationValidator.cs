@@ -51,13 +51,15 @@ public static class PaginationValidator
         var prefix = "PaginationFilter: validation failed:";
 
         if (forbidPagination)
+        {
             throw new ArgumentException(
                 $"""
                 {prefix}
                 Pagination (LIMIT/OFFSET) is not allowed when using COUNT(*) query.
                 """
             );
+        }
 
-        CommonValidator.ThrowIfErrors(Validate(filter).ToArray(), prefix);
+        CommonValidator.ThrowIfErrors([.. Validate(filter)], prefix);
     }
 }

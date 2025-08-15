@@ -25,7 +25,7 @@ internal readonly struct ColumnRef
     => $"{Table}_{Sanitize(Column)}_{_index}";
 
     internal string GetParamName<T>(T enumOp) where T : struct, Enum
-    => $"{GetParamNameWithoutIndex()}_{enumOp.ToString()}_{_index}";
+    => $"{GetParamNameWithoutIndex()}_{enumOp}_{_index}";
 
     private string GetParamNameWithoutIndex()
     => $"{Table}_{Sanitize(Column)}";

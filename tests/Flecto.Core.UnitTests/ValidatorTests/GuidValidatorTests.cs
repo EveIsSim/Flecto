@@ -60,7 +60,7 @@ public class GuidValidatorTests
         // Arrange
         var filter = new GuidFilter
         {
-            In = Array.Empty<Guid>()
+            In = []
         };
 
         // Act
@@ -79,7 +79,7 @@ public class GuidValidatorTests
         var id = Guid.NewGuid();
         var filter = new GuidFilter
         {
-            NotIn = new[] { id, id }
+            NotIn = [id, id]
         };
 
         // Act
@@ -98,7 +98,7 @@ public class GuidValidatorTests
         var filter = new GuidFilter { Eq = Guid.NewGuid() };
 
         // Act
-        var result = GuidValidator.Validate(filter, customValidator: _ => (false, "custom error"));
+        var result = GuidValidator.Validate(filter, customValidator: static _ => (false, "custom error"));
 
         // Assert
         var error = Assert.Single(result);
@@ -112,7 +112,7 @@ public class GuidValidatorTests
         // Arrange
         var filter = new GuidFilter
         {
-            In = new[] { Guid.NewGuid(), Guid.NewGuid() },
+            In = [Guid.NewGuid(), Guid.NewGuid()],
             NotEq = Guid.NewGuid()
         };
 

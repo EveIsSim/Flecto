@@ -20,7 +20,7 @@ public static class NumericValidator
         NumericFilter<T> filter,
         bool allowNullable = true)
         where T : struct, IComparable
-    => Validate<T>(filter, null, allowNullable);
+    => Validate(filter, null, allowNullable);
 
     /// <summary>
     /// Performs basic logical validation on the specified <see cref="NumericFilter{T}"/> with an optional custom validator,
@@ -84,5 +84,5 @@ public static class NumericValidator
     /// <param name="column">The name of the column associated with the filter.</param>
     internal static void EnsureValid<T>(NumericFilter<T> filter, string table, string column)
         where T : struct, IComparable
-    => CommonValidator.EnsureValidBindFilter(filter, table, column, f => Validate(f, false));
+    => CommonValidator.EnsureValidBindFilter(filter, table, column, static f => Validate(f, false));
 }

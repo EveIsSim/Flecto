@@ -77,12 +77,14 @@ public class StringValidatorTests
     public void Validate_WithArrayCustomValidatorFailure_ReturnsError()
     {
         // Arrange
-        var filter = new StringFilter { In = new[] { "a", "b", "fail" } };
+        var filter = new StringFilter { In = ["a", "b", "fail"] };
 
         static (bool, string?) ArrayValidator(string[] arr)
-            => arr.Contains("fail")
+        {
+            return arr.Contains("fail")
                 ? (false, "Array contains forbidden value")
                 : (true, null);
+        }
 
         // Act
         var result = StringValidator.Validate(
@@ -117,7 +119,7 @@ public class StringValidatorTests
     public void EnsureValid_WithInvalidFilter_ThrowsArgumentException()
     {
         // Act
-        var ex = Assert.Throws<ArgumentException>(() =>
+        var ex = Assert.Throws<ArgumentException>(static () =>
             StringValidator.EnsureValid(null!, "users", "name"));
 
         // Assert

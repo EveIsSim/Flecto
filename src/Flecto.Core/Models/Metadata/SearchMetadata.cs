@@ -18,7 +18,7 @@ public record SearchMetadata(int Page, int Limit, int TotalRecords, int TotalPag
     /// <param name="paginationFilter">The pagination filter containing the page and limit information.</param>
     /// <returns>A <see cref="SearchMetadata"/> instance with calculated total pages.</returns>
     public static SearchMetadata From(int totalRecords, PaginationFilter paginationFilter)
-    => new SearchMetadata(
+    => new(
         paginationFilter.Page,
         paginationFilter.Limit,
         totalRecords,

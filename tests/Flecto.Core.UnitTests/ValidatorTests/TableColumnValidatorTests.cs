@@ -54,7 +54,7 @@ public class TableColumnValidatorTests
     public void EnsureValidTableWithColumns_NullInput_Throws()
     {
         // Act
-        var ex = Assert.Throws<ArgumentException>(() =>
+        var ex = Assert.Throws<ArgumentException>(static () =>
                 TableColumnValidator.EnsureValidTableWithColumns(null!));
 
         // Assert
@@ -65,7 +65,7 @@ public class TableColumnValidatorTests
     public void EnsureValidTableWithColumns_EmptyInput_Throws()
     {
         // Act
-        var ex = Assert.Throws<ArgumentException>(()
+        var ex = Assert.Throws<ArgumentException>(static ()
                 => TableColumnValidator.EnsureValidTableWithColumns());
 
         // Assert
@@ -87,7 +87,7 @@ public class TableColumnValidatorTests
         string? alias)
     {
         // Arrange
-        var input = new FromTable[] { new(table, new Field[] { new(column, alias) }) };
+        var input = new FromTable[] { new(table, [new(column, alias)]) };
 
         // Act
         var ex = Record.Exception(() => TableColumnValidator.EnsureValidSelectTableWithColumns(input));
@@ -118,7 +118,7 @@ public class TableColumnValidatorTests
         var fields = columns?
             .Select((col) => new Field(col, alias))
             .ToArray()
-            ?? Array.Empty<Field>();
+            ?? [];
 
         var input = new[] { new FromTable(table!, fields) };
 
@@ -134,7 +134,7 @@ public class TableColumnValidatorTests
     public void EnsureValidSelectTableWithColumns_NullInput_Throws()
     {
         // Act
-        var ex = Assert.Throws<ArgumentException>(() =>
+        var ex = Assert.Throws<ArgumentException>(static () =>
                 TableColumnValidator.EnsureValidSelectTableWithColumns(null!));
 
         // Assert
@@ -145,7 +145,7 @@ public class TableColumnValidatorTests
     public void EnsureValidSelectTableWithColumns_EmptyInput_Throws()
     {
         // Act
-        var ex = Assert.Throws<ArgumentException>(()
+        var ex = Assert.Throws<ArgumentException>(static ()
                 => TableColumnValidator.EnsureValidSelectTableWithColumns([]));
 
         // Assert

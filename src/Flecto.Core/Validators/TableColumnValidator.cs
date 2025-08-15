@@ -8,9 +8,9 @@ namespace Flecto.Core.Validators;
 /// </summary>
 internal static class TableColumnValidator
 {
-    const string TableNameLabel = "Table name";
-    const string ColumnNameLabel = "Column name";
-    const string AliasNameLabel = "Alias name";
+    private const string TableNameLabel = "Table name";
+    private const string ColumnNameLabel = "Column name";
+    private const string AliasNameLabel = "Alias name";
 
     // Matches valid SQL column names and optional JSONB path expressions.
     // Supports:
@@ -19,12 +19,12 @@ internal static class TableColumnValidator
     // Constraints:
     // - Base column must start with a letter or underscore, followed by letters, digits, or underscores
     // - JSON path keys must be alphanumeric or underscore, enclosed in single quotes
-    private static readonly Regex ColumnOrJsonPathRegex = new Regex(
+    private static readonly Regex ColumnOrJsonPathRegex = new(
         @"^[a-zA-Z_][a-zA-Z0-9_]*(->>'[a-zA-Z0-9_]+'|->'[a-zA-Z0-9_]+')*$",
         RegexOptions.Compiled);
 
     // Valid SQL identifiers: start with a letter or underscore, followed by letters, numbers, or underscores.
-    private static readonly Regex CommonNameRegex = new Regex(
+    private static readonly Regex CommonNameRegex = new(
         @"^[a-zA-Z_][a-zA-Z0-9_]*$", RegexOptions.Compiled);
 
     /// <summary>

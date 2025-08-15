@@ -108,7 +108,7 @@ public static class StringValidator
     {
         if (values is null || values.Length == 0) yield break;
 
-        for (int i = 0; i < values.Length; i++)
+        for (var i = 0; i < values.Length; i++)
         {
             foreach (var error in CheckString(
                 values[i],
@@ -124,7 +124,7 @@ public static class StringValidator
         foreach (var error in CommonValidator.ValidateArrayIfNeeded(values, fieldName))
             yield return error;
 
-        foreach (var error in ValidateViaCustomValidatorIfNeeded<string[]>(values, fieldName, customArrayValidator))
+        foreach (var error in ValidateViaCustomValidatorIfNeeded(values, fieldName, customArrayValidator))
             yield return error;
     }
 
@@ -173,5 +173,5 @@ public static class StringValidator
         filter,
         table,
         column,
-        f => Validate(f, StringFilterValidationOptions.AllowEmptyStrings));
+        static f => Validate(f, StringFilterValidationOptions.AllowEmptyStrings));
 }

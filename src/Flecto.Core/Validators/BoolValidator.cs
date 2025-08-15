@@ -87,5 +87,5 @@ public static class BoolValidator
         filter,
         table,
         column,
-        f => Validate(f, BoolFilterValidationOptions.None));
+        static f => Validate(f, BoolFilterValidationOptions.None));
 }

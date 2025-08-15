@@ -32,7 +32,7 @@ internal static class StringSqlBuilder
             return ($"{column} {SqlOps.Eq} {PgSqlOps.ANY}(@{paramName})", input);
         }
 
-        var lowered = input.Select(x => x.ToLowerInvariant()).ToArray();
+        var lowered = input.Select(static x => x.ToLowerInvariant()).ToArray();
         return ($"{Sql.LOWER}({column}) {SqlOps.Eq} {PgSqlOps.ANY}(@{paramName})", lowered);
     }
 
@@ -57,7 +57,7 @@ internal static class StringSqlBuilder
             return ($"{column} {SqlOps.NotEq} {PgSqlOps.ALL}(@{paramName})", input);
         }
 
-        var lowered = input.Select(x => x.ToLowerInvariant()).ToArray();
+        var lowered = input.Select(static x => x.ToLowerInvariant()).ToArray();
         return ($"{Sql.LOWER}({column}) {SqlOps.NotEq} {PgSqlOps.ALL}(@{paramName})", lowered);
     }
 

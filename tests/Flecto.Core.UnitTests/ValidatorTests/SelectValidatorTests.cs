@@ -27,7 +27,7 @@ public class SelectValidatorTests
         // Arrange
         var selectWasSet = false;
         var tablesWithColumns = new FromTable[] {
-            new ("users", new Field[] { new ("id"), new ("name")})
+            new ("users", [new ("id"), new ("name")])
         };
 
         // Act

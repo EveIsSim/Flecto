@@ -8,7 +8,7 @@ public class BindBoolTests
 {
     private const string Table = "users";
     private const string Column = "is_active";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     [Fact]
     public void BindBool_FilterIsNull_NotAddCondition()
@@ -75,10 +75,10 @@ public class BindBoolTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<bool>(name));
+                static name => name,
+                result.Parameters.Get<bool>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Eq, paramDict[expectedParam]);
     }
@@ -112,10 +112,10 @@ public class BindBoolTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<bool>(name));
+                static name => name,
+                result.Parameters.Get<bool>);
 
-        Assert.Equal(2, paramDict.Count());
+        Assert.Equal(2, paramDict.Count);
         Assert.True(paramDict.ContainsKey(expectedParam0));
         Assert.Equal(filter0.Eq, paramDict[expectedParam0]);
 
@@ -129,7 +129,7 @@ public class BindBoolTests
         // Arrange
         var filter = new BoolFilter { NotEq = false };
         var builder = new FlectoBuilder(Table, DialectType.Postgres);
-        var tc = new FromTable(Table, new Field[] { new("id") });
+        var tc = new FromTable(Table, [new("id")]);
 
         // Act
         var result = builder
@@ -149,10 +149,10 @@ public class BindBoolTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<bool>(name));
+                static name => name,
+                result.Parameters.Get<bool>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.NotEq, paramDict[expectedParam]);
     }
@@ -243,11 +243,51 @@ public class BindBoolTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<bool>(name));
+                static name => name,
+                result.Parameters.Get<bool>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Eq, paramDict[expectedParam]);
+    }
+
+    [Fact]
+    public void BindBool_MultiConditions()
+    {
+        // Arrange
+        var filter = new BoolFilter
+        {
+            Eq = true,
+            IsNull = false,
+            Sort = new Sort(position: 1, descending: true)
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindBool(filter, Column)
+            .Build();
+
+        // Assert
+        var eqParam = "users_is_active_Eq_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.is_active = @{eqParam} " +
+                "AND users.is_active IS NOT NULL " +
+            "ORDER BY users.is_active DESC",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                static x => x,
+                result.Parameters.Get<object?>);
+
+        _ = Assert.Single(paramDict);
+        Assert.Equal(filter.Eq, paramDict[eqParam]);
     }
 }

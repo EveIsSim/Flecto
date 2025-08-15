@@ -1,3 +1,4 @@
+using System.Globalization;
 using Flecto.Core.Models.Filters.Enums;
 using Flecto.Dapper.Constants;
 using Flecto.Dapper.SqlDialect.Dialects.Postgres.Constants;
@@ -99,7 +100,7 @@ internal static class EnumSqlBuilder
         return filterMode switch
         {
             EnumFilterMode.Name => value.ToString(),
-            EnumFilterMode.Value => value,
+            EnumFilterMode.Value => Convert.ToInt32(value, CultureInfo.InvariantCulture),
             EnumFilterMode.ValueString => value.ToString("D"),
             _ => throw new ArgumentOutOfRangeException(nameof(filterMode), filterMode, null)
         };

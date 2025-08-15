@@ -49,7 +49,7 @@ internal static class CommonValidator
         if (arr.Length == 0)
             yield return (fieldName, "Array cannot be empty if specified");
 
-        if (arr.Any(s => s is null))
+        if (arr.Any(static s => s is null))
             yield return (fieldName, "Array contains null values");
 
         if (arr.Length != arr.Distinct().Count())
@@ -75,7 +75,7 @@ internal static class CommonValidator
     {
         if (errors.Length == 0) return;
 
-        var msg = string.Join("\n", errors.Select(e => $"{e.Field}: {e.Error}"));
+        var msg = string.Join("\n", errors.Select(static e => $"{e.Field}: {e.Error}"));
 
         if (!string.IsNullOrWhiteSpace(prefix))
         {
@@ -95,7 +95,7 @@ internal static class CommonValidator
         TableColumnValidator.EnsureValidTableWithColumns((table, [column]));
 
         ThrowIfErrors(
-            validator(filter).ToArray(),
+            [.. validator(filter)],
             $"{typeof(TFilter).Name}: validation for table: '{table}', column: '{column}' failed:"
         );
     }

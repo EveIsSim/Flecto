@@ -25,7 +25,7 @@ public class BoolValidatorTests
         var result = BoolValidator.Validate(null).ToArray();
 
         // Assert
-        Assert.Single(result);
+        _ = Assert.Single(result);
 
         var error = result.First();
         Assert.Equal("BoolFilter", error.Field);
@@ -46,7 +46,7 @@ public class BoolValidatorTests
         var result = BoolValidator.Validate(filter).ToArray();
 
         // Assert
-        Assert.Single(result);
+        _ = Assert.Single(result);
 
         var error = result.First();
         Assert.Equal("BoolFilter", error.Field);
@@ -111,7 +111,7 @@ public class BoolValidatorTests
         // Act
         var result = BoolValidator.Validate(
             filter,
-            f => (false, "Custom error occurred"),
+            static f => (false, "Custom error occurred"),
             BoolFilterValidationOptions.None);
 
         // Assert

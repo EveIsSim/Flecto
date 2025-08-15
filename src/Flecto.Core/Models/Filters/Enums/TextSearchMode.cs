@@ -1,4 +1,4 @@
-namespace Flecto.Core.Models.Filters;
+namespace Flecto.Core.Models.Filters.Enums;
 
 /// <summary>
 /// Specifies the text search mode used for full-text search operations

@@ -81,7 +81,7 @@ public static class SearchValidator
         TableColumnValidator.EnsureValidTableWithColumns(tablesWithColumns);
 
         CommonValidator.ThrowIfErrors(
-            Validate(filter, allowNullable: false).ToArray(),
+            [.. Validate(filter, allowNullable: false)],
             "SearchFilter validation failed:");
     }
 }

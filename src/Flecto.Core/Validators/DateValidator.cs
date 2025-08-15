@@ -77,5 +77,5 @@ public static class DateValidator
     /// <param name="table">The name of the table associated with the filter.</param>
     /// <param name="column">The name of the column associated with the filter.</param>
     internal static void EnsureValid(DateFilter filter, string table, string column)
-    => CommonValidator.EnsureValidBindFilter(filter, table, column, f => Validate(f, false));
+    => CommonValidator.EnsureValidBindFilter(filter, table, column, static f => Validate(f, false));
 }

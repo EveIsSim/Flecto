@@ -1,4 +1,5 @@
 using Flecto.Core.Models.Filters;
+using Flecto.Core.Models.Filters.Enums;
 using Flecto.Dapper.Constants;
 
 namespace Flecto.Dapper.SqlDialect.Dialects.Postgres;

@@ -74,5 +74,5 @@ public static class FlagsEnumValidator
     /// <param name="column">The name of the column associated with the filter.</param>
     internal static void EnsureValid<T>(FlagsEnumFilter<T> filter, string table, string column)
         where T : struct, Enum
-    => CommonValidator.EnsureValidBindFilter(filter, table, column, f => Validate(f, false));
+    => CommonValidator.EnsureValidBindFilter(filter, table, column, static f => Validate(f, false));
 }

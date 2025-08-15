@@ -89,7 +89,7 @@ public class FlagsEnumValidatorTests
         var filter = new FlagsEnumFilter<AccessRights> { Eq = AccessRights.Read };
 
         // Act
-        var result = FlagsEnumValidator.Validate(filter, customValidator: _ => (false, "custom failed"));
+        var result = FlagsEnumValidator.Validate(filter, customValidator: static _ => (false, "custom failed"));
 
         // Assert
         var error = Assert.Single(result);

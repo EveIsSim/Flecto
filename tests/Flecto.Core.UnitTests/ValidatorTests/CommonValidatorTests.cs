@@ -8,7 +8,7 @@ namespace Flecto.Core.UnitTests.ValidatorTests;
 public class CommonValidatorTests
 {
     private class DummyFilter : IFilter { }
-    private BoolFilter _defaultFilter = new();
+    private readonly BoolFilter _defaultFilter = new();
 
     #region ValidateNullOr
 
@@ -22,7 +22,7 @@ public class CommonValidatorTests
         var result = CommonValidator.ValidateNullOr(
             filter,
             allowNullable: true,
-            validateNotNull: _ => throw new Exception("Should not be called"));
+            validateNotNull: static _ => throw new ArgumentException("Should not be called"));
 
         // Assert
         Assert.Empty(result);
@@ -38,7 +38,7 @@ public class CommonValidatorTests
         var result = CommonValidator.ValidateNullOr(
             filter,
             allowNullable: false,
-            validateNotNull: _ => throw new Exception("Should not be called"));
+            validateNotNull: static _ => throw new ArgumentException("Should not be called"));
 
         // Assert
         var error = result.Single();
@@ -53,9 +53,9 @@ public class CommonValidatorTests
         var result = CommonValidator.ValidateNullOr(
             _defaultFilter,
             allowNullable: true,
-            validateNotNull: f =>
+            validateNotNull: static f =>
             {
-                return new[] { ("FieldX", "Some error") };
+                return [("FieldX", "Some error")];
             });
 
         // Assert
@@ -132,7 +132,7 @@ public class CommonValidatorTests
     public void ValidateArrayIfNeeded_EmptyArray_ReturnsError()
     {
         // Arrange
-        var arr = new int[] { };
+        var arr = Array.Empty<int>();
 
         // Act
         var result = CommonValidator.ValidateArrayIfNeeded(arr, "MyField");
@@ -208,7 +208,7 @@ public class CommonValidatorTests
         // Act
         var result = CommonValidator.ValidateViaCustomValidatorIfNeeded(
             _defaultFilter,
-            f => (true, null));
+            static f => (true, null));
 
         // Assert
         Assert.Empty(result);
@@ -220,7 +220,7 @@ public class CommonValidatorTests
         // Act
         var result = CommonValidator.ValidateViaCustomValidatorIfNeeded(
             _defaultFilter,
-            f => (false, "Custom validation failed"));
+            static f => (false, "Custom validation failed"));
 
         // Assert
         var error = Assert.Single(result);
@@ -234,7 +234,7 @@ public class CommonValidatorTests
         // Act
         var result = CommonValidator.ValidateViaCustomValidatorIfNeeded(
             _defaultFilter,
-            f => (false, null));
+            static f => (false, null));
 
         // Assert
         var error = Assert.Single(result);
@@ -335,7 +335,7 @@ public class CommonValidatorTests
                 _defaultFilter,
                 "users",
                 "is_active",
-                _ => Enumerable.Empty<(string Field, string Error)>()));
+                _ => []));
 
         // Assert
         Assert.Null(ex);
@@ -353,7 +353,7 @@ public class CommonValidatorTests
                 _defaultFilter,
                 table!,
                 "status",
-                _ => Enumerable.Empty<(string Field, string Error)>()));
+                _ => []));
 
         // Assert
         Assert.Equal("Table name cannot be null or whitespace", ex.Message);
@@ -371,7 +371,7 @@ public class CommonValidatorTests
                 _defaultFilter,
                 "orders",
                 column!,
-                _ => Enumerable.Empty<(string Field, string Error)>()));
+                _ => []));
 
         // Assert
         Assert.Equal("Column name cannot be null or whitespace", ex.Message);
@@ -386,7 +386,7 @@ public class CommonValidatorTests
                 _defaultFilter,
                 "logs",
                 "enabled",
-                _ => new[] { ("SomeField", "SomeError") }));
+                _ => [("SomeField", "SomeError")]));
 
         // Assert
         Assert.Equal(
@@ -486,10 +486,10 @@ public class CommonValidatorTests
         var errors = result.ToArray();
 
         Assert.Equal(4, errors.Length);
-        Assert.Contains(errors, e => e.Error == "Gt (10) must be less than Lt (9)");
-        Assert.Contains(errors, e => e.Error == "Gt (10) must be less than or equal to Lte (8)");
-        Assert.Contains(errors, e => e.Error == "Gte (20) must be less than Lt (9)");
-        Assert.Contains(errors, e => e.Error == "Gte (20) must be less than or equal to Lte (8)");
+        Assert.Contains(errors, static e => e.Error == "Gt (10) must be less than Lt (9)");
+        Assert.Contains(errors, static e => e.Error == "Gt (10) must be less than or equal to Lte (8)");
+        Assert.Contains(errors, static e => e.Error == "Gte (20) must be less than Lt (9)");
+        Assert.Contains(errors, static e => e.Error == "Gte (20) must be less than or equal to Lte (8)");
     }
 
     #endregion

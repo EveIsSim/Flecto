@@ -1,3 +1,4 @@
+using System.Globalization;
 using Flecto.Core.Enums;
 using Flecto.Core.Models.Filters;
 using Flecto.Core.Models.Filters.Enums;
@@ -8,7 +9,7 @@ namespace Flecto.Dapper.UnitTests.FlectoBuilderTests;
 public class CloneTests
 {
     private const string Table = "users";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     private enum UserStatus
     {
@@ -26,56 +27,56 @@ public class CloneTests
         Admin = 1 << 2, // 4
     }
 
-    private SearchFilter searchFilter = new()
+    private readonly SearchFilter searchFilter = new()
     {
         Value = "query usual search",
         CaseSensitive = false
     };
-    private SearchFilter searchTsVectorPlaneFilter = new()
+    private readonly SearchFilter searchTsVectorPlaneFilter = new()
     {
         Value = "query ts vector plain",
         CaseSensitive = false
     };
-    private SearchFilter searchTsVectorWebStyleFilter = new()
+    private readonly SearchFilter searchTsVectorWebStyleFilter = new()
     {
         Value = "query ts vector webStyle",
         CaseSensitive = false
     };
-    private BoolFilter boolFilter = new()
+    private readonly BoolFilter boolFilter = new()
     {
         Eq = true,
         Sort = new Sort(1, descending: false)
     };
-    private DateFilter dateFilter = new()
+    private readonly DateFilter dateFilter = new()
     {
-        In = [DateTime.Parse("2025-01-01T00:00:00Z")],
+        In = [DateTime.Parse("2025-01-01T00:00:00Z", CultureInfo.InvariantCulture)],
         Sort = new Sort(2, descending: true)
     };
-    private EnumFilter<UserStatus> enumFilter = new()
+    private readonly EnumFilter<UserStatus> enumFilter = new()
     {
         NotIn = [UserStatus.Unknown, UserStatus.Inactive]
     };
-    private FlagsEnumFilter<Access> flagsEnumFilter = new()
+    private readonly FlagsEnumFilter<Access> flagsEnumFilter = new()
     {
         HasFlag = Access.Admin
     };
-    private GuidFilter guidFilter = new()
+    private readonly GuidFilter guidFilter = new()
     {
         IsNull = false,
         Sort = new Sort(3, descending: true)
     };
-    private NumericFilter<short> shortNumericFilter = new() { Gt = 10 };
-    private NumericFilter<int> intNumericFilter = new() { Lt = 20 };
-    private NumericFilter<long> longNumericFilter = new() { Lte = 30L };
-    private NumericFilter<decimal> decimalNumericFilter = new() { Gt = 9999.99m };
-    private NumericFilter<double> doubleNumericFilter = new() { Gte = 123.456 };
-    private NumericFilter<float> floatNumericFilter = new() { Gt = 3.14f };
-    private StringFilter stringFilter = new()
+    private readonly NumericFilter<short> shortNumericFilter = new() { Gt = 10 };
+    private readonly NumericFilter<int> intNumericFilter = new() { Lt = 20 };
+    private readonly NumericFilter<long> longNumericFilter = new() { Lte = 30L };
+    private readonly NumericFilter<decimal> decimalNumericFilter = new() { Gt = 9999.99m };
+    private readonly NumericFilter<double> doubleNumericFilter = new() { Gte = 123.456 };
+    private readonly NumericFilter<float> floatNumericFilter = new() { Gt = 3.14f };
+    private readonly StringFilter stringFilter = new()
     {
         In = ["Alice", "Bob"],
         CaseSensitive = false
     };
-    private PaginationFilter pagingFilter = new() { Limit = 10, Page = 5 };
+    private readonly PaginationFilter pagingFilter = new() { Limit = 10, Page = 5 };
 
     [Fact]
     public void Clone_ProducesIdenticalQueryAndParams_WithSelectAll()
@@ -86,17 +87,17 @@ public class CloneTests
             .Search(searchFilter, "name", "email")
             .SearchTsVector(
                 searchTsVectorPlaneFilter,
-                new[] { "bio", "notes", "profile->'personal'->>'full_name'" },
+                ["bio", "notes", "profile->'personal'->>'full_name'"],
                 TextSearchMode.Plain)
             .SearchTsVector(
                 searchTsVectorWebStyleFilter,
-                new[] { "summary", "profile->'personal'->>'full_name'" },
+                ["summary", "profile->'personal'->>'full_name'"],
                 TextSearchMode.WebStyle,
                 "english")
             .BindBool(boolFilter, "profile->'is_active'")
             .BindDate(dateFilter, "created_at")
-            .BindEnum<UserStatus>(enumFilter, "status", EnumFilterMode.Name)
-            .BindFlagsEnum<Access>(flagsEnumFilter, "access")
+            .BindEnum(enumFilter, "status", EnumFilterMode.Name)
+            .BindFlagsEnum(flagsEnumFilter, "access")
             .BindGuid(guidFilter, "department_id")
             .BindNumeric(shortNumericFilter, "profile->>'short_value'")
             .BindNumeric(intNumericFilter, "profile->>'int_value'")
@@ -119,12 +120,12 @@ public class CloneTests
 
         var oParams = original.Parameters.ParameterNames
             .ToDictionary(
-                x => x,
-                x => original.Parameters.Get<object?>(x));
+                static x => x,
+                original.Parameters.Get<object?>);
         var cParams = cloned.Parameters.ParameterNames
             .ToDictionary(
-                x => x,
-                x => cloned.Parameters.Get<object?>(x));
+                static x => x,
+                cloned.Parameters.Get<object?>);
 
         var expectedParamsNumber = 16;
         Assert.Equal(oParams.Count, expectedParamsNumber);
@@ -147,17 +148,17 @@ public class CloneTests
             .Search(searchFilter, "name", "email")
             .SearchTsVector(
                 searchTsVectorPlaneFilter,
-                new[] { "bio", "notes", "profile->'personal'->>'full_name'" },
+                ["bio", "notes", "profile->'personal'->>'full_name'"],
                 TextSearchMode.Plain)
             .SearchTsVector(
                 searchTsVectorWebStyleFilter,
-                new[] { "summary", "profile->'personal'->>'full_name'" },
+                ["summary", "profile->'personal'->>'full_name'"],
                 TextSearchMode.WebStyle,
                 "english")
             .BindBool(boolFilter, "profile->'is_active'")
             .BindDate(dateFilter, "created_at")
-            .BindEnum<UserStatus>(enumFilter, "status", EnumFilterMode.Name)
-            .BindFlagsEnum<Access>(flagsEnumFilter, "access")
+            .BindEnum(enumFilter, "status", EnumFilterMode.Name)
+            .BindFlagsEnum(flagsEnumFilter, "access")
             .BindGuid(guidFilter, "department_id")
             .BindNumeric(shortNumericFilter, "profile->>'short_value'")
             .BindNumeric(intNumericFilter, "profile->>'int_value'")
@@ -179,12 +180,12 @@ public class CloneTests
 
         var oParams = original.Parameters.ParameterNames
             .ToDictionary(
-                x => x,
-                x => original.Parameters.Get<object?>(x));
+                static x => x,
+                original.Parameters.Get<object?>);
         var cParams = cloned.Parameters.ParameterNames
             .ToDictionary(
-                x => x,
-                x => cloned.Parameters.Get<object?>(x));
+                static x => x,
+                cloned.Parameters.Get<object?>);
 
         var expectedParamsNumber = 14;
         Assert.Equal(oParams.Count, expectedParamsNumber);
@@ -207,17 +208,17 @@ public class CloneTests
             .Search(searchFilter, "name", "email")
             .SearchTsVector(
                 searchTsVectorPlaneFilter,
-                new[] { "bio", "notes", "profile->'personal'->>'full_name'" },
+                ["bio", "notes", "profile->'personal'->>'full_name'"],
                 TextSearchMode.Plain)
             .SearchTsVector(
                 searchTsVectorWebStyleFilter,
-                new[] { "summary", "profile->'personal'->>'full_name'" },
+                ["summary", "profile->'personal'->>'full_name'"],
                 TextSearchMode.WebStyle,
                 "english")
             .BindBool(boolFilter, "profile->'is_active'")
             .BindDate(dateFilter, "created_at")
-            .BindEnum<UserStatus>(enumFilter, "status", EnumFilterMode.Name)
-            .BindFlagsEnum<Access>(flagsEnumFilter, "access")
+            .BindEnum(enumFilter, "status", EnumFilterMode.Name)
+            .BindFlagsEnum(flagsEnumFilter, "access")
             .BindGuid(guidFilter, "department_id")
             .BindNumeric(shortNumericFilter, "profile->>'short_value'")
             .BindNumeric(intNumericFilter, "profile->>'int_value'")
@@ -240,12 +241,12 @@ public class CloneTests
 
         var oParams = original.Parameters.ParameterNames
             .ToDictionary(
-                x => x,
-                x => original.Parameters.Get<object?>(x));
+                static x => x,
+                original.Parameters.Get<object?>);
         var cParams = cloned.Parameters.ParameterNames
             .ToDictionary(
-                x => x,
-                x => cloned.Parameters.Get<object?>(x));
+                static x => x,
+                cloned.Parameters.Get<object?>);
 
         var expectedParamsNumber = 16;
         Assert.Equal(oParams.Count, expectedParamsNumber);

@@ -8,7 +8,7 @@ public class BindStringTests
 {
     private const string Table = "users";
     private const string Column = "name";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     [Fact]
     public void BindString_FilterIsNull_NotAddCondition()
@@ -86,10 +86,10 @@ public class BindStringTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Eq, paramDict[expectedParam]);
     }
@@ -126,10 +126,10 @@ public class BindStringTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.NotEq, paramDict[expectedParam]);
     }
@@ -166,10 +166,10 @@ public class BindStringTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal($"%{filter.Contains}%", paramDict[expectedParam]);
     }
@@ -206,10 +206,10 @@ public class BindStringTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal($"{filter.StartsWith}%", paramDict[expectedParam]);
     }
@@ -246,10 +246,10 @@ public class BindStringTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal($"%{filter.EndsWith}", paramDict[expectedParam]);
     }
@@ -287,7 +287,7 @@ public class BindStringTests
                 name => name,
                 name => result.Parameters.Get<string[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.In, paramDict[expectedParam]);
     }
@@ -325,7 +325,7 @@ public class BindStringTests
                 name => name,
                 name => result.Parameters.Get<string[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(new[] { "anna", "bob" }, paramDict[expectedParam]);
     }
@@ -363,7 +363,7 @@ public class BindStringTests
                 name => name,
                 name => result.Parameters.Get<string[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.NotIn, paramDict[expectedParam]);
     }
@@ -401,7 +401,7 @@ public class BindStringTests
                 name => name,
                 name => result.Parameters.Get<string[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(new[] { "anna", "bob" }, paramDict[expectedParam]);
     }
@@ -509,10 +509,10 @@ public class BindStringTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<string>(name));
+                static name => name,
+                result.Parameters.Get<string>);
 
-        Assert.Equal(2, paramDict.Count());
+        Assert.Equal(2, paramDict.Count);
         Assert.True(paramDict.ContainsKey(expectedParam0));
         Assert.Equal(filter0.Eq, paramDict[expectedParam0]);
 
@@ -553,8 +553,58 @@ public class BindStringTests
                 name => name,
                 name => result.Parameters.Get<string[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(new string[] { "alice", "bob" }, paramDict[expectedParam]);
+    }
+
+    [Fact]
+    public void BindString_MultiConditions()
+    {
+        // Arrange
+        var filter = new StringFilter
+        {
+            NotIn = [
+                "a", "b"
+            ],
+            In = ["c", "d"],
+            IsNull = false,
+            NotEq = "hhh",
+            Sort = new Sort(position: 1, descending: true)
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindString(filter, Column)
+            .Build();
+
+        // Assert
+        var notEqParam = "users_name_NotEq_0";
+        var inParam = "users_name_In_0";
+        var notInParam = "users_name_NotIn_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.name <> @{notEqParam} " +
+                $"AND users.name = ANY(@{inParam}) " +
+                $"AND users.name <> ALL(@{notInParam}) " +
+                "AND users.name IS NOT NULL " +
+            "ORDER BY users.name DESC",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                static x => x,
+                result.Parameters.Get<object?>);
+
+        Assert.Equal(3, paramDict.Count);
+        Assert.Equal(filter.NotEq, paramDict[notEqParam]);
+        Assert.Equal(filter.In, paramDict[inParam]);
+        Assert.Equal(filter.NotIn, paramDict[notInParam]);
     }
 }

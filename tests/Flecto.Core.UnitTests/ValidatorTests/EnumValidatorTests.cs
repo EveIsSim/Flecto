@@ -67,7 +67,7 @@ public class EnumValidatorTests
         // Arrange
         var filter = new EnumFilter<BoxStatus>
         {
-            In = Array.Empty<BoxStatus>()
+            In = []
         };
 
         // Act
@@ -85,7 +85,7 @@ public class EnumValidatorTests
         // Arrange
         var filter = new EnumFilter<BoxStatus>
         {
-            NotIn = new[] { BoxStatus.Opened, BoxStatus.Opened }
+            NotIn = [BoxStatus.Opened, BoxStatus.Opened]
         };
 
         // Act
@@ -106,7 +106,7 @@ public class EnumValidatorTests
         // Act
         var result = EnumValidator.Validate(
             filter,
-            customValidator: _ => (false, "enum invalid"));
+            customValidator: static _ => (false, "enum invalid"));
 
         // Assert
         var error = Assert.Single(result);
@@ -120,7 +120,7 @@ public class EnumValidatorTests
         // Arrange
         var filter = new EnumFilter<BoxStatus>
         {
-            In = new[] { BoxStatus.Opened, BoxStatus.Destoyed },
+            In = [BoxStatus.Opened, BoxStatus.Destoyed],
             NotEq = BoxStatus.Closed
         };
 

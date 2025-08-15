@@ -7,7 +7,7 @@ namespace Flecto.Dapper.UnitTests.FlectoBuilderTests;
 public class ApplyPagingTests
 {
     private const string Table = "users";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     [Fact]
     public void ApplyPaging_ValidationFailes_ThrowException()
@@ -58,9 +58,9 @@ public class ApplyPagingTests
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
                 name => name,
-                name => result.Parameters.Get<int>(name));
+                result.Parameters.Get<int>);
 
-        Assert.Equal(2, paramDict.Count());
+        Assert.Equal(2, paramDict.Count);
 
         Assert.True(paramDict.ContainsKey(expectedLimitParam));
         Assert.Equal(filter.Limit, paramDict[expectedLimitParam]);
@@ -102,9 +102,9 @@ public class ApplyPagingTests
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
                 name => name,
-                name => result.Parameters.Get<int>(name));
+                result.Parameters.Get<int>);
 
-        Assert.Equal(2, paramDict.Count());
+        Assert.Equal(2, paramDict.Count);
 
         Assert.True(paramDict.ContainsKey(expectedLimitParam));
         Assert.Equal(filter3.Limit, paramDict[expectedLimitParam]);

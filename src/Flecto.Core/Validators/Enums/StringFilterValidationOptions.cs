@@ -1,7 +1,7 @@
 namespace Flecto.Core.Validators.Enums;
 
 /// <summary>
-/// Specifies validation options for a <see cref="Flecto.Core.Models.Filters.StringFilter"/>
+/// Specifies validation options for a <see cref="Models.Filters.StringFilter"/>
 /// </summary>
 [Flags]
 public enum StringFilterValidationOptions

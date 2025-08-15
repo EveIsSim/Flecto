@@ -8,7 +8,7 @@ public class BindGuidTests
 {
     private const string Table = "users";
     private const string Column = "department_id";
-    private readonly FromTable _tc = new FromTable(Table, new Field[] { new("id") });
+    private readonly FromTable _tc = new(Table, [new("id")]);
 
     [Fact]
     public void BindGuid_FilterIsNull_NotAddCondition()
@@ -84,10 +84,10 @@ public class BindGuidTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<Guid>(name));
+                static name => name,
+                result.Parameters.Get<Guid>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Eq, paramDict[expectedParam]);
     }
@@ -120,10 +120,10 @@ public class BindGuidTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<Guid>(name));
+                static name => name,
+                result.Parameters.Get<Guid>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.NotEq, paramDict[expectedParam]);
     }
@@ -163,7 +163,7 @@ public class BindGuidTests
                 name => name,
                 name => result.Parameters.Get<Guid[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.Equal(filter.In, paramDict[expectedIn]);
     }
 
@@ -202,7 +202,7 @@ public class BindGuidTests
                 name => name,
                 name => result.Parameters.Get<Guid[]>(name));
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.Equal(filter.NotIn, paramDict[expectedIn]);
     }
 
@@ -308,10 +308,10 @@ public class BindGuidTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<Guid>(name));
+                static name => name,
+                result.Parameters.Get<Guid>);
 
-        Assert.Single(paramDict);
+        _ = Assert.Single(paramDict);
         Assert.True(paramDict.ContainsKey(expectedParam));
         Assert.Equal(filter.Eq, paramDict[expectedParam]);
     }
@@ -346,14 +346,62 @@ public class BindGuidTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
-                name => result.Parameters.Get<Guid>(name));
+                static name => name,
+                result.Parameters.Get<Guid>);
 
-        Assert.Equal(2, paramDict.Count());
+        Assert.Equal(2, paramDict.Count);
         Assert.True(paramDict.ContainsKey(expectedParam0));
         Assert.Equal(filter0.Eq, paramDict[expectedParam0]);
 
         Assert.True(paramDict.ContainsKey(expectedParam1));
         Assert.Equal(filter1.Eq, paramDict[expectedParam1]);
+    }
+
+    [Fact]
+    public void BindGuid_MultiConditions()
+    {
+        // Arrange
+        var filter = new GuidFilter
+        {
+            NotIn = [Guid.NewGuid(), Guid.NewGuid()],
+            In = [Guid.NewGuid(), Guid.NewGuid()],
+            IsNull = false,
+            NotEq = Guid.NewGuid(),
+            Sort = new Sort(position: 1, descending: true)
+        };
+
+        var builder = new FlectoBuilder(Table, DialectType.Postgres);
+
+        // Act
+        var result = builder
+            .Select(_tc)
+            .BindGuid(filter, Column)
+            .Build();
+
+        // Assert
+        var notEqParam = "users_department_id_NotEq_0";
+        var inParam = "users_department_id_In_0";
+        var notInParam = "users_department_id_NotIn_0";
+
+        Assert.Equal(
+            "SELECT users.id " +
+            "FROM users " +
+            $"WHERE users.department_id <> @{notEqParam} " +
+                $"AND users.department_id = ANY(@{inParam}) " +
+                $"AND users.department_id <> ANY(@{notInParam}) " +
+                "AND users.department_id IS NOT NULL " +
+            "ORDER BY users.department_id DESC",
+            result.Sql
+        );
+
+        var paramDict = result.Parameters.ParameterNames
+            .ToDictionary(
+                static x => x,
+                result.Parameters.Get<object?>);
+
+        Assert.Equal(3, paramDict.Count);
+        Assert.Equal(filter.NotEq, paramDict[notEqParam]);
+        Assert.Equal(filter.In, paramDict[inParam]);
+        Assert.Equal(filter.NotIn, paramDict[notInParam]);
     }
 }

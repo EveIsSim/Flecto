@@ -8,9 +8,9 @@ public interface IQueryFilter : IFilter
     /// <summary>
     /// Gets or sets a value indicating whether to filter for null values
     /// </summary>
-    public bool? IsNull { get; set; }
+    bool? IsNull { get; set; }
     /// <summary>
     /// Gets or sets the sort direction for the filtered property
     /// </summary>
-    public Sort? Sort { get; set; }
+    Sort? Sort { get; set; }
 }
