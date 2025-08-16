@@ -22,7 +22,7 @@ Used for filtering boolean columns.
 **Key properties:**
 
 - `Eq`: filter by true/false.
-- `Null`: filter for null values.
+- `IsNull`: filter for null values.
 - `Sort`: sorting direction.
 
 **Example:**
@@ -40,7 +40,7 @@ Used for filtering date columns with exact match or ranges.
 - `Eq` / `NotEq`: exact date match or exclusion.
 - `Gt` / `Gte`, `Lt` / `Lte`: range filtering.
 - `In` / `NotIn`: inclusion/exclusion by list.
-- `Null`: filter for null values.
+- `IsNull`: filter for null values.
 - `Sort`: sorting direction.
 
 **Example:**
@@ -61,8 +61,7 @@ Used for filtering enum columns by name or numeric value.
 
 - `Eq` / `NotEq`: exact enum match or exclusion.
 - `In` / `NotIn`: inclusion/exclusion by list.
-- `Null`: filter for null values.
-- `EnumFilterMode`: mode used for filtering enumeration values (Name, Value, ValueString)
+- `IsNull`: filter for null values.
 - `Sort`: sorting direction.
 
 **Example:**
@@ -83,7 +82,7 @@ enabling type-safe filtering for flags enums.
 - `NotEq`: filter for inequality with the specified enum value.
 - `HasFlag`: filter where the specified flag is set.
 - `NotHasFlag`: filter where the specified flag is not set.
-- `Null`: filter for null values.
+- `IsNull`: filter for null values.
 - `Sort`: sorting direction.
 
 **Example:**
@@ -104,7 +103,7 @@ Used for filtering `Guid` columns with support for exact matching, inclusion/exc
 - `NotEq`: filter for inequality with the specified `Guid`.
 - `In`: filter for inclusion within a list of `Guid` values.
 - `NotIn`: filter for exclusion from a list of `Guid` values.
-- `Null`: filter for null values.
+- `IsNull`: filter for null values.
 - `Sort`: sorting direction.
 
 **Example:**
@@ -133,7 +132,7 @@ inclusion/exclusion, null checking, and sorting.
 - `Gt` / `Gte`: greater than, greater than or equal.
 - `Lt` / `Lte`: less than, less than or equal.
 - `In` / `NotIn`: inclusion or exclusion by list.
-- `Null`: filter for null values.
+- `IsNull`: filter for null values.
 - `Sort`: sorting direction.
 
 **Support types**
@@ -221,7 +220,7 @@ Used for filtering string columns with pattern matching.
 - `Eq` / `NotEq`: exact match or exclusion.
 - `Contains`, `StartsWith`, `EndsWith`: pattern searches.
 - `In` / `NotIn`: inclusion/exclusion by list.
-- `Null`: filter for null values.
+- `IsNull`: filter for null values.
 - `Sort`: sorting direction.
 - `CaseSensitive`: case-insensitive comparison.
 

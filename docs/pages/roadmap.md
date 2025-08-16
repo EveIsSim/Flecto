@@ -5,7 +5,7 @@ developer experience, and broader ecosystem integrations.
 
 ---
 
-### 🔜 Short-Term Goals
+### *Short-Term Goals*
 
 These features are either in development or high-priority in the near term.
 
@@ -19,7 +19,7 @@ These features are either in development or high-priority in the near term.
   - Add `.AndWhere(...)` APIs for advanced scenarios.
 ---
 
-### 🔭 Long-Term Ideas
+### *Long-Term Ideas*
 
 These ideas are under consideration but not yet scheduled.
 
@@ -30,7 +30,7 @@ These ideas are under consideration but not yet scheduled.
 
 ---
 
-### 📝 Notes
+### *Notes*
 
 - All roadmap items are modular. Features will be added in a non-breaking, opt-in manner.
 - You can follow the releases and progress via GitHub milestones and discussions.

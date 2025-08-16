@@ -254,7 +254,7 @@ public class FlectoBuilder
     /// <param name="config">The text search configuration (e.g., "simple", "english"). Defaults to "simple".</param>
     /// <param name="tablesWithColumns">The tables and their columns to include in the full-text search vector.</param>
     /// <returns>The current <see cref="FlectoBuilder"/> instance for chaining.</returns>
-    public FlectoBuilder SearchTsVector(
+    private FlectoBuilder SearchTsVector(
         SearchFilter? filter,
         TextSearchMode mode = TextSearchMode.Plain,
         string config = DefaultVectorConfig,

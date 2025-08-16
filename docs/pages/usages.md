@@ -84,6 +84,14 @@ RuleFor(x => x.BoolFilter)
 // ...
 // ...
 
+
+private readonly FromTable _tc = new FromTable(
+    table: _employeeTable,
+    fields: new Field[]{
+        new Field("id"),
+        new Field("social_networks->'is_active'", "social_networks_is_active")
+});
+
 public async Task<SearchResult<Employee[]>> Search(Request r, CancellationToken token)
 {
     var builder = new FlectoBuilder(_employeeTable, DialectType.Postgres)
@@ -102,7 +110,7 @@ public async Task<SearchResult<Employee[]>> Search(Request r, CancellationToken 
     var totalRecords = await connection.QueryFirstAsync<int>(sqlCount, parametersCount);
 
     var (sql, parameters) = builder
-        .Select(_employeeAllColumn)
+        .Select(_tc)
         .ApplyPaging(r.Paging)
         .Build();
 
