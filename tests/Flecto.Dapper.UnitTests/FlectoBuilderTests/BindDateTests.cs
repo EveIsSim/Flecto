@@ -121,7 +121,7 @@ public class BindDateTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
+                static name => name,
                 result.Parameters.Get<DateTime>);
 
         _ = Assert.Single(paramDict);
@@ -161,7 +161,7 @@ public class BindDateTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
+                static name => name,
                 result.Parameters.Get<DateTime>);
 
         Assert.Equal(2, paramDict.Count);
@@ -208,7 +208,7 @@ public class BindDateTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
+                static name => name,
                 result.Parameters.Get<DateTime>);
 
         Assert.Equal(4, paramDict.Count);
@@ -398,7 +398,7 @@ public class BindDateTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
+                static name => name,
                 result.Parameters.Get<DateTime>);
 
         _ = Assert.Single(paramDict);
@@ -436,7 +436,7 @@ public class BindDateTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
+                static name => name,
                 result.Parameters.Get<DateTime>);
 
         Assert.Equal(2, paramDict.Count);

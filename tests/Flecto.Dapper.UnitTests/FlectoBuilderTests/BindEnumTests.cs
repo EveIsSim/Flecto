@@ -498,7 +498,7 @@ public class BindEnumTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
+                static name => name,
                 result.Parameters.Get<object>);
 
         _ = Assert.Single(paramDict);
@@ -550,7 +550,7 @@ public class BindEnumTests
 
         Assert.Equal(3, paramDict.Count);
         Assert.Equal(filter.NotEq.ToString(), paramDict[notEqParam]);
-        Assert.Equal(filter.In.Select(x => x.ToString()), paramDict[inParam]);
-        Assert.Equal(filter.NotIn.Select(x => x.ToString()), paramDict[notInParam]);
+        Assert.Equal(filter.In.Select(static x => x.ToString()), paramDict[inParam]);
+        Assert.Equal(filter.NotIn.Select(static x => x.ToString()), paramDict[notInParam]);
     }
 }

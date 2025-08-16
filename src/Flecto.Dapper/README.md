@@ -4,16 +4,16 @@
 
 It takes strongly-typed filter, sorting, and pagination models from `Flecto.Core` and translates them into valid SQL queries with parameters.
 
-🔗 See usage examples and implementation details on [GitHub Pages](https://eveissim.github.io/Flecto).
+🔗 See usage examples and implementation details on [GitHub Pages](https://flecto-labs.github.io/Flecto/).
 
 ---
 
 ## Features
 
 - Build flexible and composable SQL queries using filter, sort, and paging models
-- Support for text search (`LIKE`, `ILIKE`, `tsvector`)
+- Support text search and tsvector
 - Safe parameter binding for use with Dapper
-- Support for Postgres dialect (more coming)
+- Support only Postgres dialect at the moment. Other dialects will add base on priority. 
 
 ---
 

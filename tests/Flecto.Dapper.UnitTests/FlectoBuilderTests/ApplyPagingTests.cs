@@ -57,7 +57,7 @@ public class ApplyPagingTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
+                static name => name,
                 result.Parameters.Get<int>);
 
         Assert.Equal(2, paramDict.Count);
@@ -101,7 +101,7 @@ public class ApplyPagingTests
 
         var paramDict = result.Parameters.ParameterNames
             .ToDictionary(
-                name => name,
+                static name => name,
                 result.Parameters.Get<int>);
 
         Assert.Equal(2, paramDict.Count);

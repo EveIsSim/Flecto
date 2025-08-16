@@ -1,14 +1,12 @@
-> ⚠️ **Beta Disclaimer**  
-> This library is under active development. Its API is not stable and may change at any time.  
-> It is not recommended for production use yet.
-
 # Flecto
 
-Fluent, safe, and flexible SQL SELECT query builder for .NET (starting with .NET 9+) with structured filters, sorting, and pagination, designed for use with Dapper and extensible to other providers and sql dialects.
+Fluent, safe, and flexible SQL SELECT query builder for .NET (starting with .NET 9+) with structured filters, 
+sorting, and pagination, designed for use with Dapper and extensible to other providers and sql dialects.
 
 ## Why Flecto?
 
-Stop building SQL manually. Flecto lets you dynamically and safely construct SQL queries in .NET using structured filters, sorting, and pagination. It automatically manages parameters, prevents SQL injection, and keeps your query logic clean and maintainable, whether used in HTTP APIs or internal services.
+Stop building SQL manually. Flecto lets you dynamically and safely construct SQL queries in .NET using structured filters, sorting, and pagination. 
+It automatically manages parameters, prevents SQL injection, and keeps your query logic clean and maintainable, whether used in HTTP APIs or internal services.
 
 ## Who is this for?
 * Building Read APIs with structured, dynamic queries.
@@ -18,18 +16,19 @@ Stop building SQL manually. Flecto lets you dynamically and safely construct SQL
 
 ## Key Features
 
-- **Fluent API**: Build queries clearly using `Select()`, `Search()`, `BindNumeric()`, `BindString()`, and `ApplyPaging()`.
-- **Automatic Filtering**: Filters are applied basic logical validations only if provided, and supporting to adding custom validators.
+- **Fluent API**: Fluent API: Build queries clearly with strongly-typed filters - [link](https://flecto-labs.github.io/Flecto/filters/).
+- **Automatic Validation**: Validation are applied basic logical validations and supporting to adding custom validators.
 - **Safe Parameterization**: Prevents SQL injection automatically.
 - **Validation**: Built-in validation, custom validators, and you can apply it in FluentValidation.
-- **Sorting and Pagination**: Integrated and type-safe.
+- **Sorting and Pagination**: Integrated, user-friendly and type-safe.
 - **Multiple SQL Dialects**: PostgreSQL supported, extensible to SQL Server/MySQL.
 - **Cloneable Queries**: Create variations easily with `.Clone()`.
 - **HTTP and Internal Services Ready**: Use with APIs or background/CLI services.
 
 ## Filters
 
-Use strongly-typed filters (`NumericFilter`, `StringFilter`, `BoolFilter`, etc.) for safe, composable filtering with sorting and null checks.
+Use strongly-typed filters (`NumericFilter`, `StringFilter`, `BoolFilter`, etc.) for safe, 
+composable filtering with sorting and null checks.
 
 ## Getting Started
 
@@ -65,7 +64,7 @@ public async Task<SearchResult<Employee[]>> Search(Request request, Cancellation
 
     var (sql, parameters) = builder
         .Clone()
-        .Select("id", "first_name", "last_name")
+        .SelectAll()
         .ApplyPaging(request.Paging)
         .Build();
 
@@ -101,9 +100,11 @@ var errors = StringValidator.Validate(nameFilter, maxLength: 100, customValidato
 Or use FluentValidation to validate DTOs before using FlectoBuilder.
 
 ## Roadmap
-- You can read on GitHub pages.
+- You can read on GitHub pages - [link](https://flecto-labs.github.io/Flecto/roadmap/)
 
 ## Conclusion
 
-Flecto provides a lightweight, powerful way to build clear, safe SQL queries in .NET. With filters, search, sorting, pagination, and validation, you can generate precise queries easily for APIs and internal services without manual SQL handling.
+Flecto provides a lightweight, powerful way to build clear, safe SQL queries in .NET. 
+With filters, search, sorting, pagination, and validation, you can generate precise queries easily 
+for APIs and internal services without manual SQL handling.
 

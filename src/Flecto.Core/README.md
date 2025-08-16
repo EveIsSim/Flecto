@@ -22,7 +22,7 @@ It includes filter objects, sorting models, pagination, and input validation. Th
 This package is intended to be consumed by libraries that handle SQL or other query generation.  
 See [Flecto.Dapper](https://www.nuget.org/packages/Flecto.Dapper) for a full example of how to integrate Flecto.Core with Dapper-based data access.
 
-🔗 You can explore usage examples and implementation details on [GitHub Pages](https://eveissim.github.io/Flecto).
+🔗 You can explore usage examples and implementation details on [GitHub Pages](https://flecto-labs.github.io/Flecto/).
 
 ---
 
