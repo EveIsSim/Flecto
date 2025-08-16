@@ -758,7 +758,6 @@ public class FlectoBuilder
 
     #region AddSmthIfPresent
 
-    // 999 add multi tests with checking sorting order
     private void AddSortIfPresent(string sqlName, Sort? sort)
     {
         if (!sort.HasValue) return;
@@ -937,10 +936,24 @@ public class FlectoBuilder
 
     #endregion
 
+    /// <summary>
+    /// Adds a condition and (optionally) a parameter to the query.
+    /// <param name="condition">The SQL condition (e.g., "Name = @name").</param>
+    /// <param name="paramName">
+    /// The name of the parameter to bind. 
+    /// If <c>null</c>, no parameter is added.
+    /// </param>
+    /// <param name="value">
+    /// The parameter value. 
+    /// If <c>null</c>, the parameter may be omitted. 
+    /// This is expected and valid for cases such as <c>IS NULL</c>, <c>IS NOT NULL</c> etc.
+    /// where no explicit value is required.
+    /// </param>
+    /// </summary>
     private void AddCondition(string condition, string? paramName = null, object? value = null)
     {
-        // 999 test: validate, that: is it definitely possible to add to conditioned if the parameter is null? 
         _conditions.Add(condition);
+
         if (paramName != null)
             _parameters.Add(paramName, value);
     }
