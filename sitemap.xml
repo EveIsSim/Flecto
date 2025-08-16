@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://flecto-labs.github.io/Flecto/</loc>
+         <lastmod>2025-08-16</lastmod>
+    </url>
+    <url>
+         <loc>https://flecto-labs.github.io/Flecto/bindings/</loc>
+         <lastmod>2025-08-16</lastmod>
+    </url>
+    <url>
+         <loc>https://flecto-labs.github.io/Flecto/filters/</loc>
+         <lastmod>2025-08-16</lastmod>
+    </url>
+    <url>
+         <loc>https://flecto-labs.github.io/Flecto/roadmap/</loc>
+         <lastmod>2025-08-16</lastmod>
+    </url>
+    <url>
+         <loc>https://flecto-labs.github.io/Flecto/usages/</loc>
+         <lastmod>2025-08-16</lastmod>
+    </url>
+    <url>
+         <loc>https://flecto-labs.github.io/Flecto/validations/</loc>
+         <lastmod>2025-08-16</lastmod>
+    </url>
+</urlset>

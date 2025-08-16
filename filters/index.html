@@ -1,0 +1,1167 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://flecto-labs.github.io/Flecto/filters/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../validations/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Filters - Flecto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#filters" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Flecto" class="md-header__button md-logo" aria-label="Flecto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Flecto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Filters
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/flecto-labs/Flecto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Filters
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../validations/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Validations
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../bindings/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Bindings
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../usages/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Usages
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../roadmap/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Flecto" class="md-nav__button md-logo" aria-label="Flecto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Flecto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/flecto-labs/Flecto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Filters
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Filters
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-use-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why use filters?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available Filters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Filters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boolfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      BoolFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datefilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      DateFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enumfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnumFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flagsenumfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      FlagsEnumFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guidfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      GuidFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numericfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      NumericFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paginationfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      PaginationFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#searchfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      SearchFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sort" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sort
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stringfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      StringFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-filter-projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Filter Projection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Filter Projection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-customizing-numericfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Customizing NumericFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Example
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bindings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Bindings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-use-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why use filters?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available Filters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Filters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boolfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      BoolFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datefilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      DateFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enumfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnumFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flagsenumfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      FlagsEnumFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guidfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      GuidFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numericfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      NumericFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paginationfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      PaginationFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#searchfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      SearchFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sort" class="md-nav__link">
+    <span class="md-ellipsis">
+      Sort
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stringfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      StringFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-filter-projection" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Filter Projection
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Filter Projection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-customizing-numericfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Customizing NumericFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage Example
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="filters">Filters<a class="headerlink" href="#filters" title="Permanent link">&para;</a></h1>
+<p>Flecto uses structured, type-safe filters to build clean, safe, and dynamic SQL SELECT queries 
+across providers. Filters ensure your read operations are clear and maintainable while preventing 
+SQL injection and supporting validation before executing queries.</p>
+<hr />
+<h2 id="why-use-filters">Why use filters?<a class="headerlink" href="#why-use-filters" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Eliminate manual SQL WHERE clause construction.</li>
+<li>Apply dynamic filters safely without boilerplate.</li>
+<li>Enable validated, composable filtering for APIs and services.</li>
+<li>Support clear API contracts and frontend filter builders.</li>
+</ul>
+<hr />
+<h2 id="available-filters">Available Filters<a class="headerlink" href="#available-filters" title="Permanent link">&para;</a></h2>
+<h3 id="boolfilter"><code>BoolFilter</code><a class="headerlink" href="#boolfilter" title="Permanent link">&para;</a></h3>
+<p>Used for filtering boolean columns.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Eq</code>: filter by true/false.</li>
+<li><code>IsNull</code>: filter for null values.</li>
+<li><code>Sort</code>: sorting direction.</li>
+</ul>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BoolFilter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Eq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div></p>
+<hr />
+<h3 id="datefilter"><code>DateFilter</code><a class="headerlink" href="#datefilter" title="Permanent link">&para;</a></h3>
+<p>Used for filtering date columns with exact match or ranges.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Eq</code> / <code>NotEq</code>: exact date match or exclusion.</li>
+<li><code>Gt</code> / <code>Gte</code>, <code>Lt</code> / <code>Lte</code>: range filtering.</li>
+<li><code>In</code> / <code>NotIn</code>: inclusion/exclusion by list.</li>
+<li><code>IsNull</code>: filter for null values.</li>
+<li><code>Sort</code>: sorting direction.</li>
+</ul>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DateFilter</span><span class="w"> </span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="n">Gt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DateTime</span><span class="p">(</span><span class="mi">1970</span><span class="p">,</span><span class="w"> </span><span class="mi">01</span><span class="p">,</span><span class="w"> </span><span class="mi">01</span><span class="p">),</span><span class="w"> </span>
+<span class="w">    </span><span class="n">Lt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DateTime</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span><span class="w"> </span><span class="mi">01</span><span class="p">,</span><span class="w"> </span><span class="mi">01</span><span class="p">)</span><span class="w"> </span>
+<span class="p">};</span>
+</code></pre></div></p>
+<hr />
+<h3 id="enumfiltert"><code>EnumFilter&lt;T&gt;</code><a class="headerlink" href="#enumfiltert" title="Permanent link">&para;</a></h3>
+<p>Used for filtering enum columns by name or numeric value.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Eq</code> / <code>NotEq</code>: exact enum match or exclusion.</li>
+<li><code>In</code> / <code>NotIn</code>: inclusion/exclusion by list.</li>
+<li><code>IsNull</code>: filter for null values.</li>
+<li><code>Sort</code>: sorting direction.</li>
+</ul>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">EnumFilter</span><span class="o">&lt;</span><span class="n">UserStatus</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Eq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UserStatus</span><span class="p">.</span><span class="n">Active</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div></p>
+<hr />
+<h3 id="flagsenumfiltert"><code>FlagsEnumFilter&lt;T&gt;</code><a class="headerlink" href="#flagsenumfiltert" title="Permanent link">&para;</a></h3>
+<p>Used for filtering columns that store flags-style enums using bitwise operations, 
+enabling type-safe filtering for flags enums.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Eq</code>: filter for exact enum value.</li>
+<li><code>NotEq</code>: filter for inequality with the specified enum value.</li>
+<li><code>HasFlag</code>: filter where the specified flag is set.</li>
+<li><code>NotHasFlag</code>: filter where the specified flag is not set.</li>
+<li><code>IsNull</code>: filter for null values.</li>
+<li><code>Sort</code>: sorting direction.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FlagsEnumFilter</span><span class="o">&lt;</span><span class="n">UserPermissions</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">HasFlag</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UserPermissions</span><span class="p">.</span><span class="n">Admin</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+<hr />
+<h3 id="guidfilter"><code>GuidFilter</code><a class="headerlink" href="#guidfilter" title="Permanent link">&para;</a></h3>
+<p>Used for filtering <code>Guid</code> columns with support for exact matching, inclusion/exclusion, null checks, and sorting.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Eq</code>: filter for exact <code>Guid</code> value.</li>
+<li><code>NotEq</code>: filter for inequality with the specified <code>Guid</code>.</li>
+<li><code>In</code>: filter for inclusion within a list of <code>Guid</code> values.</li>
+<li><code>NotIn</code>: filter for exclusion from a list of <code>Guid</code> values.</li>
+<li><code>IsNull</code>: filter for null values.</li>
+<li><code>Sort</code>: sorting direction.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GuidFilter</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">NotIn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Guid</span><span class="p">[]</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Guid</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">&quot;5a1d2b3c-6f4e-4d7b-9c2f-8b5c4e7d9f10&quot;</span><span class="p">),</span>
+<span class="w">        </span><span class="n">Guid</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">&quot;3f4b5a6c-2e1d-4c3b-8f7e-5d6c7b8a9e01&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="n">Sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Sort</span><span class="p">.</span><span class="n">Desc</span>
+<span class="p">};</span>
+</code></pre></div>
+<hr />
+<h3 id="numericfiltert"><code>NumericFilter&lt;T&gt;</code><a class="headerlink" href="#numericfiltert" title="Permanent link">&para;</a></h3>
+<p>Used for filtering numeric columns with full support for comparison operations, 
+inclusion/exclusion, null checking, and sorting.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Eq</code> / <code>NotEq</code>: exact equality or inequality.</li>
+<li><code>Gt</code> / <code>Gte</code>: greater than, greater than or equal.</li>
+<li><code>Lt</code> / <code>Lte</code>: less than, less than or equal.</li>
+<li><code>In</code> / <code>NotIn</code>: inclusion or exclusion by list.</li>
+<li><code>IsNull</code>: filter for null values.</li>
+<li><code>Sort</code>: sorting direction.</li>
+</ul>
+<p><strong>Support types</strong></p>
+<ul>
+<li><code>short, int, long, decimal, double, float</code></li>
+</ul>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NumericFilter</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span>
+<span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="n">Gte</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="n">Lt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="n">Sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Position</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">Descending</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">}</span><span class="w"> </span>
+<span class="p">};</span>
+</code></pre></div></p>
+<hr />
+<h3 id="paginationfilter"><code>PaginationFilter</code><a class="headerlink" href="#paginationfilter" title="Permanent link">&para;</a></h3>
+<p>Used user-friendly filter for controlling pagination in your queries, 
+allowing clients to request data in manageable chunks.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Limit</code>: maximum number of items to return.</li>
+<li><code>Page</code>: page number to retrieve.</li>
+</ul>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaginationFilter</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Page</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
+<span class="p">};</span>
+</code></pre></div></p>
+<hr />
+<h3 id="searchfilter"><code>SearchFilter</code><a class="headerlink" href="#searchfilter" title="Permanent link">&para;</a></h3>
+<p>Used for performing free-text search across specific columns in your queries, 
+supporting OR-based matching or integration with <code>tsvector</code> for PostgreSQL full-text search.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Value</code>: the search string to match.</li>
+<li><code>CaseSensitive</code>: determines if the search should be case-sensitive.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SearchFilter</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;project manager&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">CaseSensitive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span>
+<span class="p">};</span>
+</code></pre></div>
+<hr />
+<h3 id="sort"><code>Sort</code><a class="headerlink" href="#sort" title="Permanent link">&para;</a></h3>
+<p><code>Sort</code> is used across all filters in Flecto to define sorting behavior on query properties, 
+supporting multi-column and user-defined sorting orders.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Position</code>: defines the sort priority among multiple sorted columns.</li>
+<li><code>Descending</code>: determines if the sort direction is descending (<code>true</code>) or ascending (<code>false</code>).</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">sort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Sort</span><span class="p">(</span><span class="n">position</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="k">descending</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">);</span>
+</code></pre></div>
+<hr />
+<h3 id="stringfilter"><code>StringFilter</code><a class="headerlink" href="#stringfilter" title="Permanent link">&para;</a></h3>
+<p>Used for filtering string columns with pattern matching.</p>
+<p><strong>Key properties:</strong></p>
+<ul>
+<li><code>Eq</code> / <code>NotEq</code>: exact match or exclusion.</li>
+<li><code>Contains</code>, <code>StartsWith</code>, <code>EndsWith</code>: pattern searches.</li>
+<li><code>In</code> / <code>NotIn</code>: inclusion/exclusion by list.</li>
+<li><code>IsNull</code>: filter for null values.</li>
+<li><code>Sort</code>: sorting direction.</li>
+<li><code>CaseSensitive</code>: case-insensitive comparison.</li>
+</ul>
+<p><strong>Example:</strong>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringFilter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Contains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;admin&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">CaseSensitive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="w"> </span><span class="p">};</span>
+</code></pre></div></p>
+<hr />
+<h3 id="custom-filter-projection">Custom Filter Projection<a class="headerlink" href="#custom-filter-projection" title="Permanent link">&para;</a></h3>
+<p>Flecto filters are modular and reusable, but sometimes you may want to restrict or 
+simplify their functionality for public APIs or external consumers. </p>
+<p>For example, you may want to disallow sorting and array-based operations 
+like <code>In</code> and <code>NotIn</code> from <code>NumericFilter&lt;T&gt;</code>.</p>
+<p>You can achieve this by introducing a custom DTO (e.g., <code>CustomNumericFilter</code>) 
+and mapping it internally to Flecto's standard filters.</p>
+<h4 id="example-customizing-numericfiltert">Example: Customizing <code>NumericFilter&lt;T&gt;</code><a class="headerlink" href="#example-customizing-numericfiltert" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">CustomNumericFilter</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">Eq</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">NotEq</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Then map it inside your application or service layer:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">mapped</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NumericFilter</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Eq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">Id</span><span class="o">?.</span><span class="n">Eq</span><span class="p">,</span>
+<span class="w">    </span><span class="n">NotEq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">Id</span><span class="o">?.</span><span class="n">NotEq</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>Use the mapped version in your builder:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FlectoBuilder</span><span class="p">(</span><span class="s">&quot;employees&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">DialectType</span><span class="p">.</span><span class="n">Postgres</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">BindNumeric</span><span class="p">(</span><span class="n">mapped</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="s">&quot;*&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p>This allows you to:</p>
+<ul>
+<li>Hide advanced options like sorting or range filtering from end users.</li>
+<li>Provide strict or simplified filters for public APIs.</li>
+<li>Maintain full compatibility with the internal Flecto engine.</li>
+</ul>
+<hr />
+<h2 id="usage-example">Usage Example<a class="headerlink" href="#usage-example" title="Permanent link">&para;</a></h2>
+<p>Filters in Flecto are typically used together with FlectoBuilder to dynamically construct SQL SELECT
+Details about FlectoBuilder will be covered in the next sections.</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="p">(</span><span class="n">sqlCount</span><span class="p">,</span><span class="w"> </span><span class="n">parametersCount</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FlectoBuilder</span><span class="p">(</span><span class="s">&quot;table_name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">DialectType</span><span class="p">.</span><span class="n">Postgres</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">BindNumeric</span><span class="p">(</span><span class="s">&quot;age&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">filter</span><span class="p">.</span><span class="n">Age</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">BindString</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">filter</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">ApplyPaging</span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">Page</span><span class="p">,</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">PageSize</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+</code></pre></div>
+<p>Filters in Flecto help keep your query layer clean, safe, and adaptable while supporting structured 
+dynamic query building.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "diagrams"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>

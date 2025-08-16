@@ -1,0 +1,1156 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://flecto-labs.github.io/Flecto/validations/">
+      
+      
+        <link rel="prev" href="../filters/">
+      
+      
+        <link rel="next" href="../bindings/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.17">
+    
+    
+      
+        <title>Validations - Flecto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#validations" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Flecto" class="md-header__button md-logo" aria-label="Flecto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Flecto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Validations
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/flecto-labs/Flecto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../filters/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Filters
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Validations
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../bindings/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Bindings
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../usages/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Usages
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../roadmap/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Flecto" class="md-nav__button md-logo" aria-label="Flecto" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Flecto
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/flecto-labs/Flecto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../filters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Filters
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Validations
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Validations
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key principles:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Built-in behavior
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boolfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      BoolFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datefilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      DateFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enumfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnumFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flagsenumfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      FlagsEnumFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guidfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      GuidFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numericfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      NumericFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paginationfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      PaginationFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#searchfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      SearchFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stringfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      StringFilter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation API
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-flagsenumfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: FlagsEnumFilter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation Modes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-internal-ensure-always-enforced-throws-on-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Internal (Ensure) — always enforced, throws on error
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-user-facing-validate-collects-errors-for-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. User-facing (Validate) — collects errors for feedback
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-add-custom-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Add custom rule
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-use-with-fluentvalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Use with FluentValidation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-it-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why it matters
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bindings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Bindings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Usages
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Roadmap
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#key-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key principles:
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      Built-in behavior
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#boolfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      BoolFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datefilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      DateFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enumfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      EnumFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flagsenumfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      FlagsEnumFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guidfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      GuidFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numericfiltert" class="md-nav__link">
+    <span class="md-ellipsis">
+      NumericFilter&lt;T&gt;
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paginationfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      PaginationFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#searchfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      SearchFilter
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stringfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      StringFilter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation API
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-flagsenumfilter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: FlagsEnumFilter
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation Modes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-internal-ensure-always-enforced-throws-on-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Internal (Ensure) — always enforced, throws on error
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-user-facing-validate-collects-errors-for-feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. User-facing (Validate) — collects errors for feedback
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-add-custom-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Add custom rule
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example-use-with-fluentvalidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Example: Use with FluentValidation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-it-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why it matters
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="validations">Validations<a class="headerlink" href="#validations" title="Permanent link">&para;</a></h1>
+<p>Flecto provides a built-in validation mechanism to verify that filters are logically 
+consistent before executing a query. Depending on the use case, it can either throw 
+exceptions immediately or return structured errors to support user-facing validation. 
+This adds a layer of safety and prevents malformed or 
+logically incorrect inputs from being processed.</p>
+<h3 id="key-principles">Key principles:<a class="headerlink" href="#key-principles" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Filters are only validated if provided (i.e., not null), 
+    but when present, they are always subjected to built-in logical checks.</li>
+<li>These checks are executed during query construction and use <code>Ensure</code>-style 
+    strict validation by default (throwing exceptions on invalid input).</li>
+<li>Validation logic uses the same methods for both internal and external validation: 
+    internally, it throws exceptions on invalid input (e.g., via <code>Ensure</code>), 
+    while externally, it can return structured errors to support user-facing 
+    validation. Developers can also inject additional custom validation logic 
+    (e.g., business rules) into the same mechanism.</li>
+<li>You can also integrate Flecto filters into external validators like <strong>FluentValidation</strong>.</li>
+</ul>
+<h3 id="built-in-behavior">Built-in behavior<a class="headerlink" href="#built-in-behavior" title="Permanent link">&para;</a></h3>
+<p>Each filter in Flecto has a corresponding validator that performs 
+<strong>basic logical consistency checks</strong> to ensure correct usage and guard against 
+invalid combinations of values.</p>
+<p>Below is a summary of built-in validation logic per filter type:</p>
+<h4 id="boolfilter"><code>BoolFilter</code><a class="headerlink" href="#boolfilter" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Disallows using <code>Eq</code> and <code>NotEq</code> simultaneously.</li>
+<li>If <code>RequireAtLeastOne</code> is set, requires at least one of <code>Eq</code>, <code>NotEq</code>, or <code>Null</code>.</li>
+<li>Invokes <code>customValidator</code> if provided and includes its result.</li>
+</ul>
+<h4 id="datefilter"><code>DateFilter</code><a class="headerlink" href="#datefilter" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Disallows using <code>Eq</code> and <code>NotEq</code> simultaneously.</li>
+<li>Ensures range boundaries <code>Gt</code>, <code>Gte</code>, <code>Lt</code>, and <code>Lte</code> are logically consistent.</li>
+<li>Validates that <code>In</code> and <code>NotIn</code> arrays are not empty if provided.</li>
+<li>Invokes <code>customValidator</code> if provided.</li>
+</ul>
+<h4 id="enumfiltert"><code>EnumFilter&lt;T&gt;</code><a class="headerlink" href="#enumfiltert" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Disallows using <code>Eq</code> and <code>NotEq</code> simultaneously.</li>
+<li>Validates that <code>In</code> and <code>NotIn</code> arrays are not empty if provided.</li>
+<li>Invokes <code>customValidator</code> if provided.</li>
+</ul>
+<h4 id="flagsenumfiltert"><code>FlagsEnumFilter&lt;T&gt;</code><a class="headerlink" href="#flagsenumfiltert" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Disallows using <code>Eq</code> and <code>NotEq</code> simultaneously.</li>
+<li>Disallows setting both <code>HasFlag</code> and <code>NotHasFlag</code> at the same time.</li>
+<li>Invokes <code>customValidator</code> if provided.</li>
+</ul>
+<h4 id="guidfilter"><code>GuidFilter</code><a class="headerlink" href="#guidfilter" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Disallows using <code>Eq</code> and <code>NotEq</code> simultaneously.</li>
+<li>Validates that <code>In</code> and <code>NotIn</code> arrays are not empty if provided.</li>
+<li>Invokes <code>customValidator</code> if provided.</li>
+</ul>
+<h4 id="numericfiltert"><code>NumericFilter&lt;T&gt;</code><a class="headerlink" href="#numericfiltert" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Disallows using <code>Eq</code> and <code>NotEq</code> simultaneously.</li>
+<li>Ensures logical consistency of range fields: <code>Gt</code>, <code>Gte</code>, <code>Lt</code>, and <code>Lte</code>.</li>
+<li>Validates that <code>In</code> and <code>NotIn</code> arrays are not empty if provided.</li>
+<li>Invokes <code>customValidator</code> if provided.</li>
+</ul>
+<h4 id="paginationfilter"><code>PaginationFilter</code><a class="headerlink" href="#paginationfilter" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Validates that <code>Limit</code> and <code>Page</code> are greater than zero.</li>
+<li>If <code>maxLimit</code> is specified, ensures <code>Limit</code> does not exceed it.</li>
+<li>Returns an error if the filter itself is null.</li>
+</ul>
+<h4 id="searchfilter"><code>SearchFilter</code><a class="headerlink" href="#searchfilter" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Requires <code>Value</code> to be non-empty and not just whitespace.</li>
+<li>Validates that <code>Value</code> meets optional <code>minLength</code> and <code>maxLength</code> constraints if provided.</li>
+</ul>
+<h4 id="stringfilter"><code>StringFilter</code><a class="headerlink" href="#stringfilter" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Validates individual string fields (<code>Eq</code>, <code>NotEq</code>, <code>Contains</code>, <code>StartsWith</code>, <code>EndsWith</code>) for emptiness, length, and optional <code>customValidator</code>.</li>
+<li>Validates string arrays (<code>In</code>, <code>NotIn</code>) for emptiness, length, and optional <code>customArrayValidator</code>.</li>
+<li>Honors <code>allowEmptyStrings</code> to control whether empty strings are permitted.</li>
+<li>Applies <code>maxLength</code> if provided to restrict string length.</li>
+</ul>
+<h3 id="validation-api">Validation API<a class="headerlink" href="#validation-api" title="Permanent link">&para;</a></h3>
+<p>Flecto provides per-filter validation methods that return structured errors 
+in the form of <code>(Field, Error)</code> tuples. These are designed for both internal use 
+(<code>Ensure(...)</code> for exceptions) and user-facing validation (<code>Validate(...)</code> 
+for result collection).</p>
+<p>Each filter type has its own <code>Validate(...)</code> method with a signature tailored to its structure. 
+All validators:</p>
+<ul>
+<li>Apply <strong>built-in logical checks</strong> (e.g., Eq + NotEq conflict, range consistency, non-empty arrays).</li>
+<li>Optionally use <strong>custom validation logic</strong> via <code>Func&lt;TFilter, (bool IsValid, string? Error)&gt;</code>.</li>
+<li>Return a consistent output: <code>IEnumerable&lt;(string Field, string Error)&gt;</code>.</li>
+</ul>
+<h4 id="example-flagsenumfilter">Example: FlagsEnumFilter<a class="headerlink" href="#example-flagsenumfilter" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IEnumerable</span><span class="o">&lt;</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Field</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Error</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Validate</span><span class="p">(</span>
+<span class="w">    </span><span class="n">FlagsEnumFilter</span><span class="o">&lt;</span><span class="n">UserRole</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">filter</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Func</span><span class="o">&lt;</span><span class="n">FlagsEnumFilter</span><span class="o">&lt;</span><span class="n">UserRole</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">IsValid</span><span class="p">,</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">ErrorMessage</span><span class="p">)</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">customValidator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+</code></pre></div>
+<p>Other filters (e.g. <code>SearchFilter</code>, <code>StringFilter</code>) may also accept <code>maxLength</code>, <code>minLength</code>, 
+<code>allowEmptyStrings</code>, or custom array validators as additional parameters.</p>
+<h3 id="validation-modes">Validation Modes<a class="headerlink" href="#validation-modes" title="Permanent link">&para;</a></h3>
+<p>There are two usage modes for Flecto's validation system:</p>
+<h4 id="1-internal-ensure-always-enforced-throws-on-error">1. <strong>Internal (Ensure) — always enforced, throws on error</strong><a class="headerlink" href="#1-internal-ensure-always-enforced-throws-on-error" title="Permanent link">&para;</a></h4>
+<p>Internal validation logic (<code>EnsureValid(...)</code>) runs automatically during query building 
+and throws immediately on validation failure.</p>
+<p>This is useful for internal tools, CLI utilities, or safe programmatic usage or if developer 
+do not use validation for requests.</p>
+<h4 id="2-user-facing-validate-collects-errors-for-feedback">2. <strong>User-facing (Validate) — collects errors for feedback</strong><a class="headerlink" href="#2-user-facing-validate-collects-errors-for-feedback" title="Permanent link">&para;</a></h4>
+<p>You can manually invoke <code>Validate(...)</code> to get a list of validation results and display them to users:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">errors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FlagsEnumFilterValidator</span><span class="o">&lt;</span><span class="n">UserRole</span><span class="o">&gt;</span><span class="p">.</span><span class="n">Validate</span><span class="p">(</span><span class="n">filter</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">errors</span><span class="p">.</span><span class="n">Any</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nf">BadRequest</span><span class="p">(</span><span class="n">errors</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This mode allows API endpoints and UIs to return understandable validation errors instead of throwing.</p>
+<hr />
+<h3 id="example-add-custom-rule">Example: Add custom rule<a class="headerlink" href="#example-add-custom-rule" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kt">var</span><span class="w"> </span><span class="n">errors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FlagsEnumFilterValidator</span><span class="o">&lt;</span><span class="n">UserRole</span><span class="o">&gt;</span><span class="p">.</span><span class="n">Validate</span><span class="p">(</span>
+<span class="w">    </span><span class="n">filter</span><span class="p">,</span>
+<span class="w">    </span><span class="n">customValidator</span><span class="p">:</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">f</span><span class="p">.</span><span class="n">Eq</span><span class="p">.</span><span class="n">HasValue</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">Eq</span><span class="p">.</span><span class="n">Value</span><span class="p">.</span><span class="n">HasFlag</span><span class="p">(</span><span class="n">UserRole</span><span class="p">.</span><span class="n">Admin</span><span class="p">),</span><span class="w"> </span><span class="s">&quot;Only Admins are allowed&quot;</span><span class="p">));</span>
+</code></pre></div>
+<hr />
+<h3 id="example-use-with-fluentvalidation">Example: Use with FluentValidation<a class="headerlink" href="#example-use-with-fluentvalidation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">RuleFor</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Role</span><span class="p">)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">Must</span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="n">FlagsEnumFilterValidator</span><span class="o">&lt;</span><span class="n">UserRole</span><span class="o">&gt;</span><span class="p">.</span><span class="n">Validate</span><span class="p">(</span><span class="n">f</span><span class="p">).</span><span class="n">Any</span><span class="p">())</span>
+<span class="w">    </span><span class="p">.</span><span class="n">WithMessage</span><span class="p">(</span><span class="s">&quot;Invalid Role filter&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="why-it-matters">Why it matters<a class="headerlink" href="#why-it-matters" title="Permanent link">&para;</a></h3>
+<p>Validation gives API developers and consumers predictable behavior, safer filtering, 
+and <strong>early failure</strong> before querying the database.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips", "diagrams"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.92b07e13.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
